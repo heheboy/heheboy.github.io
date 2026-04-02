@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>咖啡烘焙 on 熟童·实验室</title><link>https://heheboy.github.io/tags/%E5%92%96%E5%95%A1%E7%83%98%E7%84%99/</link><description>Recent content in 咖啡烘焙 on 熟童·实验室</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Wed, 01 Apr 2026 12:19:15 +0800</lastBuildDate><atom:link href="https://heheboy.github.io/tags/%E5%92%96%E5%95%A1%E7%83%98%E7%84%99/index.xml" rel="self" type="application/rss+xml"/><item><title>第3章 烘焙前的准备与设备检查</title><link>https://heheboy.github.io/posts/%E7%AC%AC3%E7%AB%A0-%E7%83%98%E7%84%99%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87%E4%B8%8E%E8%AE%BE%E5%A4%87%E6%A3%80%E6%9F%A5/</link><pubDate>Wed, 01 Apr 2026 12:19:15 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC3%E7%AB%A0-%E7%83%98%E7%84%99%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87%E4%B8%8E%E8%AE%BE%E5%A4%87%E6%A3%80%E6%9F%A5/</guid><description>&lt;h2 id="31-烘焙环境准备"&gt;3.1 烘焙环境准备&lt;/h2&gt;
+&lt;h3 id="311-烘焙车间环境标准"&gt;3.1.1 烘焙车间环境标准&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;温湿度控制&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;参数&lt;/th&gt;
+ &lt;th&gt;标准范围&lt;/th&gt;
+ &lt;th&gt;允许波动&lt;/th&gt;
+ &lt;th&gt;超出影响&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;环境温度&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;18-24°C&lt;/td&gt;
+ &lt;td&gt;±3°C&lt;/td&gt;
+ &lt;td&gt;影响烘焙机热平衡&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;相对湿度&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;45-65%&lt;/td&gt;
+ &lt;td&gt;±10%&lt;/td&gt;
+ &lt;td&gt;生豆水分变化&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;通风换气&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;10-15次/小时&lt;/td&gt;
+ &lt;td&gt;-&lt;/td&gt;
+ &lt;td&gt;排除烟雾和CO₂&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;气压&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;标准大气压±50hPa&lt;/td&gt;
+ &lt;td&gt;-&lt;/td&gt;
+ &lt;td&gt;高海拔需调整参数&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;环境因素影响分析&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;环境温度对烘焙的影响：
+
+低温环境（&amp;lt;15°C）
+├── 烘焙机预热时间延长
+├── 热量散失加快 → 需增加火力输入
+├── 冷却速度加快 → 可能下豆后冷却不足
+└── 冬季操作建议：提高预热温度5-10°C
+
+高温环境（&amp;gt;28°C）
+├── 冷却系统效率下降
+├── 生豆储存风险增加
+├── 操作舒适度下降
+└── 夏季操作建议：加强通风，监控生豆水分
+
+高湿度环境（&amp;gt;70%）
+├── 生豆吸湿风险
+├── 烘焙后熟豆水分回升
+├── 银皮排出受阻
+└── 除湿措施：除湿机、密封储存
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="312-工作区域布局"&gt;3.1.2 工作区域布局&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;功能分区原则&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>

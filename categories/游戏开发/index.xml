@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>游戏开发 on 熟童·实验室</title><link>https://heheboy.github.io/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/</link><description>Recent content in 游戏开发 on 熟童·实验室</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Wed, 01 Apr 2026 12:02:13 +0800</lastBuildDate><atom:link href="https://heheboy.github.io/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml"/><item><title>第3章 全局系统与自动加载</title><link>https://heheboy.github.io/posts/%E7%AC%AC3%E7%AB%A0-%E5%85%A8%E5%B1%80%E7%B3%BB%E7%BB%9F%E4%B8%8E%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD/</link><pubDate>Wed, 01 Apr 2026 12:02:13 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC3%E7%AB%A0-%E5%85%A8%E5%B1%80%E7%B3%BB%E7%BB%9F%E4%B8%8E%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD/</guid><description>&lt;p&gt;全局系统与自动加载是游戏框架的核心基础设施，它们负责管理跨场景共享的数据和服务，协调系统初始化顺序，并提供统一的访问接口。本章将详细介绍如何在 Godot C# 中设计和实现这些关键系统。&lt;/p&gt;
+&lt;h2 id="311-autoload设计原理"&gt;3.1.1 AutoLoad设计原理&lt;/h2&gt;
+&lt;p&gt;Godot的AutoLoad机制是游戏开发中最基础也是最重要的架构模式之一。理解其设计原理有助于正确构建全局系统。&lt;/p&gt;</description></item><item><title>第2章 框架设计原则</title><link>https://heheboy.github.io/posts/%E7%AC%AC2%E7%AB%A0-%E6%A1%86%E6%9E%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</link><pubDate>Wed, 01 Apr 2026 11:58:07 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC2%E7%AB%A0-%E6%A1%86%E6%9E%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</guid><description>&lt;p&gt;良好的框架设计是游戏项目成功的基石。本章将介绍如何在 Godot C# 开发中应用经典的软件设计原则，建立可维护、可扩展的代码架构。&lt;/p&gt;
+&lt;h2 id="211-solid原则在游戏开发中的特殊性"&gt;2.1.1 SOLID原则在游戏开发中的特殊性&lt;/h2&gt;
+&lt;p&gt;SOLID原则源自企业软件开发，但在游戏开发中需要根据实时性、性能要求和架构特点进行适配。&lt;/p&gt;
+&lt;h3 id="单一职责原则的灵活性"&gt;单一职责原则的灵活性&lt;/h3&gt;
+&lt;p&gt;游戏开发中的SRP需要平衡以下因素：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;职责粒度的选择&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;过细粒度&lt;/strong&gt;：每个微小组件单独成类，导致节点数量爆炸&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;过粗粒度&lt;/strong&gt;：一个类承担过多职责，难以维护&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;游戏实践&lt;/strong&gt;：以&amp;quot;一个完整功能&amp;quot;为界限，而非&amp;quot;一个操作&amp;quot;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;示例&lt;/strong&gt;：玩家控制器可以包含移动、跳跃、蹲伏等输入处理，但不应该包含血条UI显示或存档逻辑。&lt;/p&gt;</description></item><item><title>第1章 Godot C# 核心架构</title><link>https://heheboy.github.io/posts/%E7%AC%AC1%E7%AB%A0-godot-c%23-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84/</link><pubDate>Wed, 01 Apr 2026 11:49:51 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC1%E7%AB%A0-godot-c%23-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84/</guid><description>&lt;h2 id="11-概述"&gt;1.1 概述&lt;/h2&gt;
+&lt;p&gt;Godot 引擎从 3.x 版本开始引入 C# 支持，在 4.x 版本中 C# 集成更加成熟和稳定。本章将深入介绍 Godot C# 的核心架构概念，帮助开发者理解如何在这个独特的节点系统中高效使用 C# 进行游戏开发。&lt;/p&gt;
+&lt;h2 id="12-为什么选择-godot--c"&gt;1.2 为什么选择 Godot + C#&lt;/h2&gt;
+&lt;p&gt;在游戏开发领域，开发者面临着众多技术选择。Unity、Unreal Engine、Godot 各有优势，而编程语言的选择同样重要。本节将分析为什么 Godot + C# 是一个值得考虑的技术组合。&lt;/p&gt;</description></item></channel></rss>

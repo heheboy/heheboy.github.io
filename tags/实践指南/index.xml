@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>实践指南 on 熟童·实验室</title><link>https://heheboy.github.io/tags/%E5%AE%9E%E8%B7%B5%E6%8C%87%E5%8D%97/</link><description>Recent content in 实践指南 on 熟童·实验室</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Thu, 02 Apr 2026 18:26:19 +0800</lastBuildDate><atom:link href="https://heheboy.github.io/tags/%E5%AE%9E%E8%B7%B5%E6%8C%87%E5%8D%97/index.xml" rel="self" type="application/rss+xml"/><item><title>ClaudeCode工坊：commands、Agents、Skills与Mcp的实践指南</title><link>https://heheboy.github.io/posts/claudecode%E5%B7%A5%E5%9D%8Acommandsagentsskills%E4%B8%8Emcp%E7%9A%84%E5%AE%9E%E8%B7%B5%E6%8C%87%E5%8D%97/</link><pubDate>Thu, 02 Apr 2026 18:26:19 +0800</pubDate><guid>https://heheboy.github.io/posts/claudecode%E5%B7%A5%E5%9D%8Acommandsagentsskills%E4%B8%8Emcp%E7%9A%84%E5%AE%9E%E8%B7%B5%E6%8C%87%E5%8D%97/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;打造属于你的数字工匠工具箱&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一每个开发者都需要一个工坊"&gt;一、每个开发者都需要一个工坊&lt;/h2&gt;
+&lt;p&gt;好的工匠都有自己的工坊——工具挂在顺手的位置，技艺烂熟于心，需要材料时有可靠的供应商。&lt;/p&gt;
+&lt;p&gt;Claude Code 不只是一个&amp;quot;AI 助手&amp;quot;，它是你的&lt;strong&gt;数字工坊&lt;/strong&gt;。你可以布置自己的工具（Commands）、培养技艺（Skills）、请来助手（Agents）、连接供应商（MCP）。&lt;/p&gt;
+&lt;p&gt;本文将带你了解如何打造适合自己的 Claude Code 工坊。&lt;/p&gt;</description></item></channel></rss>

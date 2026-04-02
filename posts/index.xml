@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>内容文章 on 熟童·实验室</title><link>https://heheboy.github.io/posts/</link><description>Recent content in 内容文章 on 熟童·实验室</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Thu, 02 Apr 2026 18:26:19 +0800</lastBuildDate><atom:link href="https://heheboy.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>ClaudeCode工坊：commands、Agents、Skills与Mcp的实践指南</title><link>https://heheboy.github.io/posts/claudecode%E5%B7%A5%E5%9D%8Acommandsagentsskills%E4%B8%8Emcp%E7%9A%84%E5%AE%9E%E8%B7%B5%E6%8C%87%E5%8D%97/</link><pubDate>Thu, 02 Apr 2026 18:26:19 +0800</pubDate><guid>https://heheboy.github.io/posts/claudecode%E5%B7%A5%E5%9D%8Acommandsagentsskills%E4%B8%8Emcp%E7%9A%84%E5%AE%9E%E8%B7%B5%E6%8C%87%E5%8D%97/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;打造属于你的数字工匠工具箱&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一每个开发者都需要一个工坊"&gt;一、每个开发者都需要一个工坊&lt;/h2&gt;
+&lt;p&gt;好的工匠都有自己的工坊——工具挂在顺手的位置，技艺烂熟于心，需要材料时有可靠的供应商。&lt;/p&gt;
+&lt;p&gt;Claude Code 不只是一个&amp;quot;AI 助手&amp;quot;，它是你的&lt;strong&gt;数字工坊&lt;/strong&gt;。你可以布置自己的工具（Commands）、培养技艺（Skills）、请来助手（Agents）、连接供应商（MCP）。&lt;/p&gt;
+&lt;p&gt;本文将带你了解如何打造适合自己的 Claude Code 工坊。&lt;/p&gt;</description></item><item><title>我不养龙虾因为我有ClaudeCode</title><link>https://heheboy.github.io/posts/%E6%88%91%E4%B8%8D%E5%85%BB%E9%BE%99%E8%99%BE%E5%9B%A0%E4%B8%BA%E6%88%91%E6%9C%89claudecode/</link><pubDate>Thu, 02 Apr 2026 01:22:30 +0800</pubDate><guid>https://heheboy.github.io/posts/%E6%88%91%E4%B8%8D%E5%85%BB%E9%BE%99%E8%99%BE%E5%9B%A0%E4%B8%BA%E6%88%91%E6%9C%89claudecode/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;不是简单，而是更可控、更专业、更符合我的方式&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一两只全能管家"&gt;一、两只&amp;quot;全能管家&amp;quot;&lt;/h2&gt;
+&lt;p&gt;2026年开年，一只&amp;quot;龙虾&amp;quot;席卷了技术圈。&lt;/p&gt;
+&lt;p&gt;它叫 OpenClaw，GitHub 上架 24 小时斩获 9000+ Star，一周破 6 万，现在已经超过 12 万。小红书上相关话题浏览量超 3 亿，被称为&amp;quot;数字打工人&amp;quot;——能帮你回邮件、管日历、写代码、控家居，一个工具打通办公、生活、开发全场景。&lt;/p&gt;</description></item><item><title>第3章 烘焙前的准备与设备检查</title><link>https://heheboy.github.io/posts/%E7%AC%AC3%E7%AB%A0-%E7%83%98%E7%84%99%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87%E4%B8%8E%E8%AE%BE%E5%A4%87%E6%A3%80%E6%9F%A5/</link><pubDate>Wed, 01 Apr 2026 12:19:15 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC3%E7%AB%A0-%E7%83%98%E7%84%99%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87%E4%B8%8E%E8%AE%BE%E5%A4%87%E6%A3%80%E6%9F%A5/</guid><description>&lt;h2 id="31-烘焙环境准备"&gt;3.1 烘焙环境准备&lt;/h2&gt;
+&lt;h3 id="311-烘焙车间环境标准"&gt;3.1.1 烘焙车间环境标准&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;温湿度控制&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;参数&lt;/th&gt;
+ &lt;th&gt;标准范围&lt;/th&gt;
+ &lt;th&gt;允许波动&lt;/th&gt;
+ &lt;th&gt;超出影响&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;环境温度&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;18-24°C&lt;/td&gt;
+ &lt;td&gt;±3°C&lt;/td&gt;
+ &lt;td&gt;影响烘焙机热平衡&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;相对湿度&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;45-65%&lt;/td&gt;
+ &lt;td&gt;±10%&lt;/td&gt;
+ &lt;td&gt;生豆水分变化&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;通风换气&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;10-15次/小时&lt;/td&gt;
+ &lt;td&gt;-&lt;/td&gt;
+ &lt;td&gt;排除烟雾和CO₂&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;气压&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;标准大气压±50hPa&lt;/td&gt;
+ &lt;td&gt;-&lt;/td&gt;
+ &lt;td&gt;高海拔需调整参数&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;环境因素影响分析&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;环境温度对烘焙的影响：
+
+低温环境（&amp;lt;15°C）
+├── 烘焙机预热时间延长
+├── 热量散失加快 → 需增加火力输入
+├── 冷却速度加快 → 可能下豆后冷却不足
+└── 冬季操作建议：提高预热温度5-10°C
+
+高温环境（&amp;gt;28°C）
+├── 冷却系统效率下降
+├── 生豆储存风险增加
+├── 操作舒适度下降
+└── 夏季操作建议：加强通风，监控生豆水分
+
+高湿度环境（&amp;gt;70%）
+├── 生豆吸湿风险
+├── 烘焙后熟豆水分回升
+├── 银皮排出受阻
+└── 除湿措施：除湿机、密封储存
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="312-工作区域布局"&gt;3.1.2 工作区域布局&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;功能分区原则&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>第2章 生豆品质评估与验收标准</title><link>https://heheboy.github.io/posts/%E7%AC%AC2%E7%AB%A0-%E7%94%9F%E8%B1%86%E5%93%81%E8%B4%A8%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%AA%8C%E6%94%B6%E6%A0%87%E5%87%86/</link><pubDate>Wed, 01 Apr 2026 12:16:19 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC2%E7%AB%A0-%E7%94%9F%E8%B1%86%E5%93%81%E8%B4%A8%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%AA%8C%E6%94%B6%E6%A0%87%E5%87%86/</guid><description>&lt;h2 id="21-生豆物理检测"&gt;2.1 生豆物理检测&lt;/h2&gt;
+&lt;h3 id="211-水分含量测定"&gt;2.1.1 水分含量测定&lt;/h3&gt;
+&lt;p&gt;水分含量是影响烘焙一致性的首要参数，直接决定热量传递效率和化学反应进程。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;标准范围&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;SCAA标准：9-12%&lt;/li&gt;
+&lt;li&gt;理想区间：10.5-11.5%&lt;/li&gt;
+&lt;li&gt;欧盟标准：最大12%&lt;/li&gt;
+&lt;li&gt;日本精品标准：10-11%&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;测定方法&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;方法&lt;/th&gt;
+ &lt;th&gt;原理&lt;/th&gt;
+ &lt;th&gt;精度&lt;/th&gt;
+ &lt;th&gt;适用场景&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;烘箱干燥法&lt;/strong&gt;（基准法）&lt;/td&gt;
+ &lt;td&gt;105°C干燥至恒重，计算失重&lt;/td&gt;
+ &lt;td&gt;±0.1%&lt;/td&gt;
+ &lt;td&gt;实验室校准&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;电容式水分仪&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;介电常数与水分相关性&lt;/td&gt;
+ &lt;td&gt;±0.5%&lt;/td&gt;
+ &lt;td&gt;快速现场检测&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;电阻式水分仪&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;电阻与水分相关性&lt;/td&gt;
+ &lt;td&gt;±0.3%&lt;/td&gt;
+ &lt;td&gt;手持便携式&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;近红外光谱（NIR）&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;水分子对特定波长吸收&lt;/td&gt;
+ &lt;td&gt;±0.2%&lt;/td&gt;
+ &lt;td&gt;高精度在线检测&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;水分异常的影响&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>第1章 咖啡生豆学</title><link>https://heheboy.github.io/posts/%E7%AC%AC1%E7%AB%A0-%E5%92%96%E5%95%A1%E7%94%9F%E8%B1%86%E5%AD%A6/</link><pubDate>Wed, 01 Apr 2026 12:10:51 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC1%E7%AB%A0-%E5%92%96%E5%95%A1%E7%94%9F%E8%B1%86%E5%AD%A6/</guid><description>&lt;h2 id="11-咖啡品种学基础"&gt;1.1 咖啡品种学基础&lt;/h2&gt;
+&lt;h3 id="111-三大原生种"&gt;1.1.1 三大原生种&lt;/h3&gt;
+&lt;p&gt;咖啡属（&lt;em&gt;Coffea&lt;/em&gt;）植物超过120种，但商业化种植主要集中在以下三大原生种：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;特征&lt;/th&gt;
+ &lt;th&gt;阿拉比卡（&lt;em&gt;Coffea arabica&lt;/em&gt;）&lt;/th&gt;
+ &lt;th&gt;罗布斯塔（&lt;em&gt;Coffea canephora&lt;/em&gt;）&lt;/th&gt;
+ &lt;th&gt;利比里亚（&lt;em&gt;Coffea liberica&lt;/em&gt;）&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;全球产量占比&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;60-70%&lt;/td&gt;
+ &lt;td&gt;30-40%&lt;/td&gt;
+ &lt;td&gt;&amp;lt;2%&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;咖啡因含量&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;1.0-1.5%&lt;/td&gt;
+ &lt;td&gt;2.0-2.7%&lt;/td&gt;
+ &lt;td&gt;1.2-1.5%&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;糖分含量&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;6-9%&lt;/td&gt;
+ &lt;td&gt;3-5%&lt;/td&gt;
+ &lt;td&gt;5-7%&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;脂质含量&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;15-17%&lt;/td&gt;
+ &lt;td&gt;10-12%&lt;/td&gt;
+ &lt;td&gt;10-13%&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;最佳种植海拔&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;1000-2000m&lt;/td&gt;
+ &lt;td&gt;0-800m&lt;/td&gt;
+ &lt;td&gt;0-1000m&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;染色体&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;44（四倍体）&lt;/td&gt;
+ &lt;td&gt;22（二倍体）&lt;/td&gt;
+ &lt;td&gt;22（二倍体）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;自花授粉&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;是&lt;/td&gt;
+ &lt;td&gt;否&lt;/td&gt;
+ &lt;td&gt;否&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;主要风味特征&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;花果香、酸质明亮、层次丰富&lt;/td&gt;
+ &lt;td&gt;坚果、木质、苦味强、醇厚&lt;/td&gt;
+ &lt;td&gt;烟熏、木质、独特烟熏感&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;阿拉比卡&lt;/strong&gt;的复杂性源于其遗传特性：&lt;/p&gt;</description></item><item><title>第3章 全局系统与自动加载</title><link>https://heheboy.github.io/posts/%E7%AC%AC3%E7%AB%A0-%E5%85%A8%E5%B1%80%E7%B3%BB%E7%BB%9F%E4%B8%8E%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD/</link><pubDate>Wed, 01 Apr 2026 12:02:13 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC3%E7%AB%A0-%E5%85%A8%E5%B1%80%E7%B3%BB%E7%BB%9F%E4%B8%8E%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD/</guid><description>&lt;p&gt;全局系统与自动加载是游戏框架的核心基础设施，它们负责管理跨场景共享的数据和服务，协调系统初始化顺序，并提供统一的访问接口。本章将详细介绍如何在 Godot C# 中设计和实现这些关键系统。&lt;/p&gt;
+&lt;h2 id="311-autoload设计原理"&gt;3.1.1 AutoLoad设计原理&lt;/h2&gt;
+&lt;p&gt;Godot的AutoLoad机制是游戏开发中最基础也是最重要的架构模式之一。理解其设计原理有助于正确构建全局系统。&lt;/p&gt;</description></item><item><title>第2章 框架设计原则</title><link>https://heheboy.github.io/posts/%E7%AC%AC2%E7%AB%A0-%E6%A1%86%E6%9E%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</link><pubDate>Wed, 01 Apr 2026 11:58:07 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC2%E7%AB%A0-%E6%A1%86%E6%9E%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</guid><description>&lt;p&gt;良好的框架设计是游戏项目成功的基石。本章将介绍如何在 Godot C# 开发中应用经典的软件设计原则，建立可维护、可扩展的代码架构。&lt;/p&gt;
+&lt;h2 id="211-solid原则在游戏开发中的特殊性"&gt;2.1.1 SOLID原则在游戏开发中的特殊性&lt;/h2&gt;
+&lt;p&gt;SOLID原则源自企业软件开发，但在游戏开发中需要根据实时性、性能要求和架构特点进行适配。&lt;/p&gt;
+&lt;h3 id="单一职责原则的灵活性"&gt;单一职责原则的灵活性&lt;/h3&gt;
+&lt;p&gt;游戏开发中的SRP需要平衡以下因素：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;职责粒度的选择&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;过细粒度&lt;/strong&gt;：每个微小组件单独成类，导致节点数量爆炸&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;过粗粒度&lt;/strong&gt;：一个类承担过多职责，难以维护&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;游戏实践&lt;/strong&gt;：以&amp;quot;一个完整功能&amp;quot;为界限，而非&amp;quot;一个操作&amp;quot;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;示例&lt;/strong&gt;：玩家控制器可以包含移动、跳跃、蹲伏等输入处理，但不应该包含血条UI显示或存档逻辑。&lt;/p&gt;</description></item><item><title>第1章 Godot C# 核心架构</title><link>https://heheboy.github.io/posts/%E7%AC%AC1%E7%AB%A0-godot-c%23-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84/</link><pubDate>Wed, 01 Apr 2026 11:49:51 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC1%E7%AB%A0-godot-c%23-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84/</guid><description>&lt;h2 id="11-概述"&gt;1.1 概述&lt;/h2&gt;
+&lt;p&gt;Godot 引擎从 3.x 版本开始引入 C# 支持，在 4.x 版本中 C# 集成更加成熟和稳定。本章将深入介绍 Godot C# 的核心架构概念，帮助开发者理解如何在这个独特的节点系统中高效使用 C# 进行游戏开发。&lt;/p&gt;
+&lt;h2 id="12-为什么选择-godot--c"&gt;1.2 为什么选择 Godot + C#&lt;/h2&gt;
+&lt;p&gt;在游戏开发领域，开发者面临着众多技术选择。Unity、Unreal Engine、Godot 各有优势，而编程语言的选择同样重要。本节将分析为什么 Godot + C# 是一个值得考虑的技术组合。&lt;/p&gt;</description></item><item><title>熟童实验室开张:为什么技术需要长出温度?</title><link>https://heheboy.github.io/posts/%E7%86%9F%E7%AB%A5%E5%AE%9E%E9%AA%8C%E5%AE%A4%E5%BC%80%E5%BC%A0%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8A%80%E6%9C%AF%E9%9C%80%E8%A6%81%E9%95%BF%E5%87%BA%E6%B8%A9%E5%BA%A6/</link><pubDate>Wed, 01 Apr 2026 00:47:06 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%86%9F%E7%AB%A5%E5%AE%9E%E9%AA%8C%E5%AE%A4%E5%BC%80%E5%BC%A0%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8A%80%E6%9C%AF%E9%9C%80%E8%A6%81%E9%95%BF%E5%87%BA%E6%B8%A9%E5%BA%A6/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;欢迎来到熟童·实验室。这里记录的不只是技术，还有那些被实现出来的想法。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一深夜的那个瞬间"&gt;一、深夜的那个瞬间&lt;/h2&gt;
+&lt;p&gt;凌晨两点十七分，屏幕右下角的时间在黑暗中格外刺眼。&lt;/p&gt;
+&lt;p&gt;我终于看到那行绿色的输出：&lt;code&gt;All tests passed.&lt;/code&gt; 一段时间的业余开发，一个从概念到原型的游戏AI系统，就在这一刻宣告跑通。按照剧本，这时候我应该欢呼，或者至少发个朋友圈纪念一下。但我只是盯着屏幕，感觉心里某个地方空荡荡的。&lt;/p&gt;</description></item></channel></rss>
