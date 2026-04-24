@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>咖啡豆 on 熟童·实验室</title><link>https://heheboy.github.io/tags/%E5%92%96%E5%95%A1%E8%B1%86/</link><description>Recent content in 咖啡豆 on 熟童·实验室</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sat, 25 Apr 2026 02:01:10 +0800</lastBuildDate><atom:link href="https://heheboy.github.io/tags/%E5%92%96%E5%95%A1%E8%B1%86/index.xml" rel="self" type="application/rss+xml"/><item><title>第12章 烘焙机操作实战技巧</title><link>https://heheboy.github.io/posts/%E7%AC%AC12%E7%AB%A0-%E7%83%98%E7%84%99%E6%9C%BA%E6%93%8D%E4%BD%9C%E5%AE%9E%E6%88%98%E6%8A%80%E5%B7%A7/</link><pubDate>Sat, 25 Apr 2026 02:01:10 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC12%E7%AB%A0-%E7%83%98%E7%84%99%E6%9C%BA%E6%93%8D%E4%BD%9C%E5%AE%9E%E6%88%98%E6%8A%80%E5%B7%A7/</guid><description>&lt;h2 id="121-开机与预热技巧"&gt;12.1 开机与预热技巧&lt;/h2&gt;
+&lt;h3 id="1211-标准开机流程"&gt;12.1.1 标准开机流程&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;开机检查清单&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;开机前（5-10分钟）：
+□ 确认燃气/电力供应正常
+□ 检查通风系统
+□ 清洁工作区域
+□ 准备生豆并称重
+□ 准备记录表格
+
+开机步骤：
+1. 开启总电源
+2. 启动控制系统
+3. 打开燃气主阀（检查压力）
+4. 启动排烟风机
+5. 检查紧急停止按钮复位
+6. 确认各探针读数正常
+
+燃气系统检查：
+□ 气压表读数（2.0-3.0 kPa）
+□ 管路无泄漏（肥皂水检测）
+□ 燃烧器点火测试
+□ 火焰颜色（蓝色为正常）
+□ 燃烧声音平稳
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="1212-预热策略"&gt;12.1.2 预热策略&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;标准预热程序&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>第11章 特定产地豆的烘焙曲线设计</title><link>https://heheboy.github.io/posts/%E7%AC%AC11%E7%AB%A0-%E7%89%B9%E5%AE%9A%E4%BA%A7%E5%9C%B0%E8%B1%86%E7%9A%84%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF%E8%AE%BE%E8%AE%A1/</link><pubDate>Sat, 25 Apr 2026 01:57:17 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC11%E7%AB%A0-%E7%89%B9%E5%AE%9A%E4%BA%A7%E5%9C%B0%E8%B1%86%E7%9A%84%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF%E8%AE%BE%E8%AE%A1/</guid><description>&lt;h2 id="111-非洲产区"&gt;11.1 非洲产区&lt;/h2&gt;
+&lt;h3 id="1111-埃塞俄比亚ethiopia"&gt;11.1.1 埃塞俄比亚（Ethiopia）&lt;/h3&gt;
+&lt;h4 id="耶加雪菲yirgacheffe水洗"&gt;耶加雪菲（Yirgacheffe）水洗&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;生豆特性&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;基本参数：
+├── 海拔：1750-2200m
+├── 密度：1.18-1.22 g/cm³（极高密度）
+├── 水分：11-12%
+├── 品种：原生种（Heirloom）、74110、74112
+├── 处理法：水洗为主
+├── 粒径：偏小（16-17#）
+└── 收获期：10月-次年1月
+
+风味特征：
+├── 花香：茉莉、橙花
+├── 酸质：柑橘、柠檬、茶感
+├── 甜感：蜂蜜、红糖
+├── 茶感：伯爵茶、绿茶
+└── 整体：精致、优雅、复杂
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;推荐烘焙曲线&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>第10章 不同豆种的烘焙策略</title><link>https://heheboy.github.io/posts/%E7%AC%AC10%E7%AB%A0-%E4%B8%8D%E5%90%8C%E8%B1%86%E7%A7%8D%E7%9A%84%E7%83%98%E7%84%99%E7%AD%96%E7%95%A5/</link><pubDate>Sat, 25 Apr 2026 01:55:17 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC10%E7%AB%A0-%E4%B8%8D%E5%90%8C%E8%B1%86%E7%A7%8D%E7%9A%84%E7%83%98%E7%84%99%E7%AD%96%E7%95%A5/</guid><description>&lt;h2 id="101-按密度分类的烘焙策略"&gt;10.1 按密度分类的烘焙策略&lt;/h2&gt;
+&lt;h3 id="1011-高密度豆high-density"&gt;10.1.1 高密度豆（High Density）&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;特征分析&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;密度范围：&amp;gt;1.17 g/cm³ 或 &amp;gt;700 g/L（容重）
+典型产地：埃塞俄比亚（&amp;gt;2000m）、肯尼亚（&amp;gt;1800m）、巴拿马（&amp;gt;1600m）
+
+物理特性：
+├── 豆体紧实，细胞壁厚
+├── 水分含量高（11-12%）
+├── 比热容大（热惯性高）
+├── 热传导慢
+└── 升温滞后明显
+
+化学特性：
+├── 糖分积累多
+├── 酸质前体丰富
+├── 蛋白质含量适中
+├── 芳香物质前体复杂
+└── 风味潜力高
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;烘焙策略&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>第9章 关键参数控制</title><link>https://heheboy.github.io/posts/%E7%AC%AC9%E7%AB%A0-%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0%E6%8E%A7%E5%88%B6/</link><pubDate>Thu, 09 Apr 2026 23:03:07 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC9%E7%AB%A0-%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0%E6%8E%A7%E5%88%B6/</guid><description>&lt;h2 id="91-升温速率ror的精密控制"&gt;9.1 升温速率（ROR）的精密控制&lt;/h2&gt;
+&lt;h3 id="911-ror的数学模型"&gt;9.1.1 ROR的数学模型&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;ROR的物理定义&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;ROR (Rate of Rise) = dT/dt
+
+精确计算（离散点）：
+RORₙ = (Tₙ - Tₙ₋₁) / (tₙ - tₙ₋₁)
+
+其中：
+Tₙ = 当前温度读数
+Tₙ₋₁ = 上一时刻温度读数
+tₙ - tₙ₋₁ = 时间间隔（通常15-30秒）
+
+平滑ROR（移动平均）：
+ROR_smooth = (RORₙ + RORₙ₋₁ + RORₙ₋₂) / 3
+
+目的：消除探针读数噪声
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;ROR与火力、风门的关系&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>第8章 烘焙曲线设计原理</title><link>https://heheboy.github.io/posts/%E7%AC%AC8%E7%AB%A0-%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86/</link><pubDate>Thu, 09 Apr 2026 23:01:30 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC8%E7%AB%A0-%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86/</guid><description>&lt;h2 id="81-烘焙曲线的组成要素"&gt;8.1 烘焙曲线的组成要素&lt;/h2&gt;
+&lt;h3 id="811-曲线维度定义"&gt;8.1.1 曲线维度定义&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;烘焙曲线的三个维度：
+
+时间（X轴）：从开始到结束的全程
+├── 总时间：8-15分钟（典型）
+├── 各阶段时长分配
+└── 发展时间比率（DTR）
+
+温度（Y轴）：豆温变化轨迹
+├── 入豆温：160-220°C
+├── 回温点：80-120°C
+├── 一爆温：195-205°C
+├── 二爆温：220-230°C
+└── 下豆温：200-235°C
+
+速率（导数）：升温速率（ROR）
+├── 干燥期：10-15°C/min
+├── 梅纳期：6-10°C/min
+├── 焦糖化期：5-8°C/min
+├── 一爆期：3-6°C/min
+└── 发展期：2-5°C/min
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="812-标准曲线模板"&gt;8.1.2 标准曲线模板&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;浅烘曲线（Light Roast）&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>第7章 烘焙缺陷的形成机理</title><link>https://heheboy.github.io/posts/%E7%AC%AC7%E7%AB%A0-%E7%83%98%E7%84%99%E7%BC%BA%E9%99%B7%E7%9A%84%E5%BD%A2%E6%88%90%E6%9C%BA%E7%90%86/</link><pubDate>Thu, 09 Apr 2026 22:59:53 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC7%E7%AB%A0-%E7%83%98%E7%84%99%E7%BC%BA%E9%99%B7%E7%9A%84%E5%BD%A2%E6%88%90%E6%9C%BA%E7%90%86/</guid><description>&lt;h2 id="71-缺陷分类体系"&gt;7.1 缺陷分类体系&lt;/h2&gt;
+&lt;h3 id="711-按形成阶段分类"&gt;7.1.1 按形成阶段分类&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;烘焙缺陷分类树：
+
+烘焙缺陷
+├── 烘焙前缺陷（生豆带入）
+│ ├── 瑕疵豆烘焙
+│ ├── 水分异常
+│ └── 密度不均
+│
+├── 烘焙中缺陷（操作不当）
+│ ├── 温度控制缺陷
+│ │ ├── 焦糊（Scorched）
+│ │ ├── 烤熟（Baked）
+│ │ └── 夹生（Underdeveloped）
+│ ├── 时间控制缺陷
+│ │ ├── 发展不足
+│ │ └── 发展过度
+│ ├── 热分布缺陷
+│ │ ├── 烘焙不均
+│ │ ├── 芯表温差过大
+│ │ └── 批次间差异
+│ └── 操作失误
+│ ├── 下豆时机错误
+│ ├── 冷却不当
+│ └── 设备故障
+│
+└── 烘焙后缺陷（处理不当）
+ ├── 氧化
+ ├── 吸湿
+ ├── 污染
+ └── 储存不当
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="712-按缺陷性质分类"&gt;7.1.2 按缺陷性质分类&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;缺陷类型&lt;/th&gt;
+ &lt;th&gt;主要表现&lt;/th&gt;
+ &lt;th&gt;形成原因&lt;/th&gt;
+ &lt;th&gt;可逆性&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;热力学缺陷&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;温度相关异常&lt;/td&gt;
+ &lt;td&gt;热量输入不当&lt;/td&gt;
+ &lt;td&gt;不可逆&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;动力学缺陷&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;时间/速率异常&lt;/td&gt;
+ &lt;td&gt;节奏控制失误&lt;/td&gt;
+ &lt;td&gt;不可逆&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;物理缺陷&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;外观/结构异常&lt;/td&gt;
+ &lt;td&gt;机械/热冲击&lt;/td&gt;
+ &lt;td&gt;不可逆&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;化学缺陷&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;风味化学反应异常&lt;/td&gt;
+ &lt;td&gt;反应条件失控&lt;/td&gt;
+ &lt;td&gt;不可逆&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;操作缺陷&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;流程执行错误&lt;/td&gt;
+ &lt;td&gt;人为失误&lt;/td&gt;
+ &lt;td&gt;部分可纠正&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="72-焦糊缺陷scorched--tipped"&gt;7.2 焦糊缺陷（Scorched / Tipped）&lt;/h2&gt;
+&lt;h3 id="721-形成机理"&gt;7.2.1 形成机理&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;焦糊（Scorched）&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>第6章 关键化学反应深度解析</title><link>https://heheboy.github.io/posts/%E7%AC%AC6%E7%AB%A0-%E5%85%B3%E9%94%AE%E5%8C%96%E5%AD%A6%E5%8F%8D%E5%BA%94%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</link><pubDate>Tue, 07 Apr 2026 17:59:24 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC6%E7%AB%A0-%E5%85%B3%E9%94%AE%E5%8C%96%E5%AD%A6%E5%8F%8D%E5%BA%94%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</guid><description>&lt;h2 id="61-梅纳反应maillard-reaction的完整机制"&gt;6.1 梅纳反应（Maillard Reaction）的完整机制&lt;/h2&gt;
+&lt;h3 id="611-反应动力学"&gt;6.1.1 反应动力学&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;温度依赖性&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;梅纳反应速率与温度的关系：
+
+阿伦尼乌斯方程：
+k = A × exp(-Ea/RT)
+
+其中：
+k = 反应速率常数
+A = 频率因子
+Ea = 活化能（梅纳反应约80-120 kJ/mol）
+R = 气体常数 8.314 J/mol·K
+T = 绝对温度（K）
+
+温度效应：
+├── 20°C：反应极慢，可忽略
+├── 80°C：反应开始可检测
+├── 120°C：反应加速
+├── 150°C：反应显著
+├── 180°C：反应快速
+└── 200°C：反应剧烈但趋向完成
+
+温度每升高10°C，反应速率约增加2-3倍（经验法则）
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;pH值的影响&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>第5章 烘焙阶段的物理化学变化</title><link>https://heheboy.github.io/posts/%E7%AC%AC5%E7%AB%A0-%E7%83%98%E7%84%99%E9%98%B6%E6%AE%B5%E7%9A%84%E7%89%A9%E7%90%86%E5%8C%96%E5%AD%A6%E5%8F%98%E5%8C%96/</link><pubDate>Tue, 07 Apr 2026 17:55:31 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC5%E7%AB%A0-%E7%83%98%E7%84%99%E9%98%B6%E6%AE%B5%E7%9A%84%E7%89%A9%E7%90%86%E5%8C%96%E5%AD%A6%E5%8F%98%E5%8C%96/</guid><description>&lt;h2 id="51-烘焙阶段总览"&gt;5.1 烘焙阶段总览&lt;/h2&gt;
+&lt;h3 id="511-时间-温度-化学反应映射"&gt;5.1.1 时间-温度-化学反应映射&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;温度(°C)
+ │
+250 ┤ ┌─────────── 深烘终点
+ │ ┌──────┘
+230 ┤ ┌─────┘ 二爆
+ │ ┌─────┘
+220 ┤ ┌─────┘
+ │ ┌─────┘ 一爆
+205 ┤──────┘
+ │
+200 ┤────────┬────────┬────────┬────────┬────────┬──→ 时间(min)
+ │ │ │ │ │ │
+ │ 干燥期 梅纳期 焦糖化 发展期 冷却期
+ │ 0-5 5-8 8-10 10-12 12-14
+ │ (分钟) (分钟) (分钟) (分钟) (分钟)
+
+化学反应强度：
+干燥期：水分蒸发 ████████░░░░░░░░░░░░ 40%
+梅纳期：化学反应 ██████████████░░░░░░ 70%
+焦糖化：糖类分解 ████████████████░░░░ 80%
+发展期：风味形成 ████████████████████ 100%
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="512-各阶段关键参数"&gt;5.1.2 各阶段关键参数&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;阶段&lt;/th&gt;
+ &lt;th&gt;温度范围&lt;/th&gt;
+ &lt;th&gt;时间占比&lt;/th&gt;
+ &lt;th&gt;质量损失占比&lt;/th&gt;
+ &lt;th&gt;核心反应&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;干燥期&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;20-150°C&lt;/td&gt;
+ &lt;td&gt;35-45%&lt;/td&gt;
+ &lt;td&gt;8-10%&lt;/td&gt;
+ &lt;td&gt;水分蒸发、组织软化&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;梅纳反应期&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;150-180°C&lt;/td&gt;
+ &lt;td&gt;20-25%&lt;/td&gt;
+ &lt;td&gt;2-3%&lt;/td&gt;
+ &lt;td&gt;氨基酸-还原糖反应&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;焦糖化期&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;170-200°C&lt;/td&gt;
+ &lt;td&gt;15-20%&lt;/td&gt;
+ &lt;td&gt;3-5%&lt;/td&gt;
+ &lt;td&gt;糖类热解、褐变&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;发展期&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;200-230°C&lt;/td&gt;
+ &lt;td&gt;10-20%&lt;/td&gt;
+ &lt;td&gt;1-2%&lt;/td&gt;
+ &lt;td&gt;风味物质合成&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;冷却期&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;230-30°C&lt;/td&gt;
+ &lt;td&gt;2-3分钟&lt;/td&gt;
+ &lt;td&gt;可忽略&lt;/td&gt;
+ &lt;td&gt;反应终止&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="52-干燥期drying-phase"&gt;5.2 干燥期（Drying Phase）&lt;/h2&gt;
+&lt;h3 id="521-水分迁移机制"&gt;5.2.1 水分迁移机制&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;生豆中的水分分布&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>第4章 热力学基础与传热机制</title><link>https://heheboy.github.io/posts/%E7%AC%AC4%E7%AB%A0-%E7%83%AD%E5%8A%9B%E5%AD%A6%E5%9F%BA%E7%A1%80%E4%B8%8E%E4%BC%A0%E7%83%AD%E6%9C%BA%E5%88%B6/</link><pubDate>Tue, 07 Apr 2026 17:45:28 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC4%E7%AB%A0-%E7%83%AD%E5%8A%9B%E5%AD%A6%E5%9F%BA%E7%A1%80%E4%B8%8E%E4%BC%A0%E7%83%AD%E6%9C%BA%E5%88%B6/</guid><description>&lt;h2 id="41-热力学基础概念"&gt;4.1 热力学基础概念&lt;/h2&gt;
+&lt;h3 id="411-温度与热量"&gt;4.1.1 温度与热量&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;温度（Temperature）&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;定义：物质微观粒子热运动剧烈程度的量度&lt;/li&gt;
+&lt;li&gt;单位：摄氏度（°C）、华氏度（°F）、开尔文（K）&lt;/li&gt;
+&lt;li&gt;转换公式：
+&lt;ul&gt;
+&lt;li&gt;°F = °C × 9/5 + 32&lt;/li&gt;
+&lt;li&gt;K = °C + 273.15&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;热量（Heat）&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;定义：能量的一种形式，由温度差驱动的能量传递&lt;/li&gt;
+&lt;li&gt;单位：焦耳（J）、卡路里（cal）&lt;/li&gt;
+&lt;li&gt;转换：1 cal = 4.184 J&lt;/li&gt;
+&lt;li&gt;热量计算公式：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Q = m × c × ΔT
+
+其中：
+Q = 热量（J）
+m = 质量（kg）
+c = 比热容（J/kg·K）
+ΔT = 温度变化（K或°C）
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="412-比热容specific-heat-capacity"&gt;4.1.2 比热容（Specific Heat Capacity）&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;定义&lt;/strong&gt;：单位质量的物质温度升高1°C所需的热量&lt;/p&gt;</description></item><item><title>第3章 烘焙前的准备与设备检查</title><link>https://heheboy.github.io/posts/%E7%AC%AC3%E7%AB%A0-%E7%83%98%E7%84%99%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87%E4%B8%8E%E8%AE%BE%E5%A4%87%E6%A3%80%E6%9F%A5/</link><pubDate>Wed, 01 Apr 2026 12:19:15 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC3%E7%AB%A0-%E7%83%98%E7%84%99%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87%E4%B8%8E%E8%AE%BE%E5%A4%87%E6%A3%80%E6%9F%A5/</guid><description>&lt;h2 id="31-烘焙环境准备"&gt;3.1 烘焙环境准备&lt;/h2&gt;
+&lt;h3 id="311-烘焙车间环境标准"&gt;3.1.1 烘焙车间环境标准&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;温湿度控制&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;参数&lt;/th&gt;
+ &lt;th&gt;标准范围&lt;/th&gt;
+ &lt;th&gt;允许波动&lt;/th&gt;
+ &lt;th&gt;超出影响&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;环境温度&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;18-24°C&lt;/td&gt;
+ &lt;td&gt;±3°C&lt;/td&gt;
+ &lt;td&gt;影响烘焙机热平衡&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;相对湿度&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;45-65%&lt;/td&gt;
+ &lt;td&gt;±10%&lt;/td&gt;
+ &lt;td&gt;生豆水分变化&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;通风换气&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;10-15次/小时&lt;/td&gt;
+ &lt;td&gt;-&lt;/td&gt;
+ &lt;td&gt;排除烟雾和CO₂&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;气压&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;标准大气压±50hPa&lt;/td&gt;
+ &lt;td&gt;-&lt;/td&gt;
+ &lt;td&gt;高海拔需调整参数&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;环境因素影响分析&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;环境温度对烘焙的影响：
+
+低温环境（&amp;lt;15°C）
+├── 烘焙机预热时间延长
+├── 热量散失加快 → 需增加火力输入
+├── 冷却速度加快 → 可能下豆后冷却不足
+└── 冬季操作建议：提高预热温度5-10°C
+
+高温环境（&amp;gt;28°C）
+├── 冷却系统效率下降
+├── 生豆储存风险增加
+├── 操作舒适度下降
+└── 夏季操作建议：加强通风，监控生豆水分
+
+高湿度环境（&amp;gt;70%）
+├── 生豆吸湿风险
+├── 烘焙后熟豆水分回升
+├── 银皮排出受阻
+└── 除湿措施：除湿机、密封储存
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="312-工作区域布局"&gt;3.1.2 工作区域布局&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;功能分区原则&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>第2章 生豆品质评估与验收标准</title><link>https://heheboy.github.io/posts/%E7%AC%AC2%E7%AB%A0-%E7%94%9F%E8%B1%86%E5%93%81%E8%B4%A8%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%AA%8C%E6%94%B6%E6%A0%87%E5%87%86/</link><pubDate>Wed, 01 Apr 2026 12:16:19 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC2%E7%AB%A0-%E7%94%9F%E8%B1%86%E5%93%81%E8%B4%A8%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%AA%8C%E6%94%B6%E6%A0%87%E5%87%86/</guid><description>&lt;h2 id="21-生豆物理检测"&gt;2.1 生豆物理检测&lt;/h2&gt;
+&lt;h3 id="211-水分含量测定"&gt;2.1.1 水分含量测定&lt;/h3&gt;
+&lt;p&gt;水分含量是影响烘焙一致性的首要参数，直接决定热量传递效率和化学反应进程。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;标准范围&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;SCAA标准：9-12%&lt;/li&gt;
+&lt;li&gt;理想区间：10.5-11.5%&lt;/li&gt;
+&lt;li&gt;欧盟标准：最大12%&lt;/li&gt;
+&lt;li&gt;日本精品标准：10-11%&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;测定方法&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;方法&lt;/th&gt;
+ &lt;th&gt;原理&lt;/th&gt;
+ &lt;th&gt;精度&lt;/th&gt;
+ &lt;th&gt;适用场景&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;烘箱干燥法&lt;/strong&gt;（基准法）&lt;/td&gt;
+ &lt;td&gt;105°C干燥至恒重，计算失重&lt;/td&gt;
+ &lt;td&gt;±0.1%&lt;/td&gt;
+ &lt;td&gt;实验室校准&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;电容式水分仪&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;介电常数与水分相关性&lt;/td&gt;
+ &lt;td&gt;±0.5%&lt;/td&gt;
+ &lt;td&gt;快速现场检测&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;电阻式水分仪&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;电阻与水分相关性&lt;/td&gt;
+ &lt;td&gt;±0.3%&lt;/td&gt;
+ &lt;td&gt;手持便携式&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;近红外光谱（NIR）&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;水分子对特定波长吸收&lt;/td&gt;
+ &lt;td&gt;±0.2%&lt;/td&gt;
+ &lt;td&gt;高精度在线检测&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;水分异常的影响&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>第1章 咖啡生豆学</title><link>https://heheboy.github.io/posts/%E7%AC%AC1%E7%AB%A0-%E5%92%96%E5%95%A1%E7%94%9F%E8%B1%86%E5%AD%A6/</link><pubDate>Wed, 01 Apr 2026 12:10:51 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC1%E7%AB%A0-%E5%92%96%E5%95%A1%E7%94%9F%E8%B1%86%E5%AD%A6/</guid><description>&lt;h2 id="11-咖啡品种学基础"&gt;1.1 咖啡品种学基础&lt;/h2&gt;
+&lt;h3 id="111-三大原生种"&gt;1.1.1 三大原生种&lt;/h3&gt;
+&lt;p&gt;咖啡属（&lt;em&gt;Coffea&lt;/em&gt;）植物超过120种，但商业化种植主要集中在以下三大原生种：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;特征&lt;/th&gt;
+ &lt;th&gt;阿拉比卡（&lt;em&gt;Coffea arabica&lt;/em&gt;）&lt;/th&gt;
+ &lt;th&gt;罗布斯塔（&lt;em&gt;Coffea canephora&lt;/em&gt;）&lt;/th&gt;
+ &lt;th&gt;利比里亚（&lt;em&gt;Coffea liberica&lt;/em&gt;）&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;全球产量占比&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;60-70%&lt;/td&gt;
+ &lt;td&gt;30-40%&lt;/td&gt;
+ &lt;td&gt;&amp;lt;2%&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;咖啡因含量&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;1.0-1.5%&lt;/td&gt;
+ &lt;td&gt;2.0-2.7%&lt;/td&gt;
+ &lt;td&gt;1.2-1.5%&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;糖分含量&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;6-9%&lt;/td&gt;
+ &lt;td&gt;3-5%&lt;/td&gt;
+ &lt;td&gt;5-7%&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;脂质含量&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;15-17%&lt;/td&gt;
+ &lt;td&gt;10-12%&lt;/td&gt;
+ &lt;td&gt;10-13%&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;最佳种植海拔&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;1000-2000m&lt;/td&gt;
+ &lt;td&gt;0-800m&lt;/td&gt;
+ &lt;td&gt;0-1000m&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;染色体&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;44（四倍体）&lt;/td&gt;
+ &lt;td&gt;22（二倍体）&lt;/td&gt;
+ &lt;td&gt;22（二倍体）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;自花授粉&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;是&lt;/td&gt;
+ &lt;td&gt;否&lt;/td&gt;
+ &lt;td&gt;否&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;主要风味特征&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;花果香、酸质明亮、层次丰富&lt;/td&gt;
+ &lt;td&gt;坚果、木质、苦味强、醇厚&lt;/td&gt;
+ &lt;td&gt;烟熏、木质、独特烟熏感&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;阿拉比卡&lt;/strong&gt;的复杂性源于其遗传特性：&lt;/p&gt;</description></item></channel></rss>

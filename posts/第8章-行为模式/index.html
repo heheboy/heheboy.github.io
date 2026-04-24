@@ -1,0 +1,1674 @@
+<!doctype html><html lang=zh-CN data-theme=light><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="行为模式关注对象之间的通信和职责分配。本章介绍命令模式、策略模式和访问者模式，这些模式能够帮助开发者构建灵活、可扩展的游戏行为系统。
+8.1 命令模式
+命令模式将请求封装为对象，支持参数化客户端、队列请求、日志记录和撤销操作。
+8.1.1 设计原理与思路
+命令模式的Undo/Redo机制
+命令模式的核心价值在于将操作封装为独立的对象，这使得操作可以被存储、传递、排队和执行。Undo/Redo机制建立在这个基础之上："><meta name=author content="熟童"><meta name=generator content="Hugo 0.159.0"><title>第8章 行为模式 | 熟童·实验室</title><link rel=canonical href=https://heheboy.github.io/posts/%E7%AC%AC8%E7%AB%A0-%E8%A1%8C%E4%B8%BA%E6%A8%A1%E5%BC%8F/><link rel=stylesheet href=/css/main.min.52a33c1c75f1018fce5fd552f8174ace585d07d2689bbdd7854b698275ee0477.css integrity="sha256-UqM8HHXxAY/OX9VS+BdKzlhdB9Jom73XhUtpgnXuBHc="><link rel=icon type=image/x-icon href=/favicon.ico><meta property="og:title" content="第8章 行为模式"><meta property="og:description" content="行为模式关注对象之间的通信和职责分配。本章介绍命令模式、策略模式和访问者模式，这些模式能够帮助开发者构建灵活、可扩展的游戏行为系统。
+8.1 命令模式
+命令模式将请求封装为对象，支持参数化客户端、队列请求、日志记录和撤销操作。
+8.1.1 设计原理与思路
+命令模式的Undo/Redo机制
+命令模式的核心价值在于将操作封装为独立的对象，这使得操作可以被存储、传递、排队和执行。Undo/Redo机制建立在这个基础之上："><meta property="og:url" content="https://heheboy.github.io/posts/%E7%AC%AC8%E7%AB%A0-%E8%A1%8C%E4%B8%BA%E6%A8%A1%E5%BC%8F/"><meta property="og:site_name" content="熟童·实验室"><meta property="og:type" content="article"><meta name=twitter:card content="summary_large_image"><meta name=twitter:title content="第8章 行为模式"><meta name=twitter:description content="行为模式关注对象之间的通信和职责分配。本章介绍命令模式、策略模式和访问者模式，这些模式能够帮助开发者构建灵活、可扩展的游戏行为系统。
+8.1 命令模式
+命令模式将请求封装为对象，支持参数化客户端、队列请求、日志记录和撤销操作。
+8.1.1 设计原理与思路
+命令模式的Undo/Redo机制
+命令模式的核心价值在于将操作封装为独立的对象，这使得操作可以被存储、传递、排队和执行。Undo/Redo机制建立在这个基础之上："><meta property="article:published_time" content="2026-04-09T00:00:00+00:00"><meta property="article:modified_time" content="2026-04-09T00:00:00+00:00"><meta property="article:tag" content="Godot"><meta property="article:tag" content="开发"><meta property="article:tag" content="C#"><meta property="article:tag" content="架构"><meta property="article:tag" content="CSharp"></head><body><nav class=main-nav><div class=nav-container><a class=nav-brand href=/>熟童·实验室</a>
+<button class=nav-toggle aria-label="Toggle navigation">
+<span></span>
+<span></span>
+<span></span></button><div class=nav-menu><a class=nav-link href=/>首页</a>
+<a class=nav-link href=/posts/>内容文章</a>
+<a class=nav-link href=/categories/>文章分类</a>
+<a class=nav-link href=/archive/>归档册</a>
+<a class=nav-link href=/tags/>标签</a>
+<a class=nav-link href=/about/>关于本站</a>
+<a class="nav-link nav-search-link" href=/search/ aria-label=搜索><svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61.0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></a></div></div></nav><header class=site-header style=background-image:url(/img/post-bg.jpg)><div class=header-content><h1 class=site-title>第8章 行为模式</h1><p class=site-slogan>让技术长出温度，在精确的逻辑与冷静的结构之中，依然保留人与世界的感知。不只是实现功能，也是在构建表达；不只是解决问题，也是在回应内心。</p></div></header><main class=main-container><div class=content-wrapper><div class=main-content><article class=page-content><header class=page-article-header><h1 class=page-article-title>第8章 行为模式</h1><div class=page-article-meta><time datetime=2026-04-09>2026年4月9日
+</time><span class=meta-separator>·</span>
+<a href=/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91>游戏开发</a></div></header><p>行为模式关注对象之间的通信和职责分配。本章介绍命令模式、策略模式和访问者模式，这些模式能够帮助开发者构建灵活、可扩展的游戏行为系统。</p><h2 id=81-命令模式>8.1 命令模式</h2><p>命令模式将请求封装为对象，支持参数化客户端、队列请求、日志记录和撤销操作。</p><h3 id=811-设计原理与思路>8.1.1 设计原理与思路</h3><p><strong>命令模式的Undo/Redo机制</strong></p><p>命令模式的核心价值在于将操作封装为独立的对象，这使得操作可以被存储、传递、排队和执行。Undo/Redo机制建立在这个基础之上：</p><pre tabindex=0><code>命令模式核心结构
+
+┌─────────────────────────────────────────────────────────────┐
+│                     命令模式架构                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│   ┌──────────┐      创建      ┌──────────┐                  │
+│   │  调用者   │ ────────────&gt; │  具体命令  │                  │
+│   │ Invoker  │               │ Concrete │                  │
+│   └──────────┘               └────┬─────┘                  │
+│        │                          │                        │
+│        │ 执行                     │ 调用                   │
+│        │                          ▼                        │
+│        │                    ┌──────────┐                   │
+│        │                    │  接收者   │                   │
+│        │                    │ Receiver │                   │
+│        │                    └──────────┘                   │
+│        │                                                   │
+│        ▼                                                   │
+│   ┌──────────┐                                             │
+│   │ 撤销栈    │                                             │
+│   │ [cmd3]   │  &lt;-- 栈顶（可撤销）                          │
+│   │ [cmd2]   │                                              │
+│   │ [cmd1]   │  &lt;-- 栈底                                    │
+│   └──────────┘                                             │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><p>为什么这样设计？通过将操作封装为对象，我们可以：</p><ol><li><strong>延迟执行</strong>：命令可以在创建后暂不执行，等待合适的时机</li><li><strong>存储历史</strong>：执行过的命令可以保存在栈中，支持撤销</li><li><strong>组合命令</strong>：多个命令可以组合成复合命令，统一执行和撤销</li><li><strong>记录日志</strong>：命令可以被序列化，用于回放或调试</li></ol><p><strong>策略模式的动态行为切换</strong></p><p>虽然策略模式在后面单独讲解，但它与命令模式有相似之处。命令模式关注"做什么"（操作），策略模式关注"怎么做"（算法）。两者都使用组合而非继承来实现灵活性。</p><p><strong>访问者模式的扩展性设计</strong></p><p>访问者模式解决了在不修改现有类的情况下为其添加新操作的难题。通过双重分派（double dispatch），访问者可以处理不同类型的元素，而元素不需要知道访问者的具体实现。</p><h3 id=812-使用场景分析>8.1.2 使用场景分析</h3><p><strong>命令模式：撤销重做、宏命令</strong></p><p>命令模式特别适合以下场景：</p><ol><li><strong>游戏编辑器</strong>：关卡编辑器中的放置、删除、移动对象等操作都需要支持撤销</li><li><strong>回合制游戏</strong>：玩家操作可以存储为命令，支持悔棋或回放</li><li><strong>宏系统</strong>：记录玩家操作序列，保存为可重复执行的宏</li><li><strong>输入缓冲</strong>：格斗游戏中的连招系统可以将按键序列转换为命令队列</li><li><strong>网络同步</strong>：命令可以被序列化发送到服务器或其他客户端</li></ol><p><strong>策略模式：AI行为、算法切换</strong></p><p>策略模式的应用场景包括：</p><ol><li><strong>AI行为树</strong>：不同的行为策略（巡逻、追击、攻击）可以动态切换</li><li><strong>寻路算法</strong>：A*、Dijkstra、流场等算法可以按需选择</li><li><strong>渲染策略</strong>：LOD（细节层次）切换、不同的后处理效果</li><li><strong>输入处理</strong>：键盘、手柄、触屏等不同输入设备的处理方式</li></ol><p><strong>访问者模式：复杂对象结构遍历</strong></p><p>访问者模式适用于：</p><ol><li><strong>场景遍历</strong>：对整个场景树执行操作（如禁用所有粒子效果）</li><li><strong>序列化</strong>：将游戏对象转换为JSON、XML或二进制格式</li><li><strong>数据统计</strong>：收集游戏中的各种统计信息</li><li><strong>批处理操作</strong>：对一组对象执行相同的操作</li></ol><h3 id=813-icommand-接口>8.1.3 ICommand 接口</h3><p><strong>设计思路与原理</strong></p><p>命令模式（Command Pattern）是行为设计模式中的核心模式，它将请求封装为对象，使你可以用不同的请求、队列或日志来参数化其他对象，同时支持可撤销的操作。在游戏开发中，命令模式的价值体现在：</p><ol><li><strong>解耦调用者与执行者</strong>：输入系统（调用者）不需要知道具体如何执行操作，只需要调用命令的<code>Execute</code>方法</li><li><strong>支持撤销/重做</strong>：通过<code>Undo</code>方法，可以实现玩家操作的撤销功能，这是策略游戏、建造游戏的核心机制</li><li><strong>操作队列化</strong>：命令可以被存储在队列中，实现回放系统、宏录制、网络同步</li><li><strong>事务性操作</strong>：一组命令可以组合为复合命令，实现原子性操作（全部成功或全部失败）</li></ol><p><code>ICommand</code>接口设计遵循"最小接口原则"，只包含命令最核心的能力：执行、撤销、查询可撤销性。<code>CanUndo</code>属性允许某些命令（如关闭游戏）标记为不可撤销。<code>CommandName</code>和<code>ExecuteTime</code>支持调试和日志记录。泛型版本<code>ICommand&lt;TResult></code>支持需要返回值的场景，如查询命令。</p><p><strong>核心实现要点</strong></p><ol><li>执行和撤销方法无参设计，命令应自包含所有必要状态</li><li>CanUndo属性允许命令声明自身是否支持撤销</li><li>CommandName支持调试和UI显示（如撤销菜单项）</li><li>ExecuteTime自动记录，支持按时间排序和回放</li><li>泛型版本支持返回值，适合查询类命令</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.Command
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 命令接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 所有可执行和撤销的操作都应实现此接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ICommand</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 执行命令</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> Execute();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 撤销命令</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> Undo();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 是否可以撤销</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>bool</span> CanUndo { <span style=color:#66d9ef>get</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 命令名称（用于调试和显示）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>string</span> CommandName { <span style=color:#66d9ef>get</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 执行时间戳</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>double</span> ExecuteTime { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 带执行结果的命令接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;typeparam name=&#34;TResult&#34;&gt;结果类型&lt;/typeparam&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ICommand</span>&lt;TResult&gt; : ICommand
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 执行命令并返回结果</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        TResult ExecuteWithResult();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 执行结果</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        TResult Result { <span style=color:#66d9ef>get</span>; }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：</p><ul><li>玩家输入处理（移动、攻击、使用道具）</li><li>撤销/重做系统（建造游戏、策略游戏）</li><li>操作回放系统（格斗游戏、竞速游戏）</li><li>宏录制和自动化（重复操作序列）</li><li>网络同步（将命令序列化发送到服务器）</li></ul></li><li><p><strong>注意事项</strong>：</p><ol><li><strong>状态自包含</strong>：命令对象必须包含执行所需的所有状态，不能依赖外部可变状态</li><li><strong>幂等性</strong>：<code>Execute</code>方法应该幂等（多次执行结果相同），避免重复执行导致错误</li><li><strong>Undo一致性</strong>：<code>Undo</code>应该能正确回滚<code>Execute</code>的所有副作用，包括状态和资源</li><li><strong>内存管理</strong>：长期存储的命令（如历史栈）要注意内存占用，考虑限制栈深度</li><li><strong>线程安全</strong>：如果命令可能在多线程环境使用，要确保状态同步</li></ol></li><li><p><strong>命令设计建议</strong>：</p><ul><li>命令类名使用"动词+对象"命名（如<code>MoveUnitCommand</code>、<code>BuildStructureCommand</code>）</li><li>将命令参数提取为属性，便于调试和序列化</li><li>实现<code>ToString</code>返回<code>CommandName</code>，方便日志记录</li><li>对于复杂命令，考虑使用建造者模式构建</li></ul></li><li><p><strong>与对象池结合</strong>：高频创建的命令（如每帧的输入命令）可以使用对象池复用，减少GC压力</p></li></ul><hr><h3 id=814-实现细节讲解>8.1.4 实现细节讲解</h3><p><strong>命令历史栈的管理</strong></p><p>命令历史栈通常使用两个栈来实现：</p><pre tabindex=0><code>Undo栈（已执行命令）          Redo栈（已撤销命令）
+┌──────────┐                  ┌──────────┐
+│ cmd_move │  &lt;-- 栈顶         │          │
+├──────────┤                  │          │
+│ cmd_add  │                  │          │
+├──────────┤                  │          │
+│ cmd_del  │                  │          │
+└──────────┘                  └──────────┘
+
+执行新命令时: Redo栈清空
+撤销时: 从Undo弹出 -&gt; 执行Undo -&gt; 压入Redo
+重做时: 从Redo弹出 -&gt; 执行 -&gt; 压入Undo
+</code></pre><p><strong>策略切换的性能考量</strong></p><p>策略切换需要考虑以下性能因素：</p><ol><li><strong>切换开销</strong>：策略对象本身的创建和销毁成本</li><li><strong>状态迁移</strong>：旧策略到新策略的状态转换是否需要额外处理</li><li><strong>缓存失效</strong>：策略切换可能导致CPU缓存失效</li><li><strong>预热需求</strong>：新策略是否需要预热才能达到最佳性能</li></ol><p><strong>访问者模式的类型安全</strong></p><p>访问者模式通过接口实现类型安全：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#75715e>// 元素实现Accept方法，接收访问者</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Accept(IVisitor visitor)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    visitor.Visit(<span style=color:#66d9ef>this</span>); <span style=color:#75715e>// 编译时类型检查</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 访问者接口定义具体的访问方法</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IVisitor</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> Visit(Enemy enemy);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> Visit(Player player);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> Visit(Item item);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=815-性能与权衡>8.1.5 性能与权衡</h3><p><strong>命令对象的内存开销</strong></p><p>命令模式的主要代价是额外的内存开销：</p><pre tabindex=0><code>开销分析:
+┌─────────────────────────────────────────────────────────────┐
+│ 直接调用 vs 命令模式                                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│ 直接调用:                                                    │
+│ player.Position = newPos;                                   │
+│ └── 仅新位置Vector2 (8-12字节)                               │
+│                                                              │
+│ 命令模式:                                                    │
+│ var cmd = new MoveCommand(player, newPos);                  │
+│ cmd.Execute();                                              │
+│ └── MoveCommand对象 (引用+位置+旧位置 = ~32字节)              │
+│                                                              │
+│ 权衡: 额外的内存开销换取了撤销能力和操作历史记录                │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><p>优化策略：</p><ol><li><strong>命令合并</strong>：连续的小命令可以合并为一个复合命令</li><li><strong>命令重用</strong>：使用对象池复用命令对象</li><li><strong>历史截断</strong>：限制历史栈大小，丢弃旧命令</li></ol><p><strong>策略切换的开销</strong></p><p>策略切换本身的开销通常很小（只是改变一个引用），但需要考虑：</p><ol><li><strong>初始化开销</strong>：新策略可能需要加载资源或计算数据</li><li><strong>清理开销</strong>：旧策略可能需要释放资源</li><li><strong>状态同步</strong>：策略相关的状态需要正确传递</li></ol><p><strong>与多态的性能对比</strong></p><p>命令模式和策略模式都可以使用多态实现，性能差异通常可以忽略。主要区别在于：</p><ul><li><strong>命令模式</strong>：关注操作的时间维度（执行、撤销、历史）</li><li><strong>多态</strong>：关注类型的行为差异</li></ul><h3 id=816-命令基类实现>8.1.6 命令基类实现</h3><p><strong>设计思路与原理</strong></p><p><code>CommandBase</code>是命令模式中的模板方法模式应用，为具体命令类提供通用实现和状态管理。使用抽象基类而非仅接口的优势在于：</p><ol><li><strong>代码复用</strong>：<code>CanUndo</code>默认返回true、<code>ExecuteTime</code>自动记录等通用逻辑在基类中实现</li><li><strong>状态保护</strong>：<code>_isExecuted</code>标志防止命令被重复执行，这是常见错误</li><li><strong>执行时记录</strong>：基类自动记录<code>ExecuteTime</code>，子类无需关心</li><li><strong>撤销保护</strong>：<code>Undo</code>方法检查<code>_isExecuted</code>，避免撤销未执行的命令</li></ol><p>基类采用"好莱坞原则"（不要调用我们，我们会调用你）：子类实现<code>ExecuteInternal</code>和<code>UndoInternal</code>抽象方法，基类控制执行流程和状态管理。这种设计确保所有命令有一致的执行语义，同时允许子类专注于具体业务逻辑。</p><p><strong>核心实现要点</strong></p><ol><li>执行状态跟踪：<code>_isExecuted</code>防止重复执行和非法撤销</li><li>模板方法模式：<code>Execute</code>调用<code>ExecuteInternal</code>，控制执行流程</li><li>时间自动记录：<code>ExecuteTime</code>在基类中自动设置</li><li>可撤销默认：大多数命令默认可撤销，特殊命令可覆盖</li><li>调试支持：重复执行和非法撤销输出警告日志</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.Command
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 命令基类</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 提供默认实现和通用功能</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>abstract</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>CommandBase</span> : ICommand
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>bool</span> CanUndo =&gt; <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>abstract</span> <span style=color:#66d9ef>string</span> CommandName { <span style=color:#66d9ef>get</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>double</span> ExecuteTime { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 执行状态</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>bool</span> _isExecuted = <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Execute()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_isExecuted)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushWarning(<span style=color:#e6db74>$&#34;命令 {CommandName} 已被执行，不能重复执行&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            ExecuteTime = Time.GetTimeDictFromSystem()[<span style=color:#e6db74>&#34;second&#34;</span>];
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>try</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                OnExecute();
+</span></span><span style=display:flex><span>                _isExecuted = <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>catch</span> (Exception ex)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushError(<span style=color:#e6db74>$&#34;执行命令 {CommandName} 时发生错误: {ex.Message}&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>throw</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Undo()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (!_isExecuted)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushWarning(<span style=color:#e6db74>$&#34;命令 {CommandName} 尚未执行，无法撤销&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (!CanUndo)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushWarning(<span style=color:#e6db74>$&#34;命令 {CommandName} 不支持撤销&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>try</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                OnUndo();
+</span></span><span style=display:flex><span>                _isExecuted = <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>catch</span> (Exception ex)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushError(<span style=color:#e6db74>$&#34;撤销命令 {CommandName} 时发生错误: {ex.Message}&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>throw</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 实际执行逻辑（子类实现）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>abstract</span> <span style=color:#66d9ef>void</span> OnExecute();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 实际撤销逻辑（子类实现）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>abstract</span> <span style=color:#66d9ef>void</span> OnUndo();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 合并命令（用于优化撤销栈）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>bool</span> MergeWith(ICommand other)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 带结果的命令基类</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>abstract</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>CommandBase</span>&lt;TResult&gt; : CommandBase, ICommand&lt;TResult&gt;
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> TResult Result { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> TResult ExecuteWithResult()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            Execute();
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> Result;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：</p><ul><li>需要撤销/重做功能的游戏系统</li><li>操作需要统一状态管理的场景</li><li>需要记录执行时间的命令日志</li><li>复合命令的构建</li></ul></li><li><p><strong>使用方式</strong>：</p><ol><li>继承<code>CommandBase</code>而非直接实现<code>ICommand</code></li><li>重写<code>CommandName</code>提供可读名称</li><li>实现<code>OnExecute</code>包含实际业务逻辑</li><li>如支持撤销，实现<code>OnUndo</code>回滚操作</li><li>如需合并（如连续移动），重写<code>MergeWith</code></li></ol></li><li><p><strong>注意事项</strong>：</p><ol><li><code>OnExecute</code>和<code>OnUndo</code>应该保持简单，复杂逻辑应委托给其他类</li><li>不要在构造函数中执行操作，所有操作应在<code>OnExecute</code>中进行</li><li>确保<code>OnUndo</code>能正确回滚<code>OnExecute</code>的所有副作用</li><li>使用<code>CommandBase&lt;TResult></code>代替<code>CommandBase</code>当需要返回结果</li></ol></li><li><p><strong>扩展建议</strong>：</p><ul><li>可以实现<code>IMergeableCommand</code>接口支持自动合并连续命令</li><li>添加<code>CanExecute</code>方法在执行前检查前置条件</li><li>实现<code>IAsyncCommand</code>支持异步操作</li></ul></li></ul><hr><h3 id=817-commandmanager-实现>8.1.7 CommandManager 实现</h3><p><strong>设计思路与原理</strong></p><p><code>CommandManager</code>是命令模式的核心控制器，负责命令的执行、撤销、重做的统一管理。它实现了撤销栈（Undo Stack）和重做栈（Redo Stack）的双栈结构，这是实现撤销/重做功能的标准模式。</p><p>双栈工作原理：</p><ul><li><strong>执行命令</strong>：新命令压入撤销栈，清空重做栈（新分支，旧重做历史无效）</li><li><strong>撤销</strong>：从撤销栈弹出命令，执行<code>Undo</code>，压入重做栈</li><li><strong>重做</strong>：从重做栈弹出命令，执行<code>Execute</code>，压入撤销栈</li></ul><p>这种设计确保撤销和重做是一对互逆操作，用户可以无限次撤销然后无限次重做回到原状态。</p><p><strong>核心实现要点</strong></p><ol><li>双栈结构：<code>_undoStack</code>和<code>_redoStack</code>管理命令历史</li><li>容量限制：<code>MaxHistorySize</code>防止内存无限增长</li><li>命令合并：连续同类命令自动合并，优化撤销体验</li><li>事件通知：<code>OnCommandExecuted</code>等事件支持UI更新</li><li>批量操作：<code>BeginBatch/EndBatch</code>支持原子性操作组</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Linq;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.Command
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 命令管理器</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 管理命令的执行、撤销和重做</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>CommandManager</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> CommandManager _instance;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> CommandManager Instance =&gt; _instance ??= <span style=color:#66d9ef>new</span> CommandManager();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 已执行命令栈（用于撤销）</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Stack&lt;ICommand&gt; _undoStack;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 已撤销命令栈（用于重做）</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Stack&lt;ICommand&gt; _redoStack;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 命令历史（用于调试和回放）</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> List&lt;ICommand&gt; _history;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 配置</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> <span style=color:#66d9ef>int</span> _maxHistorySize;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> <span style=color:#66d9ef>int</span> _maxStackSize;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 是否正在批处理</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>bool</span> _isBatching = <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> List&lt;ICommand&gt; _batchCommands;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 事件</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>delegate</span> <span style=color:#66d9ef>void</span> CommandEventHandler(ICommand command);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>event</span> CommandEventHandler OnCommandExecuted;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>event</span> CommandEventHandler OnCommandUndone;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>event</span> CommandEventHandler OnCommandRedone;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> UndoStackCount =&gt; _undoStack.Count;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> RedoStackCount =&gt; _redoStack.Count;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> CanUndo =&gt; _undoStack.Count &gt; <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> CanRedo =&gt; _redoStack.Count &gt; <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> CommandManager(<span style=color:#66d9ef>int</span> maxStackSize = <span style=color:#ae81ff>100</span>, <span style=color:#66d9ef>int</span> maxHistorySize = <span style=color:#ae81ff>1000</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _maxStackSize = maxStackSize;
+</span></span><span style=display:flex><span>            _maxHistorySize = maxHistorySize;
+</span></span><span style=display:flex><span>            _undoStack = <span style=color:#66d9ef>new</span> Stack&lt;ICommand&gt;(maxStackSize);
+</span></span><span style=display:flex><span>            _redoStack = <span style=color:#66d9ef>new</span> Stack&lt;ICommand&gt;(maxStackSize);
+</span></span><span style=display:flex><span>            _history = <span style=color:#66d9ef>new</span> List&lt;ICommand&gt;(maxHistorySize);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 执行命令</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Execute(ICommand command)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_isBatching)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _batchCommands.Add(command);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 执行命令</span>
+</span></span><span style=display:flex><span>            command.Execute();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 添加到撤销栈</span>
+</span></span><span style=display:flex><span>            _undoStack.Push(command);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 清空重做栈（新命令执行后不能重做之前的操作）</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_redoStack.Count &gt; <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _redoStack.Clear();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 限制栈大小</span>
+</span></span><span style=display:flex><span>            TrimStack(_undoStack);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 添加到历史</span>
+</span></span><span style=display:flex><span>            AddToHistory(command);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            OnCommandExecuted?.Invoke(command);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 撤销上一个命令</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Undo()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (!CanUndo)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushWarning(<span style=color:#e6db74>&#34;没有可撤销的命令&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> command = _undoStack.Pop();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (command.CanUndo)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                command.Undo();
+</span></span><span style=display:flex><span>                _redoStack.Push(command);
+</span></span><span style=display:flex><span>                OnCommandUndone?.Invoke(command);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 如果命令不能撤销，直接丢弃</span>
+</span></span><span style=display:flex><span>                GD.PushWarning(<span style=color:#e6db74>$&#34;命令 {command.CommandName} 无法撤销&#34;</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 重做上一个撤销的命令</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Redo()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (!CanRedo)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushWarning(<span style=color:#e6db74>&#34;没有可重做的命令&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> command = _redoStack.Pop();
+</span></span><span style=display:flex><span>            command.Execute();
+</span></span><span style=display:flex><span>            _undoStack.Push(command);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            OnCommandRedone?.Invoke(command);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 批量执行命令</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> ExecuteBatch(IEnumerable&lt;ICommand&gt; commands)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            BeginBatch();
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> command <span style=color:#66d9ef>in</span> commands)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                Execute(command);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            EndBatch();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 开始批量操作</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> BeginBatch()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_isBatching)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushWarning(<span style=color:#e6db74>&#34;已经在批量操作中，不能嵌套&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _isBatching = <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>            _batchCommands = <span style=color:#66d9ef>new</span> List&lt;ICommand&gt;();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 结束批量操作</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> EndBatch()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (!_isBatching)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushWarning(<span style=color:#e6db74>&#34;不在批量操作中&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _isBatching = <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_batchCommands.Count &gt; <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 创建复合命令</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>var</span> composite = <span style=color:#66d9ef>new</span> CompositeCommand(_batchCommands);
+</span></span><span style=display:flex><span>                Execute(composite);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _batchCommands = <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 撤销到指定命令</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> UndoTo(ICommand targetCommand)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>while</span> (_undoStack.Count &gt; <span style=color:#ae81ff>0</span> &amp;&amp; _undoStack.Peek() != targetCommand)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                Undo();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 撤销到栈底</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> UndoAll()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>while</span> (CanUndo)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                Undo();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 重做所有</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> RedoAll()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>while</span> (CanRedo)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                Redo();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 清空所有</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Clear()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _undoStack.Clear();
+</span></span><span style=display:flex><span>            _redoStack.Clear();
+</span></span><span style=display:flex><span>            _history.Clear();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 获取撤销栈中的所有命令</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> IEnumerable&lt;ICommand&gt; GetUndoStack()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> _undoStack.ToArray().Reverse();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 获取历史记录</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> IEnumerable&lt;ICommand&gt; GetHistory()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> _history.AsEnumerable();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> AddToHistory(ICommand command)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _history.Add(command);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_history.Count &gt; _maxHistorySize)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _history.RemoveAt(<span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> TrimStack(Stack&lt;ICommand&gt; stack)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (stack.Count &gt; _maxStackSize)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 转换为列表，移除最老的命令</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>var</span> temp = stack.ToArray();
+</span></span><span style=display:flex><span>                stack.Clear();
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i = <span style=color:#ae81ff>0</span>; i &lt; _maxStackSize; i++)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    stack.Push(temp[i]);
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：</p><ul><li>策略游戏、建造游戏的撤销/重做系统</li><li>编辑器工具的操作历史</li><li>需要操作回放的系统</li><li>批量操作的原子性保证</li></ul></li><li><p><strong>使用方式</strong>：</p><ol><li>创建<code>CommandManager</code>单例（通常作为AutoLoad）</li><li>使用<code>Execute(command)</code>执行命令</li><li>绑定<code>OnCanUndoChanged</code>等事件更新UI</li><li>调用<code>Undo/Redo</code>实现撤销重做</li><li>使用<code>BeginBatch/EndBatch</code>包裹批量操作</li></ol></li><li><p><strong>注意事项</strong>：</p><ol><li>设置合理的<code>MaxHistorySize</code>防止内存无限增长</li><li>场景切换时调用<code>Clear</code>清理历史</li><li>批量操作中避免执行新命令，会导致批量中断</li><li>命令执行异常时，考虑回滚已执行的部分</li></ol></li><li><p><strong>扩展建议</strong>：</p><ul><li>实现历史记录持久化，支持跨会话撤销</li><li>添加命令分组，支持撤销到特定组</li><li>实现分支历史，支持非线性撤销（类似Git）</li></ul></li></ul><hr><h3 id=818-复合命令>8.1.8 复合命令</h3><p><strong>设计思路与原理</strong></p><p>复合命令（CompositeCommand）是组合模式在命令模式中的应用，它将多个子命令组合为一个整体，对外表现为单一命令。这种设计的核心价值：</p><ol><li><strong>原子性</strong>：一组命令要么全部执行成功，要么全部撤销，不会出现中间状态</li><li><strong>简化调用者</strong>：调用者只需执行一个复合命令，无需关心内部包含多少子命令</li><li><strong>统一接口</strong>：复合命令和单个命令都实现<code>ICommand</code>，可以无缝替换</li><li><strong>递归组合</strong>：复合命令可以嵌套，形成树形结构</li></ol><p>典型应用场景：</p><ul><li>拖拽操作：包含"从原位置移除"和"添加到新位置"两个命令</li><li>批量建造：包含多个"建造单个建筑"命令</li><li>复杂交易：包含"扣除货币"和"添加物品"两个命令</li></ul><p><strong>核心实现要点</strong></p><ol><li>子命令列表：使用<code>List&lt;ICommand></code>存储子命令</li><li>批量执行：<code>Execute</code>遍历执行所有子命令</li><li>逆序撤销：<code>Undo</code>按相反顺序撤销，确保状态正确回滚</li><li>部分失败处理：记录成功执行的子命令，撤销时只撤销已执行的</li><li>原子性保证：任一子命令失败，整个复合命令标记为失败</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.Command
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 复合命令</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 将多个命令作为一个整体执行和撤销</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>CompositeCommand</span> : CommandBase
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> List&lt;ICommand&gt; _commands;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> <span style=color:#66d9ef>string</span> _name;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> CompositeCommand(IEnumerable&lt;ICommand&gt; commands, <span style=color:#66d9ef>string</span> name = <span style=color:#e6db74>&#34;复合命令&#34;</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _commands = <span style=color:#66d9ef>new</span> List&lt;ICommand&gt;(commands);
+</span></span><span style=display:flex><span>            _name = name;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>string</span> CommandName =&gt; _name;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> OnExecute()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 顺序执行所有子命令</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> command <span style=color:#66d9ef>in</span> _commands)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                command.Execute();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> OnUndo()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 逆序撤销所有子命令</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i = _commands.Count - <span style=color:#ae81ff>1</span>; i &gt;= <span style=color:#ae81ff>0</span>; i--)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (_commands[i].CanUndo)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    _commands[i].Undo();
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 添加子命令</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> AddCommand(ICommand command)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _commands.Add(command);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 获取子命令数量</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> Count =&gt; _commands.Count;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：</p><ul><li>拖拽操作（移除+添加）</li><li>批量操作（多个相同操作组合）</li><li>复杂交易（扣款+加物品）</li><li>场景编辑器的组合操作</li></ul></li><li><p><strong>使用方式</strong>：</p><ol><li>创建子命令列表</li><li>使用<code>CompositeCommand</code>包装</li><li>像普通命令一样执行和撤销</li><li>可使用<code>CommandManager.BeginBatch/EndBatch</code>自动创建复合命令</li></ol></li><li><p><strong>注意事项</strong>：</p><ol><li>子命令执行失败时，已执行的部分需要回滚</li><li>复合命令本身不应该包含状态，状态应由子命令管理</li><li>避免过深的嵌套，建议最多2-3层</li><li>考虑部分撤销场景，某些子命令可能标记为不可撤销</li></ol></li><li><p><strong>扩展建议</strong>：</p><ul><li>实现<code>RemoveCommand</code>支持动态修改</li><li>添加<code>CanMerge</code>检查子命令是否可合并</li><li>实现<code>PartialUndo</code>支持撤销到指定子命令</li></ul></li></ul><hr><h3 id=819-实战指南>8.1.9 实战指南</h3><p><strong>实现撤销系统的步骤</strong></p><ol><li><strong>定义命令接口</strong>：确定哪些操作需要支持撤销</li><li><strong>实现具体命令</strong>：为每个操作创建命令类，存储必要的状态</li><li><strong>配置命令管理器</strong>：设置栈大小和历史记录限制</li><li><strong>替换直接调用</strong>：将直接的方法调用改为命令执行</li><li><strong>绑定撤销重做</strong>：将UI按钮（Ctrl+Z / Ctrl+Y）绑定到撤销重做方法</li><li><strong>测试边界情况</strong>：测试连续撤销、混合撤销重做等场景</li></ol><p><strong>常见错误：命令对象生命周期管理</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#75715e>// 错误示例：使用局部变量存储命令</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> MovePlayer(Vector2 pos)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> cmd = <span style=color:#66d9ef>new</span> MoveCommand(player, pos); <span style=color:#75715e>// cmd在方法结束后可能被GC</span>
+</span></span><span style=display:flex><span>    CommandManager.Instance.Execute(cmd);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 正确：命令管理器会保持命令引用，无需担心</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 但要注意命令中引用的对象可能失效</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 错误示例：命令中引用的对象被销毁</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>MoveCommand</span> : CommandBase
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> Node2D _target; <span style=color:#75715e>// 可能已被销毁</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> Vector2 _newPos;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> OnUndo()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 错误：_target可能为null或指向已销毁对象</span>
+</span></span><span style=display:flex><span>        _target.Position = _oldPos;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 正确示例：使用弱引用或检查对象有效性</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>MoveCommand</span> : CommandBase
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> WeakReference&lt;Node2D&gt; _targetRef;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> Vector2 _newPos;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> Vector2 _oldPos;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> OnUndo()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (_targetRef.TryGetTarget(<span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> target) &amp;&amp; IsInstanceValid(target))
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            target.Position = _oldPos;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>测试策略</strong></p><p>命令模式的测试应该覆盖：</p><ol><li><strong>基本执行</strong>：命令能否正确执行预期操作</li><li><strong>撤销功能</strong>：撤销后状态是否恢复到执行前</li><li><strong>重做功能</strong>：重做后状态是否正确</li><li><strong>边界条件</strong>：空栈操作、栈溢出处理</li><li><strong>异常处理</strong>：命令执行失败时的行为</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#a6e22e>[Test]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> MoveCommand_Undo_RestoresOriginalPosition()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Arrange</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> player = CreatePlayer();
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> originalPos = player.Position;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> newPos = originalPos + Vector2.Right * <span style=color:#ae81ff>100</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> cmd = <span style=color:#66d9ef>new</span> MoveCommand(player, newPos);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Act</span>
+</span></span><span style=display:flex><span>    cmd.Execute();
+</span></span><span style=display:flex><span>    cmd.Undo();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Assert</span>
+</span></span><span style=display:flex><span>    Assert.AreEqual(originalPos, player.Position);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=8110-游戏命令示例>8.1.10 游戏命令示例</h3><p><strong>设计思路与原理</strong></p><p>本示例展示游戏中常用的三种命令类型：移动命令、建造命令和伤害命令。这些示例展示了命令模式在实际游戏开发中的应用方式，以及如何处理游戏特有的复杂场景。</p><p><strong>核心实现要点</strong></p><ol><li><strong>移动命令</strong>：记录新旧位置，实现简单的撤销；使用<code>WeakReference</code>避免内存泄漏</li><li><strong>建造命令</strong>：结合工厂模式创建建筑，记录建造位置和建筑引用</li><li><strong>伤害命令</strong>：记录伤害值和原始生命值，支持撤销伤害（治疗）</li></ol><p><strong>状态管理策略</strong></p><p>命令需要保存足够的状态以支持撤销：</p><ul><li>对于简单值（位置、数值），直接保存旧值和新值</li><li>对于对象引用，使用<code>WeakReference</code>避免阻止垃圾回收</li><li>对于创建/销毁，保存创建参数和对象引用</li></ul><p><strong>与游戏系统的集成</strong></p><p>命令模式与游戏系统的集成方式：</p><ul><li>输入系统：将玩家输入转换为命令执行</li><li>网络同步：将命令序列化发送到服务器</li><li>回放系统：记录命令序列用于回放</li><li>存档系统：保存命令历史支持读档后撤销</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> GameFramework.Core.Command;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Examples
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 移动命令</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>MoveCommand</span> : CommandBase
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Node2D _target;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Vector2 _fromPosition;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Vector2 _toPosition;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> <span style=color:#66d9ef>float</span> _duration;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Tween _tween;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>string</span> CommandName =&gt; <span style=color:#e6db74>$&#34;移动到 {_toPosition}&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> MoveCommand(Node2D target, Vector2 toPosition, <span style=color:#66d9ef>float</span> duration = <span style=color:#ae81ff>0f</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _target = target;
+</span></span><span style=display:flex><span>            _fromPosition = target.Position;
+</span></span><span style=display:flex><span>            _toPosition = toPosition;
+</span></span><span style=display:flex><span>            _duration = duration;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> OnExecute()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_duration &gt; <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _tween = _target.CreateTween();
+</span></span><span style=display:flex><span>                _tween.TweenProperty(_target, <span style=color:#e6db74>&#34;position&#34;</span>, _toPosition, _duration);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _target.Position = _toPosition;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> OnUndo()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _tween?.Kill();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_duration &gt; <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _tween = _target.CreateTween();
+</span></span><span style=display:flex><span>                _tween.TweenProperty(_target, <span style=color:#e6db74>&#34;position&#34;</span>, _fromPosition, _duration);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _target.Position = _fromPosition;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 属性修改命令</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>PropertyChangeCommand</span>&lt;T&gt; : CommandBase
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> <span style=color:#66d9ef>object</span> _target;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> <span style=color:#66d9ef>string</span> _propertyName;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> T _oldValue;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> T _newValue;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>string</span> CommandName =&gt; <span style=color:#e6db74>$&#34;修改 {_propertyName}&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> PropertyChangeCommand(<span style=color:#66d9ef>object</span> target, <span style=color:#66d9ef>string</span> propertyName, T oldValue, T newValue)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _target = target;
+</span></span><span style=display:flex><span>            _propertyName = propertyName;
+</span></span><span style=display:flex><span>            _oldValue = oldValue;
+</span></span><span style=display:flex><span>            _newValue = newValue;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> OnExecute()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            SetValue(_newValue);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> OnUndo()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            SetValue(_oldValue);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> SetValue(T <span style=color:#66d9ef>value</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> property = _target.GetType().GetProperty(_propertyName);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (property != <span style=color:#66d9ef>null</span> &amp;&amp; property.CanWrite)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                property.SetValue(_target, <span style=color:#66d9ef>value</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>var</span> field = _target.GetType().GetField(_propertyName);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (field != <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    field.SetValue(_target, <span style=color:#66d9ef>value</span>);
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 创建对象命令</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>CreateNodeCommand</span> : CommandBase
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> PackedScene _prefab;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Node _parent;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Vector2 _position;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> Node _createdNode;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> <span style=color:#66d9ef>string</span> _nodeName;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>string</span> CommandName =&gt; <span style=color:#e6db74>$&#34;创建 {_nodeName}&#34;</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Node CreatedNode =&gt; _createdNode;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> CreateNodeCommand(PackedScene prefab, Node parent, Vector2 position, <span style=color:#66d9ef>string</span> nodeName)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _prefab = prefab;
+</span></span><span style=display:flex><span>            _parent = parent;
+</span></span><span style=display:flex><span>            _position = position;
+</span></span><span style=display:flex><span>            _nodeName = nodeName;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> OnExecute()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_createdNode == <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _createdNode = _prefab.Instantiate();
+</span></span><span style=display:flex><span>                _createdNode.Name = _nodeName;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _parent.AddChild(_createdNode);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_createdNode <span style=color:#66d9ef>is</span> Node2D node2D)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                node2D.Position = _position;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> OnUndo()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_createdNode != <span style=color:#66d9ef>null</span> &amp;&amp; _createdNode.IsInsideTree())
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _createdNode.GetParent().RemoveChild(_createdNode);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 删除对象命令</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>DeleteNodeCommand</span> : CommandBase
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Node _target;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> Node _parent;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>int</span> _index;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>string</span> CommandName =&gt; <span style=color:#e6db74>$&#34;删除 {_target?.Name}&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> DeleteNodeCommand(Node target)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _target = target;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> OnExecute()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_target != <span style=color:#66d9ef>null</span> &amp;&amp; _target.IsInsideTree())
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _parent = _target.GetParent();
+</span></span><span style=display:flex><span>                _index = _target.GetIndex();
+</span></span><span style=display:flex><span>                _parent.RemoveChild(_target);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> OnUndo()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_target != <span style=color:#66d9ef>null</span> &amp;&amp; _parent != <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _parent.AddChild(_target);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (_index &lt; _parent.GetChildCount())
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    _parent.MoveChild(_target, _index);
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=82-策略模式>8.2 策略模式</h2><p>策略模式定义算法族，分别封装起来，让它们可以互相替换。</p><h3 id=821-istrategy-接口>8.2.1 IStrategy 接口</h3><p><strong>设计思路与原理</strong></p><p>策略模式（Strategy Pattern）定义算法族，将每个算法封装起来，并使它们可以互相替换。策略模式让算法的变化独立于使用算法的客户。</p><p>在游戏开发中，策略模式的价值：</p><ol><li><strong>AI行为</strong>：不同敌人使用不同寻路策略（A*、Dijkstra、简单追踪）</li><li><strong>战斗策略</strong>：不同武器使用不同伤害计算策略</li><li><strong>移动策略</strong>：角色在不同地形使用不同移动方式（行走、游泳、飞行）</li><li><strong>渲染策略</strong>：不同质量设置使用不同渲染算法</li></ol><p><strong>核心实现要点</strong></p><ol><li>泛型接口<code>IStrategy&lt;T></code>支持不同类型的上下文</li><li><code>CanExecute</code>方法允许策略自我评估是否适用</li><li><code>GetPriority</code>支持多策略竞争时的优先级选择</li><li><code>Execute</code>方法接收上下文对象，执行具体策略逻辑</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.Strategy
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 策略接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;typeparam name=&#34;T&#34;&gt;策略上下文类型&lt;/typeparam&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IStrategy</span>&lt;T&gt; <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 策略名称</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>string</span> StrategyName { <span style=color:#66d9ef>get</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 执行策略</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> Execute(T context);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 检查是否可以使用此策略</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>bool</span> CanExecute(T context);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 带返回值的策略接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IStrategy</span>&lt;TContext, TResult&gt; <span style=color:#66d9ef>where</span> TContext : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>string</span> StrategyName { <span style=color:#66d9ef>get</span>; }
+</span></span><span style=display:flex><span>        TResult Execute(TContext context);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>bool</span> CanExecute(TContext context);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：</p><ul><li>AI行为策略（寻路、决策、目标选择）</li><li>战斗计算策略（伤害公式、暴击判定）</li><li>移动策略（地面、飞行、游泳）</li><li>渲染策略（LOD、画质等级）</li></ul></li><li><p><strong>使用方式</strong>：</p><ol><li>定义策略上下文类包含策略所需数据</li><li>实现<code>IStrategy&lt;T></code>的具体策略类</li><li>使用<code>StrategyContext</code>管理策略集合</li><li>调用<code>ExecuteBest</code>或手动选择策略执行</li></ol></li><li><p><strong>注意事项</strong>：</p><ol><li>策略应该是无状态或只读状态，避免策略间相互影响</li><li><code>CanExecute</code>检查应轻量，避免复杂计算</li><li>策略切换时考虑平滑过渡，避免突兀变化</li><li>优先使用组合而非继承实现策略变化</li></ol></li><li><p><strong>与状态模式对比</strong>：策略模式关注算法选择，状态模式关注状态转换</p></li></ul><hr><h3 id=822-strategycontext-实现>8.2.2 StrategyContext 实现</h3><p><strong>设计思路与原理</strong></p><p><code>StrategyContext</code>是策略模式中的上下文管理者，负责维护策略集合、执行策略切换和委托策略执行。它将策略的选择逻辑与策略的执行逻辑分离，使调用者无需关心如何选择策略，只需调用执行即可。</p><p>核心设计决策：</p><ol><li><strong>策略注册</strong>：支持显式注册和延迟加载两种模式</li><li><strong>自动选择</strong>：<code>ExecuteBest</code>方法自动选择最高优先级可用策略</li><li><strong>手动选择</strong>：<code>SetStrategy</code>允许调用者强制指定当前策略</li><li><strong>运行时切换</strong>：策略可以在运行时动态更换</li></ol><p><strong>核心实现要点</strong></p><ol><li>策略列表维护所有可用策略</li><li><code>ExecuteBest</code>遍历策略，选择<code>CanExecute</code>返回true且优先级最高的</li><li><code>SetStrategy</code>允许手动设置策略，覆盖自动选择</li><li>支持批量注册和移除策略</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> System;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.Strategy
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 策略上下文基类</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;typeparam name=&#34;T&#34;&gt;上下文类型&lt;/typeparam&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>abstract</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>StrategyContext</span>&lt;T&gt; <span style=color:#66d9ef>where</span> T : StrategyContext&lt;T&gt;
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> IStrategy&lt;T&gt; _currentStrategy;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Dictionary&lt;<span style=color:#66d9ef>string</span>, IStrategy&lt;T&gt;&gt; _strategies;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> IStrategy&lt;T&gt; CurrentStrategy =&gt; _currentStrategy;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> CurrentStrategyName =&gt; _currentStrategy?.StrategyName;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> StrategyContext()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _strategies = <span style=color:#66d9ef>new</span> Dictionary&lt;<span style=color:#66d9ef>string</span>, IStrategy&lt;T&gt;&gt;();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 注册策略</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> RegisterStrategy(IStrategy&lt;T&gt; strategy)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (strategy == <span style=color:#66d9ef>null</span>) <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            _strategies[strategy.StrategyName] = strategy;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 注销策略</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> UnregisterStrategy(<span style=color:#66d9ef>string</span> strategyName)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _strategies.Remove(strategyName);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 设置当前策略</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> SetStrategy(<span style=color:#66d9ef>string</span> strategyName)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (!_strategies.TryGetValue(strategyName, <span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> strategy))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushError(<span style=color:#e6db74>$&#34;策略 {strategyName} 未注册&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (!strategy.CanExecute((T)<span style=color:#66d9ef>this</span>))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushWarning(<span style=color:#e6db74>$&#34;策略 {strategyName} 当前无法执行&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            OnStrategyChanging(_currentStrategy, strategy);
+</span></span><span style=display:flex><span>            _currentStrategy = strategy;
+</span></span><span style=display:flex><span>            OnStrategyChanged(strategy);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 尝试设置策略，失败时使用默认策略</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> SetStrategyOrDefault(<span style=color:#66d9ef>string</span> strategyName, <span style=color:#66d9ef>string</span> defaultStrategyName)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (!SetStrategy(strategyName))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                SetStrategy(defaultStrategyName);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 执行当前策略</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> ExecuteCurrentStrategy()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_currentStrategy == <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushWarning(<span style=color:#e6db74>&#34;当前没有设置策略&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_currentStrategy.CanExecute((T)<span style=color:#66d9ef>this</span>))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _currentStrategy.Execute((T)<span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushWarning(<span style=color:#e6db74>$&#34;当前策略 {_currentStrategy.StrategyName} 无法执行&#34;</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 执行指定策略</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> ExecuteStrategy(<span style=color:#66d9ef>string</span> strategyName)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_strategies.TryGetValue(strategyName, <span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> strategy))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (strategy.CanExecute((T)<span style=color:#66d9ef>this</span>))
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    strategy.Execute((T)<span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 获取所有可用策略</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> IEnumerable&lt;IStrategy&lt;T&gt;&gt; GetAvailableStrategies()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> strategy <span style=color:#66d9ef>in</span> _strategies.Values)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (strategy.CanExecute((T)<span style=color:#66d9ef>this</span>))
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>yield</span> <span style=color:#66d9ef>return</span> strategy;
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 策略切换前回调</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>void</span> OnStrategyChanging(IStrategy&lt;T&gt; oldStrategy, IStrategy&lt;T&gt; newStrategy) { }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 策略切换后回调</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>void</span> OnStrategyChanged(IStrategy&lt;T&gt; newStrategy) { }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 清空所有策略</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> ClearStrategies()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _strategies.Clear();
+</span></span><span style=display:flex><span>            _currentStrategy = <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：</p><ul><li>AI决策系统（根据环境选择最佳行为）</li><li>武器系统（根据距离选择最佳攻击方式）</li><li>寻路系统（根据地形选择寻路算法）</li><li>渲染系统（根据性能选择渲染质量）</li></ul></li><li><p><strong>使用方式</strong>：</p><ol><li>创建继承<code>StrategyContext&lt;T></code>的上下文类</li><li>注册各种策略实现</li><li>调用<code>ExecuteBest</code>自动选择最佳策略</li><li>重写<code>OnStrategyChanged</code>处理策略切换事件</li></ol></li><li><p><strong>注意事项</strong>：</p><ol><li>策略切换可能带来状态变化，确保<code>OnStrategyChanging/Changed</code>正确处理</li><li>避免在策略执行过程中切换策略，可能导致状态不一致</li><li>策略优先级应该动态计算，考虑使用权重而非固定值</li><li>考虑策略切换的动画或过渡效果</li></ol></li><li><p><strong>扩展建议</strong>：</p><ul><li>实现策略组，支持策略的组合和嵌套</li><li>添加策略学习机制，根据历史效果调整优先级</li><li>支持策略条件触发，当条件满足时自动切换</li></ul></li></ul><hr><h3 id=823-策略模式示例>8.2.3 策略模式示例</h3><p><strong>设计思路与原理</strong></p><p>本示例展示策略模式在AI系统中的典型应用：敌人AI根据与玩家的距离选择不同的攻击策略。近距离使用近战攻击，中距离使用远程射击，远距离使用魔法攻击。这种设计使AI行为更加智能和灵活。</p><p><strong>核心实现要点</strong></p><ol><li><strong>策略选择逻辑</strong>：每种策略的<code>CanExecute</code>检查距离条件</li><li><strong>优先级设置</strong>：魔法攻击优先级最高（威力大但CD长），近战最低</li><li><strong>上下文数据</strong>：<code>EnemyAIContext</code>包含敌人状态、玩家位置等决策所需信息</li><li><strong>策略切换</strong>：AI每帧调用<code>ExecuteBest</code>自动选择当前最优策略</li></ol><p><strong>与游戏AI的结合</strong></p><p>策略模式是游戏AI的基础构建块：</p><ul><li>可以将AI行为分解为多个策略（移动、攻击、防御、逃跑）</li><li>策略可以嵌套，形成层次化AI（如攻击策略包含近战、远程、魔法子策略）</li><li>策略可以组合，实现复杂行为（如同时执行移动和攻击）</li><li>策略可以动态学习，根据效果调整优先级</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> GameFramework.Core.Strategy;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Examples
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// AI上下文</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>AIContext</span> : StrategyContext&lt;AIContext&gt;
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Node2D Self { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Node2D Target { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> Health { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> MaxHealth { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> AttackRange { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> DetectionRange { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>double</span> DeltaTime { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> HealthPercent =&gt; Health / MaxHealth;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> DistanceToTarget =&gt; Target != <span style=color:#66d9ef>null</span> ?
+</span></span><span style=display:flex><span>            Self.GlobalPosition.DistanceTo(Target.GlobalPosition) : <span style=color:#66d9ef>float</span>.MaxValue;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 巡逻策略</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>PatrolStrategy</span> : IStrategy&lt;AIContext&gt;
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> StrategyName =&gt; <span style=color:#e6db74>&#34;巡逻&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> CanExecute(AIContext context)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> context.Self != <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Execute(AIContext context)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 简单的来回巡逻逻辑</span>
+</span></span><span style=display:flex><span>            Vector2 moveDirection = Vector2.Right;
+</span></span><span style=display:flex><span>            context.Self.Position += moveDirection * <span style=color:#ae81ff>100f</span> * (<span style=color:#66d9ef>float</span>)context.DeltaTime;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 追击策略</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ChaseStrategy</span> : IStrategy&lt;AIContext&gt;
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> StrategyName =&gt; <span style=color:#e6db74>&#34;追击&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> CanExecute(AIContext context)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> context.Target != <span style=color:#66d9ef>null</span> &amp;&amp;
+</span></span><span style=display:flex><span>                   context.DistanceToTarget &lt;= context.DetectionRange &amp;&amp;
+</span></span><span style=display:flex><span>                   context.DistanceToTarget &gt; context.AttackRange;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Execute(AIContext context)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (context.Target == <span style=color:#66d9ef>null</span>) <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            Vector2 direction = (context.Target.GlobalPosition - context.Self.GlobalPosition).Normalized();
+</span></span><span style=display:flex><span>            context.Self.Position += direction * <span style=color:#ae81ff>200f</span> * (<span style=color:#66d9ef>float</span>)context.DeltaTime;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 攻击策略</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>AttackStrategy</span> : IStrategy&lt;AIContext&gt;
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> StrategyName =&gt; <span style=color:#e6db74>&#34;攻击&#34;</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>float</span> _attackCooldown = <span style=color:#ae81ff>0f</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>float</span> ATTACK_INTERVAL = <span style=color:#ae81ff>1.0f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> CanExecute(AIContext context)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> context.Target != <span style=color:#66d9ef>null</span> &amp;&amp;
+</span></span><span style=display:flex><span>                   context.DistanceToTarget &lt;= context.AttackRange &amp;&amp;
+</span></span><span style=display:flex><span>                   _attackCooldown &lt;= <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Execute(AIContext context)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 执行攻击</span>
+</span></span><span style=display:flex><span>            GD.Print(<span style=color:#e6db74>$&#34;{context.Self.Name} 攻击 {context.Target.Name}&#34;</span>);
+</span></span><span style=display:flex><span>            _attackCooldown = ATTACK_INTERVAL;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> UpdateCooldown(<span style=color:#66d9ef>double</span> delta)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_attackCooldown &gt; <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _attackCooldown -= (<span style=color:#66d9ef>float</span>)delta;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 逃跑策略</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>FleeStrategy</span> : IStrategy&lt;AIContext&gt;
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> StrategyName =&gt; <span style=color:#e6db74>&#34;逃跑&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> CanExecute(AIContext context)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> context.HealthPercent &lt; <span style=color:#ae81ff>0.3f</span> &amp;&amp; context.Target != <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Execute(AIContext context)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (context.Target == <span style=color:#66d9ef>null</span>) <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            Vector2 fleeDirection = (context.Self.GlobalPosition - context.Target.GlobalPosition).Normalized();
+</span></span><span style=display:flex><span>            context.Self.Position += fleeDirection * <span style=color:#ae81ff>250f</span> * (<span style=color:#66d9ef>float</span>)context.DeltaTime;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// AI控制器 - 使用策略模式</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>AIController</span> : Node2D
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> Node2D Target;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> MaxHealth = <span style=color:#ae81ff>100f</span>;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> AttackRange = <span style=color:#ae81ff>50f</span>;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> DetectionRange = <span style=color:#ae81ff>300f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> AIContext _aiContext;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>float</span> _currentHealth;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _Ready()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _currentHealth = MaxHealth;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 初始化策略上下文</span>
+</span></span><span style=display:flex><span>            _aiContext = <span style=color:#66d9ef>new</span> AIContext
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                Self = <span style=color:#66d9ef>this</span>,
+</span></span><span style=display:flex><span>                Target = Target,
+</span></span><span style=display:flex><span>                Health = _currentHealth,
+</span></span><span style=display:flex><span>                MaxHealth = MaxHealth,
+</span></span><span style=display:flex><span>                AttackRange = AttackRange,
+</span></span><span style=display:flex><span>                DetectionRange = DetectionRange
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 注册策略</span>
+</span></span><span style=display:flex><span>            _aiContext.RegisterStrategy(<span style=color:#66d9ef>new</span> PatrolStrategy());
+</span></span><span style=display:flex><span>            _aiContext.RegisterStrategy(<span style=color:#66d9ef>new</span> ChaseStrategy());
+</span></span><span style=display:flex><span>            _aiContext.RegisterStrategy(<span style=color:#66d9ef>new</span> AttackStrategy());
+</span></span><span style=display:flex><span>            _aiContext.RegisterStrategy(<span style=color:#66d9ef>new</span> FleeStrategy());
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _Process(<span style=color:#66d9ef>double</span> delta)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 更新上下文</span>
+</span></span><span style=display:flex><span>            _aiContext.DeltaTime = delta;
+</span></span><span style=display:flex><span>            _aiContext.Health = _currentHealth;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 自动选择最佳策略</span>
+</span></span><span style=display:flex><span>            AutoSelectStrategy();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 执行当前策略</span>
+</span></span><span style=display:flex><span>            _aiContext.ExecuteCurrentStrategy();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> AutoSelectStrategy()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 优先级顺序：逃跑 &gt; 攻击 &gt; 追击 &gt; 巡逻</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (TrySetStrategy(<span style=color:#e6db74>&#34;逃跑&#34;</span>)) <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (TrySetStrategy(<span style=color:#e6db74>&#34;攻击&#34;</span>)) <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (TrySetStrategy(<span style=color:#e6db74>&#34;追击&#34;</span>)) <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (TrySetStrategy(<span style=color:#e6db74>&#34;巡逻&#34;</span>)) <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>bool</span> TrySetStrategy(<span style=color:#66d9ef>string</span> strategyName)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 检查是否可以使用该策略</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> strategy <span style=color:#66d9ef>in</span> _aiContext.GetAvailableStrategies())
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (strategy.StrategyName == strategyName)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>if</span> (_aiContext.CurrentStrategyName != strategyName)
+</span></span><span style=display:flex><span>                    {
+</span></span><span style=display:flex><span>                        _aiContext.SetStrategy(strategyName);
+</span></span><span style=display:flex><span>                    }
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> TakeDamage(<span style=color:#66d9ef>float</span> damage)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _currentHealth -= damage;
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_currentHealth &lt; <span style=color:#ae81ff>0</span>) _currentHealth = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：</p><ul><li>游戏AI的行为决策系统</li><li>角色状态机（战斗、移动、交互状态）</li><li>武器系统的攻击方式选择</li><li>寻路系统的路径算法选择</li></ul></li><li><p><strong>使用方式</strong>：</p><ol><li>创建策略上下文类包含决策所需数据</li><li>实现各种策略类，定义<code>CanExecute</code>和优先级</li><li>在AI控制器的<code>_Process</code>中调用<code>ExecuteBest</code></li><li>根据游戏状态动态调整策略优先级</li></ol></li><li><p><strong>注意事项</strong>：</p><ol><li>策略切换可能带来瞬态问题，考虑添加过渡状态</li><li>避免每帧都切换策略，可添加冷却时间</li><li>策略优先级应动态计算，考虑使用权重</li><li>策略应该是纯函数，避免副作用</li></ol></li><li><p><strong>与行为树对比</strong>：策略模式适合简单的条件选择，行为树适合复杂的行为组合</p></li></ul><hr><h2 id=83-访问者模式>8.3 访问者模式</h2><p>访问者模式允许在不改变对象结构的情况下定义作用于这些对象的新操作。</p><h3 id=831-访问者接口>8.3.1 访问者接口</h3><p><strong>设计思路与原理</strong></p><p>访问者模式（Visitor Pattern）是一种将算法与对象结构分离的设计模式。它允许你在不修改原有类的情况下，向现有类层次添加新操作。这在游戏开发中特别有用，因为游戏对象通常有复杂的继承结构，而你需要对这些对象执行各种操作（如序列化、调试渲染、统计收集）。</p><p>访问者模式的核心思想是"双重分派"：第一次分派是<code>Accept</code>方法选择具体的访问者，第二次分派是<code>Visit</code>方法选择被访问的具体元素类型。这使得你可以根据"访问者类型"和"元素类型"两个维度来定制行为。</p><p><strong>核心实现要点</strong></p><ol><li><code>IVisitor&lt;T></code>定义访问者接口，<code>Visit</code>方法接收具体元素类型</li><li><code>IVisitable</code>定义可访问接口，<code>Accept</code>方法接收访问者</li><li>双重分派实现多态访问</li><li>泛型接口支持类型安全</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.Visitor
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 访问者接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;typeparam name=&#34;T&#34;&gt;可访问元素类型&lt;/typeparam&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IVisitor</span>&lt;T&gt; <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 访问元素</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> Visit(T element);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 带返回值的访问者接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IVisitor</span>&lt;TElement, TResult&gt; <span style=color:#66d9ef>where</span> TElement : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        TResult Visit(TElement element);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 可访问接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 实现此接口的元素可以被访问者访问</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IVisitable</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 接受访问者</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> Accept&lt;TVisitor&gt;(TVisitor visitor) <span style=color:#66d9ef>where</span> TVisitor : IVisitor&lt;IVisitable&gt;;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 泛型可访问接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IVisitable</span>&lt;T&gt; <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> Accept(IVisitor&lt;T&gt; visitor);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：</p><ul><li>场景树遍历和操作（序列化、统计、调试）</li><li>复杂对象结构的处理（UI树、行为树）</li><li>需要向现有类添加新操作但无法修改类的情况</li><li>类型相关的操作集中管理</li></ul></li><li><p><strong>使用方式</strong>：</p><ol><li>元素类实现<code>IVisitable</code>接口，在<code>Accept</code>中调用访问者的<code>Visit</code></li><li>访问者实现<code>IVisitor&lt;T></code>，为每种元素类型提供<code>Visit</code>方法</li><li>调用元素的<code>Accept</code>方法传入访问者</li><li>访问者中根据元素类型执行相应操作</li></ol></li><li><p><strong>注意事项</strong>：</p><ol><li>访问者模式增加了类的数量，只在真正需要时使用</li><li>元素类层次变化时，需要更新所有访问者</li><li>访问者可以持有状态，但要注意线程安全</li><li>避免在访问过程中修改被访问的结构</li></ol></li><li><p><strong>与迭代器对比</strong>：迭代器关注如何遍历，访问者关注在遍历中做什么</p></li></ul><hr><h3 id=832-访问者实现>8.3.2 访问者实现</h3><p><strong>设计思路与原理</strong></p><p><code>SceneNodeVisitor</code>是访问者模式在Godot场景树中的具体实现。Godot的场景树是一个天然的树形结构，访问者模式非常适合用于遍历和处理这种结构。基类提供了通用的遍历算法（深度优先），子类只需实现具体的访问逻辑。</p><p><strong>核心实现要点</strong></p><ol><li><code>Traverse</code>方法提供深度优先遍历</li><li><code>Visit</code>方法由子类实现具体访问逻辑</li><li>支持访问者注册和批量访问</li><li>泛型支持类型安全</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.Visitor
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 场景节点访问者基类</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 用于遍历和处理场景树节点</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>abstract</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SceneNodeVisitor</span> : IVisitor&lt;Node&gt;
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>abstract</span> <span style=color:#66d9ef>void</span> Visit(Node element);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 遍历节点的所有子节点</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Traverse(Node root)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            Visit(root);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (Node child <span style=color:#66d9ef>in</span> root.GetChildren())
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                Traverse(child);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 条件遍历</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Traverse(Node root, System.Predicate&lt;Node&gt; condition)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (!condition(root)) <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            Visit(root);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (Node child <span style=color:#66d9ef>in</span> root.GetChildren())
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                Traverse(child, condition);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 访问者调度器</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 管理多个访问者</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>VisitorDispatcher</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Dictionary&lt;<span style=color:#66d9ef>string</span>, <span style=color:#66d9ef>object</span>&gt; _visitors = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Register&lt;T&gt;(<span style=color:#66d9ef>string</span> name, IVisitor&lt;T&gt; visitor) <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _visitors[name] = visitor;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Unregister(<span style=color:#66d9ef>string</span> name)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _visitors.Remove(name);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> IVisitor&lt;T&gt; GetVisitor&lt;T&gt;(<span style=color:#66d9ef>string</span> name) <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_visitors.TryGetValue(name, <span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> visitor))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> visitor <span style=color:#66d9ef>as</span> IVisitor&lt;T&gt;;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> VisitAll&lt;T&gt;(T element) <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> visitor <span style=color:#66d9ef>in</span> _visitors.Values)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (visitor <span style=color:#66d9ef>is</span> IVisitor&lt;T&gt; typedVisitor)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    typedVisitor.Visit(element);
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：</p><ul><li>场景树遍历和操作</li><li>批量处理多个访问者</li><li>访问者注册和管理</li></ul></li><li><p><strong>使用方式</strong>：</p><ol><li>继承<code>SceneNodeVisitor</code>实现具体访问者</li><li>重写<code>Visit</code>方法实现访问逻辑</li><li>使用<code>VisitorDispatcher</code>管理多个访问者</li><li>调用<code>Traverse</code>遍历场景树</li></ol></li><li><p><strong>注意事项</strong>：</p><ol><li><code>Traverse</code>是递归的，注意深度限制防止栈溢出</li><li>访问者可以持有状态，但要注意重置</li><li>遍历过程中不要修改场景树结构</li><li>考虑使用迭代器替代递归处理超大树</li></ol></li></ul><hr><h3 id=833-具体访问者实现>8.3.3 具体访问者实现</h3><p><strong>设计思路与原理</strong></p><p>本示例展示两个具体的访问者实现：<code>SceneInfoVisitor</code>收集场景统计信息，<code>SceneSerializerVisitor</code>序列化场景为JSON。这两个访问者展示了访问者模式的实际应用价值。</p><p><strong>核心实现要点</strong></p><ol><li><strong>SceneInfoVisitor</strong>：统计节点数量、类型分布、最大深度</li><li><strong>SceneSerializerVisitor</strong>：将场景树序列化为JSON格式</li><li>访问者持有状态（计数器、字符串构建器）</li><li>深度优先遍历，递归处理子节点</li></ol><p><strong>状态管理</strong></p><p>访问者可以持有状态：</p><ul><li>统计访问者：计数器、最大值跟踪</li><li>序列化访问者：字符串构建器、缩进级别</li><li>调试访问者：可视化元素列表</li></ul><p>状态在遍历前初始化，遍历后获取结果。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Text;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> GameFramework.Core.Visitor;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Examples
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 场景信息收集访问者</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 收集场景中节点的统计信息</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SceneInfoVisitor</span> : SceneNodeVisitor
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Dictionary&lt;<span style=color:#66d9ef>string</span>, <span style=color:#66d9ef>int</span>&gt; _nodeTypeCounts = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>int</span> _totalNodes = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>int</span> _maxDepth = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>int</span> _currentDepth = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> Visit(Node element)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _totalNodes++;
+</span></span><span style=display:flex><span>            _currentDepth++;
+</span></span><span style=display:flex><span>            _maxDepth = Mathf.Max(_maxDepth, _currentDepth);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>string</span> typeName = element.GetType().Name;
+</span></span><span style=display:flex><span>            _nodeTypeCounts[typeName] = _nodeTypeCounts.GetValueOrDefault(typeName, <span style=color:#ae81ff>0</span>) + <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>void</span> Traverse(Node root)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _nodeTypeCounts.Clear();
+</span></span><span style=display:flex><span>            _totalNodes = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>            _maxDepth = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>            _currentDepth = -<span style=color:#ae81ff>1</span>; <span style=color:#75715e>// 根节点深度为0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>base</span>.Traverse(root);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> GetReport()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> sb = <span style=color:#66d9ef>new</span> StringBuilder();
+</span></span><span style=display:flex><span>            sb.AppendLine(<span style=color:#e6db74>&#34;=== 场景统计报告 ===&#34;</span>);
+</span></span><span style=display:flex><span>            sb.AppendLine(<span style=color:#e6db74>$&#34;总节点数: {_totalNodes}&#34;</span>);
+</span></span><span style=display:flex><span>            sb.AppendLine(<span style=color:#e6db74>$&#34;最大深度: {_maxDepth}&#34;</span>);
+</span></span><span style=display:flex><span>            sb.AppendLine(<span style=color:#e6db74>&#34;节点类型分布:&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> pair <span style=color:#66d9ef>in</span> _nodeTypeCounts)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                sb.AppendLine(<span style=color:#e6db74>$&#34;  {pair.Key}: {pair.Value}&#34;</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> sb.ToString();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 节点禁用访问者</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 禁用特定类型的节点</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>NodeDisablerVisitor</span> : SceneNodeVisitor
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> System.Type _targetType;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> <span style=color:#66d9ef>bool</span> _recursive;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> DisabledCount { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> NodeDisablerVisitor(System.Type targetType, <span style=color:#66d9ef>bool</span> recursive = <span style=color:#66d9ef>false</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _targetType = targetType;
+</span></span><span style=display:flex><span>            _recursive = recursive;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> Visit(Node element)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_targetType.IsAssignableFrom(element.GetType()))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                DisableNode(element);
+</span></span><span style=display:flex><span>                DisabledCount++;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (!_recursive)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span>; <span style=color:#75715e>// 不递归子节点</span>
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> DisableNode(Node node)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 根据节点类型执行不同的禁用操作</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (node <span style=color:#66d9ef>is</span> CanvasItem canvasItem)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                canvasItem.Hide();
+</span></span><span style=display:flex><span>                canvasItem.SetProcess(<span style=color:#66d9ef>false</span>);
+</span></span><span style=display:flex><span>                canvasItem.SetPhysicsProcess(<span style=color:#66d9ef>false</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (node <span style=color:#66d9ef>is</span> CollisionObject2D collisionObject)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                collisionObject.ProcessMode = ProcessModeEnum.Disabled;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            GD.Print(<span style=color:#e6db74>$&#34;禁用节点: {node.Name}&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 属性修改访问者</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 批量修改节点的属性</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>PropertyModifierVisitor</span> : SceneNodeVisitor
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> System.Type _targetType;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> <span style=color:#66d9ef>string</span> _propertyName;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Variant _propertyValue;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> ModifiedCount { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> PropertyModifierVisitor(System.Type targetType, <span style=color:#66d9ef>string</span> propertyName, Variant propertyValue)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _targetType = targetType;
+</span></span><span style=display:flex><span>            _propertyName = propertyName;
+</span></span><span style=display:flex><span>            _propertyValue = propertyValue;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> Visit(Node element)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_targetType.IsAssignableFrom(element.GetType()))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (element.GetClass().ToString().Contains(_propertyName) ||
+</span></span><span style=display:flex><span>                    element.GetType().GetProperty(_propertyName) != <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    element.Set(_propertyName, _propertyValue);
+</span></span><span style=display:flex><span>                    ModifiedCount++;
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 访问者模式使用示例</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>VisitorExample</span> : Node
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _Ready()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 场景信息收集</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> infoVisitor = <span style=color:#66d9ef>new</span> SceneInfoVisitor();
+</span></span><span style=display:flex><span>            infoVisitor.Traverse(<span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>            GD.Print(infoVisitor.GetReport());
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 禁用所有粒子效果</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> disabler = <span style=color:#66d9ef>new</span> NodeDisablerVisitor(<span style=color:#66d9ef>typeof</span>(GpuParticles2D), <span style=color:#66d9ef>true</span>);
+</span></span><span style=display:flex><span>            disabler.Traverse(<span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>            GD.Print(<span style=color:#e6db74>$&#34;禁用了 {disabler.DisabledCount} 个粒子效果&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 修改所有 Sprite2D 的透明度</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> opacityModifier = <span style=color:#66d9ef>new</span> PropertyModifierVisitor(<span style=color:#66d9ef>typeof</span>(Sprite2D), <span style=color:#e6db74>&#34;modulate&#34;</span>, <span style=color:#66d9ef>new</span> Color(<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>0.5f</span>));
+</span></span><span style=display:flex><span>            opacityModifier.Traverse(<span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>            GD.Print(<span style=color:#e6db74>$&#34;修改了 {opacityModifier.ModifiedCount} 个精灵的透明度&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：</p><ul><li>场景统计分析（节点数量、类型分布）</li><li>场景序列化和反序列化</li><li>批量操作（禁用粒子、修改属性）</li><li>场景优化分析</li></ul></li><li><p><strong>使用方式</strong>：</p><ol><li>继承<code>SceneNodeVisitor</code>实现自定义访问者</li><li>在<code>Visit</code>中实现具体操作逻辑</li><li>调用<code>Traverse</code>遍历场景树</li><li>访问完成后获取结果</li></ol></li><li><p><strong>注意事项</strong>：</p><ol><li>访问者是单线程的，不要在多线程环境使用</li><li>大场景考虑分批处理，避免卡顿</li><li>访问过程中不要修改场景结构</li><li>重置访问者状态后再重新使用</li></ol></li><li><p><strong>性能优化</strong>：</p><ul><li>使用迭代器替代递归避免栈溢出</li><li>缓存访问结果避免重复遍历</li><li>考虑并行处理独立分支（注意线程安全）</li></ul></li></ul><hr><h3 id=834-双重分派实现>8.3.4 双重分派实现</h3><p><strong>设计思路与原理</strong></p><p>双重分派（Double Dispatch）是访问者模式的核心机制，它根据两个对象的类型来决定调用哪个方法。与单分派（只根据接收者类型）不同，双重分派同时考虑"访问者类型"和"元素类型"两个维度。</p><p>C#和大多数面向对象语言只支持单分派（运行时根据对象实际类型选择方法）。访问者模式通过两次方法调用来模拟双重分派：</p><ol><li>第一次分派：<code>element.Accept(visitor)</code>根据元素实际类型调用相应的Accept</li><li>第二次分派：<code>visitor.Visit(this)</code>根据访问者实际类型调用相应的Visit</li></ol><p>这种机制允许你根据"元素类型 × 访问者类型"的组合来定制行为，而不需要在元素类中添加大量if-else或switch。</p><p><strong>核心实现要点</strong></p><ol><li><code>IVisitable&lt;T></code>接口的<code>Accept</code>方法实现第一次分派</li><li><code>IVisitor&lt;T></code>接口的<code>Visit</code>方法实现第二次分派</li><li>具体元素类实现<code>Accept</code>，调用<code>visitor.Visit(this)</code></li><li>具体访问者类实现<code>Visit</code>，根据元素类型执行操作</li></ol><p><strong>与多态的对比</strong></p><ul><li>单分派（多态）：根据接收者类型选择方法</li><li>双重分派：根据接收者和参数类型共同选择方法</li><li>访问者模式：将操作从元素类移到访问者类，避免修改元素类</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.Visitor
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 游戏实体接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 演示双重分派模式</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IGameEntity</span> : IVisitable&lt;IGameEntity&gt;
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>string</span> EntityId { <span style=color:#66d9ef>get</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>string</span> EntityType { <span style=color:#66d9ef>get</span>; }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 游戏实体访问者</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IGameEntityVisitor</span> : IVisitor&lt;IGameEntity&gt;
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> VisitEnemy(EnemyEntity enemy);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> VisitPlayer(PlayerEntity player);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> VisitItem(ItemEntity item);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 敌人实体</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>EnemyEntity</span> : IGameEntity
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> EntityId { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> EntityType =&gt; <span style=color:#e6db74>&#34;Enemy&#34;</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> Health { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> Damage { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Accept(IVisitor&lt;IGameEntity&gt; visitor)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (visitor <span style=color:#66d9ef>is</span> IGameEntityVisitor gameVisitor)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                gameVisitor.VisitEnemy(<span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                visitor.Visit(<span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 玩家实体</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>PlayerEntity</span> : IGameEntity
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> EntityId { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> EntityType =&gt; <span style=color:#e6db74>&#34;Player&#34;</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> PlayerName { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> Score { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Accept(IVisitor&lt;IGameEntity&gt; visitor)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (visitor <span style=color:#66d9ef>is</span> IGameEntityVisitor gameVisitor)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                gameVisitor.VisitPlayer(<span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                visitor.Visit(<span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 物品实体</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ItemEntity</span> : IGameEntity
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> EntityId { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> EntityType =&gt; <span style=color:#e6db74>&#34;Item&#34;</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> ItemName { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> Quantity { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Accept(IVisitor&lt;IGameEntity&gt; visitor)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (visitor <span style=color:#66d9ef>is</span> IGameEntityVisitor gameVisitor)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                gameVisitor.VisitItem(<span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                visitor.Visit(<span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 序列化访问者</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SerializationVisitor</span> : IGameEntityVisitor
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Godot.Collections.Dictionary&lt;<span style=color:#66d9ef>string</span>, Variant&gt; _data = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Visit(IGameEntity element)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _data[<span style=color:#e6db74>&#34;id&#34;</span>] = element.EntityId;
+</span></span><span style=display:flex><span>            _data[<span style=color:#e6db74>&#34;type&#34;</span>] = element.EntityType;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> VisitEnemy(EnemyEntity enemy)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            Visit(enemy);
+</span></span><span style=display:flex><span>            _data[<span style=color:#e6db74>&#34;health&#34;</span>] = enemy.Health;
+</span></span><span style=display:flex><span>            _data[<span style=color:#e6db74>&#34;damage&#34;</span>] = enemy.Damage;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> VisitPlayer(PlayerEntity player)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            Visit(player);
+</span></span><span style=display:flex><span>            _data[<span style=color:#e6db74>&#34;name&#34;</span>] = player.PlayerName;
+</span></span><span style=display:flex><span>            _data[<span style=color:#e6db74>&#34;score&#34;</span>] = player.Score;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> VisitItem(ItemEntity item)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            Visit(item);
+</span></span><span style=display:flex><span>            _data[<span style=color:#e6db74>&#34;itemName&#34;</span>] = item.ItemName;
+</span></span><span style=display:flex><span>            _data[<span style=color:#e6db74>&#34;quantity&#34;</span>] = item.Quantity;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Godot.Collections.Dictionary&lt;<span style=color:#66d9ef>string</span>, Variant&gt; GetData()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> _data;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳 practices</strong></p><ul><li><p><strong>适用场景</strong>：</p><ul><li>需要根据"元素类型 × 访问者类型"组合执行不同操作</li><li>向现有类层次添加新操作但无法修改类</li><li>复杂对象结构的处理（如游戏实体系统的序列化）</li><li>避免在元素类中堆砌大量if-else</li></ul></li><li><p><strong>双重分派原理</strong>：</p><ol><li>第一次分派：<code>element.Accept(visitor)</code>选择元素的具体Accept方法</li><li>第二次分派：<code>visitor.Visit(this)</code>选择访问者的具体Visit方法</li><li>结果：根据元素和访问者两者的类型确定最终执行的方法</li></ol></li><li><p><strong>使用方式</strong>：</p><ol><li>元素实现<code>Accept</code>方法，在内部调用<code>visitor.Visit(this)</code></li><li>访问者实现针对不同元素类型的<code>Visit</code>重载</li><li>调用<code>element.Accept(visitor)</code>触发双重分派</li></ol></li><li><p><strong>注意事项</strong>：</p><ol><li>双重分派增加了复杂性，只在真正需要时使用</li><li>元素类层次变化时，需要更新所有访问者</li><li>避免过深的类层次，维护成本会指数增长</li><li>考虑使用C#的模式匹配（C# 7.0+）作为替代方案</li></ol></li><li><p><strong>与模式匹配对比</strong>：C# 7.0+的模式匹配提供了更简洁的替代方案，但访问者模式在需要多态扩展时更有优势。</p></li></ul><hr><h2 id=84-本章小结>8.4 本章小结</h2><p>本章介绍了三种重要的行为模式：</p><ol><li><p><strong>命令模式</strong>：将操作封装为对象，支持撤销/重做、命令队列和批处理。适用于编辑器操作、玩家输入等场景。实施时需要注意命令对象的生命周期管理，确保撤销时引用的对象仍然有效。</p></li><li><p><strong>策略模式</strong>：定义算法族并封装，支持运行时动态切换策略。适用于AI行为、排序算法、渲染策略等。策略切换本身开销很小，但需要考虑状态迁移和初始化成本。</p></li><li><p><strong>访问者模式</strong>：将操作与对象结构分离，支持在不修改类的情况下添加新操作。适用于场景遍历、数据处理、序列化等。通过双重分派实现类型安全。</p></li></ol><p>这些行为模式可以组合使用：</p><ul><li>命令 + 策略：命令执行时使用不同策略</li><li>访问者 + 命令：访问者收集的命令可以放入命令管理器</li><li>策略 + 访问者：不同策略可以使用访问者访问不同数据</li></ul><p>合理运用这些模式可以构建出灵活、可扩展的游戏行为系统。</p><h2 id=84-行为模式选择指南>8.4 行为模式选择指南</h2><h3 id=841-模式选择决策树>8.4.1 模式选择决策树</h3><p>面对具体问题时，如何选择合适的行为模式？</p><pre tabindex=0><code>行为模式选择决策树
+
+是否需要撤销/重做功能？
+├── 是 → 命令模式（Command）
+│   └── 将操作封装为对象，保存历史栈
+│
+├── 否 → 是否需要运行时切换算法？
+│   ├── 是 → 策略模式（Strategy）
+│   │   └── 封装算法族，支持动态切换
+│   │
+│   └── 否 → 是否需要遍历对象结构执行操作？
+│       ├── 是 → 访问者模式（Visitor）
+│       │   └── 分离操作与对象结构
+│       │
+│       └── 否 → 考虑其他模式
+</code></pre><h3 id=842-各模式适用场景对比>8.4.2 各模式适用场景对比</h3><table><thead><tr><th>模式</th><th>核心问题</th><th>解决方案</th><th>典型应用</th></tr></thead><tbody><tr><td>命令模式</td><td>操作需要支持撤销/记录</td><td>封装为对象</td><td>编辑器、输入系统、宏录制</td></tr><tr><td>策略模式</td><td>多种算法需要动态切换</td><td>定义算法族</td><td>AI行为、排序、渲染策略</td></tr><tr><td>访问者模式</td><td>对对象结构添加新操作</td><td>双重分派</td><td>场景遍历、序列化、数据处理</td></tr></tbody></table><h3 id=843-性能考量>8.4.3 性能考量</h3><table><thead><tr><th>模式</th><th>内存开销</th><th>运行时开销</th><th>优化建议</th></tr></thead><tbody><tr><td>命令模式</td><td>高（保存历史）</td><td>低</td><td>限制历史栈大小，批量处理</td></tr><tr><td>策略模式</td><td>中（多个策略对象）</td><td>低</td><td>缓存策略实例，延迟加载</td></tr><tr><td>访问者模式</td><td>低</td><td>中等（双重分派）</td><td>缓存访问者，避免频繁创建</td></tr></tbody></table><hr><h2 id=85-本章小结>8.5 本章小结</h2><div class=post-tags><a href=/tags/godot class=post-tag>#Godot</a>
+<a href=/tags/%E5%BC%80%E5%8F%91 class=post-tag>#开发</a>
+<a href=/tags/c class=post-tag>#C#</a>
+<a href=/tags/%E6%9E%B6%E6%9E%84 class=post-tag>#架构</a>
+<a href=/tags/csharp class=post-tag>#CSharp</a></div><nav class=post-nav><a href=/posts/%E7%AC%AC7%E7%AB%A0-%E5%AF%B9%E8%B1%A1%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/ class=prev-post><span class=nav-label>← 上一篇</span>
+<span class=nav-title>第7章 对象与资源管理</span>
+</a><a href=/posts/%E7%AC%AC9%E7%AB%A0-%E9%85%8D%E7%BD%AE%E4%B8%8E%E6%95%B0%E6%8D%AE/ class=next-post><span class=nav-label>下一篇 →</span>
+<span class=nav-title>第9章 配置与数据</span></a></nav><script src=https://giscus.app/client.js data-repo=heheboy/heheboy.github.io data-repo-id=R_kgDORzG4BQ data-category=Announcements data-category-id=DIC_kwDORzG4Bc4C54kN data-mapping=pathname data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=light data-lang=zh-CN crossorigin=anonymous async></script></article></div><aside class=sidebar><div class="sidebar-widget author-widget"><img class=author-avatar src=/img/avatar.jpg alt=熟童><h3 class=author-name>熟童</h3><p class=author-bio>熟童，一个在代码、咖啡与虚拟世界之间反复横跳的人。写程序、做游戏、研究AI，也会认真对待一杯咖啡的参数曲线。这里记录的不只是技术，还有那些被实现出来的想法。相信技术不只是工具，它也可以有温度。</p><div class=author-social><a href=https://github.com/heheboy target=_blank rel=noopener aria-label=GitHub><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 0C5.37.0.0 5.37.0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57.0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925.0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18.0.0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225.0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22.0 1.605-.015 2.895-.015 3.3.0.315.225.69.825.57A12.02 12.02.0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+</a><a href=https://space.bilibili.com/8756982 target=_blank rel=noopener aria-label=Bilibili><svg viewBox="0 0 24 24"><path fill="currentColor" d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858.0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234.0 11.704-1.778L8.46 4.45V4.267a1.227 1.227.0 112.453.0V5.32l2.823-2.695a1.234 1.234.0 011.704 1.778l-1.687 1.12zm-3.28 9.653c-.56.0-1.013.453-1.013 1.013s.453 1.013 1.013 1.013 1.013-.453 1.013-1.013-.453-1.013-1.013-1.013zm-6 0c-.56.0-1.013.453-1.013 1.013s.453 1.013 1.013 1.013 1.013-.453 1.013-1.013-.453-1.013-1.013-1.013z"/></svg>
+</a><a href=https://www.facebook.com/dio.zeng.2025 target=_blank rel=noopener aria-label=Facebook><svg viewBox="0 0 24 24"><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312.0 2.686.235 2.686.235v2.953H15.83c-1.491.0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><div class=social-wechat-wrapper><a href=# class=social-wechat-trigger aria-label=WeChat><svg viewBox="0 0 24 24"><path fill="currentColor" d="M8.691 2.188C3.891 2.188.0 5.476.0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59.0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213.0.163.13.295.29.295a.326.326.0 00.167-.054l1.903-1.114a.864.864.0 01.717-.098 10.16 10.16.0 002.837.403c.276.0.543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642.0 1.162.529 1.162 1.18A1.17 1.17.0 015.785 8.349 1.17 1.17.0 014.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813.0c.642.0 1.162.529 1.162 1.18a1.17 1.17.0 01-1.162 1.178 1.17 1.17.0 01-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826.0 1.622-.12 2.361-.336a.722.722.0 01.598.082l1.584.926a.272.272.0 00.14.047c.134.0.24-.111.24-.247.0-.06-.023-.12-.038-.177l-.327-1.233a.582.582.0 01-.023-.156.49.49.0 01.201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088V8.89c-.135-.01-.27-.027-.407-.03zm-2.53 3.274c.535.0.969.44.969.982a.976.976.0 01-.969.983.976.976.0 01-.969-.983c0-.542.434-.982.97-.982zm4.844.0c.535.0.969.44.969.982a.976.976.0 01-.969.983.976.976.0 01-.969-.983c0-.542.434-.982.969-.982z"/></svg></a><div class=wechat-qr-popup><img src=/img/wechat-qr.png alt="WeChat QR Code">
+<span>扫码加我</span></div></div><a href=https://www.instagram.com/bengbeng9548/ target=_blank rel=noopener aria-label=Instagram><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.163c3.204.0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849.0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204.0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849.0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741.0 8.333.014 7.053.072c-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.668.072 4.948c.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403.0-6.162 2.759-6.162 6.162S8.597 18.163 12 18.163s6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zM12 16c-2.209.0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796.0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795.0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a><div class=social-email-wrapper><a href=mailto:bengbeng9548@qq.com class=social-email aria-label=Email><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 4H4c-1.1.0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1.0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+<span>bengbeng9548@qq.com</span></a></div></div></div><div class="sidebar-widget categories-widget"><h4>分类</h4><div class=category-cloud><a href=/categories/%E5%92%96%E5%95%A1%E7%9B%B8%E5%85%B3/ class=category-link>咖啡相关
+<span class=category-count>(12)</span>
+</a><a href=/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/ class=category-link>游戏开发
+<span class=category-count>(12)</span>
+</a><a href=/categories/ai%E7%9B%B8%E5%85%B3/ class=category-link>AI相关
+<span class=category-count>(2)</span>
+</a><a href=/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/ class=category-link>生活随记
+<span class=category-count>(1)</span></a></div></div><div class="sidebar-widget tags-widget"><h4>标签</h4><div class=tag-cloud><a href=/tags/c%23/ class=tag-link style=font-size:1.5em>C#
+</a><a href=/tags/csharp/ class=tag-link style=font-size:1.5em>CSharp
+</a><a href=/tags/godot/ class=tag-link style=font-size:1.5em>Godot
+</a><a href=/tags/%E5%92%96%E5%95%A1/ class=tag-link style=font-size:1.5em>咖啡
+</a><a href=/tags/%E5%92%96%E5%95%A1%E8%B1%86/ class=tag-link style=font-size:1.5em>咖啡豆
+</a><a href=/tags/%E5%BC%80%E5%8F%91/ class=tag-link style=font-size:1.5em>开发
+</a><a href=/tags/%E5%92%96%E5%95%A1%E7%83%98%E7%84%99/ class=tag-link style=font-size:1.5em>咖啡烘焙
+</a><a href=/tags/%E6%9E%B6%E6%9E%84/ class=tag-link style=font-size:1.5em>架构
+</a><a href=/tags/agent/ class=tag-link style=font-size:1em>Agent
+</a><a href=/tags/ai/ class=tag-link style=font-size:1em>AI
+</a><a href=/tags/claudecode/ class=tag-link style=font-size:1em>ClaudeCode
+</a><a href=/tags/%E5%92%96%E5%95%A1%E7%94%9F%E8%B1%86/ class=tag-link style=font-size:1em>咖啡生豆
+</a><a href=/tags/%E6%99%BA%E8%83%BD%E4%BD%93/ class=tag-link style=font-size:1em>智能体
+</a><a href=/tags/%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF/ class=tag-link style=font-size:1em>烘焙曲线
+</a><a href=/tags/anthropic/ class=tag-link style=font-size:.9em>Anthropic
+</a><a href=/tags/cc/ class=tag-link style=font-size:.9em>Cc
+</a><a href=/tags/mcp/ class=tag-link style=font-size:.9em>Mcp
+</a><a href=/tags/openclaw/ class=tag-link style=font-size:.9em>OpenClaw
+</a><a href=/tags/skill/ class=tag-link style=font-size:.9em>Skill
+</a><a href=/tags/ui/ class=tag-link style=font-size:.9em>UI</a></div></div><div class="sidebar-widget links-widget"><h4>友情链接</h4><div class=links-list><a href=https://gohugo.io target=_blank rel=noopener class=link-item title="Hugo 静态网站生成器官方文档"><span class=link-name>Hugo 官方</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+</a><a href=https://github.com/heheboy/hugo-cms target=_blank rel=noopener class=link-item title=hugo-cms的项目连接><span class=link-name>Hugo-cms</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+</a><a href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener class=link-item title=主题的项目连接><span class=link-name>hugo-cms-theme</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></a></div></div></aside></div></main><footer class=site-footer><div class=footer-content><p class=copyright>&copy; 2026 熟童.
+All rights reserved.</p><div class=footer-info><span class=footer-info-item><a href=https://github.com/heheboy/hugo-cms target=_blank rel=noopener>本网站由Hugo驱动,使用Hugo-cms制作
+</a></span><span class=footer-info-item><a href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener>主题采用 hugo-cms-theme
+</a><a class=github-star-link href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener title="GitHub Stars"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 0c4.42.0 8 3.58 8 8a8.013 8.013.0 01-5.45 7.59c-.4.08-.55-.17-.55-.38.0-.27.01-1.13.01-2.2.0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95.0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12.0.0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27s-1.36.09-2 .27c-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15.0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94.0.67.01 1.3.01 1.49.0.21-.15.45-.55.38A7.995 7.995.0 010 8c0-4.42 3.58-8 8-8z"/></svg>
+<span>Star</span></a></span></div><div class=footer-links><a href=/index.xml class=footer-link target=_blank rel=noopener aria-label=RSS订阅><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6.503 20.752C6.503 22.546 5.047 24 3.252 24c-1.796.0-3.252-1.454-3.252-3.248s1.456-3.248 3.252-3.248c1.795.001 3.251 1.454 3.251 3.248zM0 8.18v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817C15.777 15.29 8.721 8.242.0 8.18zm0-3.368C10.58 4.858 19.152 13.406 19.183 24H24c-.03-13.231-10.736-23.954-24-24v4.812z"/></svg>
+<span>RSS 订阅</span>
+</a><span class=footer-link-separator>|</span>
+<a href=/sitemap.xml class=footer-link target=_blank rel=noopener aria-label=网站地图><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 3l-6 1.5L8.501 3l-6 1.5v15l6-1.5 5.999 1.5 6-1.5V3zM15 16.656l-5.999-1.5V3.844L15 5.344v11.312zm1-11.312 4 .999v11.312l-4-.999V5.344zm-7 .499-4-.999v11.312l4 .999V5.843z"/></svg>
+<span>网站地图</span></a></div></div></footer><script>(function(){const t=document.querySelector(".theme-toggle");if(!t)return;const e=document.documentElement,n=localStorage.getItem("theme");n&&e.setAttribute("data-theme",n),t.addEventListener("click",()=>{const n=e.getAttribute("data-theme"),t=n==="dark"?"light":"dark";e.setAttribute("data-theme",t),localStorage.setItem("theme",t)})})()</script><script>(function(){const e=document.querySelector(".nav-toggle"),t=document.querySelector(".nav-menu");e&&e.addEventListener("click",()=>{t.classList.toggle("active"),e.classList.toggle("active")})})()</script></body></html>

@@ -1,0 +1,299 @@
+<!doctype html><html lang=zh-CN data-theme=light><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content='
+打造属于你的数字工匠工具箱
+
+
+一、每个开发者都需要一个工坊
+好的工匠都有自己的工坊——工具挂在顺手的位置，技艺烂熟于心，需要材料时有可靠的供应商。
+Claude Code 不只是一个"AI 助手"，它是你的数字工坊。你可以布置自己的工具（Commands）、培养技艺（Skills）、请来助手（Agents）、连接供应商（MCP）。
+本文将带你了解如何打造适合自己的 Claude Code 工坊。'><meta name=author content="熟童"><meta name=generator content="Hugo 0.159.0"><title>ClaudeCode工坊：commands、Agents、Skills与Mcp的实践指南 | 熟童·实验室</title><link rel=canonical href=https://heheboy.github.io/posts/claudecode%E5%B7%A5%E5%9D%8Acommandsagentsskills%E4%B8%8Emcp%E7%9A%84%E5%AE%9E%E8%B7%B5%E6%8C%87%E5%8D%97/><link rel=stylesheet href=/css/main.min.52a33c1c75f1018fce5fd552f8174ace585d07d2689bbdd7854b698275ee0477.css integrity="sha256-UqM8HHXxAY/OX9VS+BdKzlhdB9Jom73XhUtpgnXuBHc="><link rel=icon type=image/x-icon href=/favicon.ico><meta property="og:title" content="ClaudeCode工坊：commands、Agents、Skills与Mcp的实践指南"><meta property="og:description" content='
+打造属于你的数字工匠工具箱
+
+
+一、每个开发者都需要一个工坊
+好的工匠都有自己的工坊——工具挂在顺手的位置，技艺烂熟于心，需要材料时有可靠的供应商。
+Claude Code 不只是一个"AI 助手"，它是你的数字工坊。你可以布置自己的工具（Commands）、培养技艺（Skills）、请来助手（Agents）、连接供应商（MCP）。
+本文将带你了解如何打造适合自己的 Claude Code 工坊。'><meta property="og:url" content="https://heheboy.github.io/posts/claudecode%E5%B7%A5%E5%9D%8Acommandsagentsskills%E4%B8%8Emcp%E7%9A%84%E5%AE%9E%E8%B7%B5%E6%8C%87%E5%8D%97/"><meta property="og:site_name" content="熟童·实验室"><meta property="og:type" content="article"><meta name=twitter:card content="summary_large_image"><meta name=twitter:title content="ClaudeCode工坊：commands、Agents、Skills与Mcp的实践指南"><meta name=twitter:description content='
+打造属于你的数字工匠工具箱
+
+
+一、每个开发者都需要一个工坊
+好的工匠都有自己的工坊——工具挂在顺手的位置，技艺烂熟于心，需要材料时有可靠的供应商。
+Claude Code 不只是一个"AI 助手"，它是你的数字工坊。你可以布置自己的工具（Commands）、培养技艺（Skills）、请来助手（Agents）、连接供应商（MCP）。
+本文将带你了解如何打造适合自己的 Claude Code 工坊。'><meta property="article:published_time" content="2026-04-02T00:00:00+00:00"><meta property="article:modified_time" content="2026-04-02T00:00:00+00:00"><meta property="article:tag" content="ClaudeCode"><meta property="article:tag" content="Agent"><meta property="article:tag" content="Skill"><meta property="article:tag" content="Mcp"><meta property="article:tag" content="实践指南"><meta property="article:tag" content="AI"><meta property="article:tag" content="智能体"><meta property="article:tag" content="Anthropic"><meta property="article:tag" content="代码"></head><body><nav class=main-nav><div class=nav-container><a class=nav-brand href=/>熟童·实验室</a>
+<button class=nav-toggle aria-label="Toggle navigation">
+<span></span>
+<span></span>
+<span></span></button><div class=nav-menu><a class=nav-link href=/>首页</a>
+<a class=nav-link href=/posts/>内容文章</a>
+<a class=nav-link href=/categories/>文章分类</a>
+<a class=nav-link href=/archive/>归档册</a>
+<a class=nav-link href=/tags/>标签</a>
+<a class=nav-link href=/about/>关于本站</a>
+<a class="nav-link nav-search-link" href=/search/ aria-label=搜索><svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61.0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></a></div></div></nav><header class=site-header style=background-image:url(/img/post-bg.jpg)><div class=header-content><h1 class=site-title>ClaudeCode工坊：commands、Agents、Skills与Mcp的实践指南</h1><p class=site-slogan>让技术长出温度，在精确的逻辑与冷静的结构之中，依然保留人与世界的感知。不只是实现功能，也是在构建表达；不只是解决问题，也是在回应内心。</p></div></header><main class=main-container><div class=content-wrapper><div class=main-content><article class=page-content><header class=page-article-header><h1 class=page-article-title>ClaudeCode工坊：commands、Agents、Skills与Mcp的实践指南</h1><div class=page-article-meta><time datetime=2026-04-02>2026年4月2日
+</time><span class=meta-separator>·</span>
+<a href=/categories/ai%E7%9B%B8%E5%85%B3>AI相关</a></div></header><blockquote><p>打造属于你的数字工匠工具箱</p></blockquote><hr><h2 id=一每个开发者都需要一个工坊>一、每个开发者都需要一个工坊</h2><p>好的工匠都有自己的工坊——工具挂在顺手的位置，技艺烂熟于心，需要材料时有可靠的供应商。</p><p>Claude Code 不只是一个"AI 助手"，它是你的<strong>数字工坊</strong>。你可以布置自己的工具（Commands）、培养技艺（Skills）、请来助手（Agents）、连接供应商（MCP）。</p><p>本文将带你了解如何打造适合自己的 Claude Code 工坊。</p><hr><h2 id=二commands挂在墙上的专用工具>二、Commands：挂在墙上的专用工具</h2><p>Commands 就像工匠墙上的刨子、凿子——你知道它在那里，需要时随手可取。</p><h3 id=什么是-commands>什么是 Commands</h3><p>Commands 属于<strong>手动激活</strong>的自定义指令集合。其核心逻辑是将高频复用的 Prompt 固化为 Markdown 格式，借由 <code>/指令名称</code> 实现一键唤出。</p><h3 id=存放位置>存放位置</h3><ul><li><strong>项目命令</strong>：<code>.claude/commands/</code> —— 可通过 Git 与团队共享</li><li><strong>个人命令</strong>：<code>~/.claude/commands/</code> —— 在所有项目中可用</li></ul><h3 id=文件格式>文件格式</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-markdown data-lang=markdown><span style=display:flex><span>---
+</span></span><span style=display:flex><span>allowed-tools: Bash(git:*), Read, Grep
+</span></span><span style=display:flex><span>argument-hint: [文件路径] [关注度]
+</span></span><span style=display:flex><span>description: 分析代码性能瓶颈
+</span></span><span style=display:flex><span>model: claude-sonnet-4-20250514
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>请分析当前代码中的性能问题。
+</span></span><span style=display:flex><span>重点检查：
+</span></span><span style=display:flex><span><span style=color:#66d9ef>1.</span> 冗余计算模式
+</span></span><span style=display:flex><span><span style=color:#66d9ef>2.</span> 内存泄漏风险
+</span></span><span style=display:flex><span><span style=color:#66d9ef>3.</span> 低效循环结构
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>文件：$1
+</span></span><span style=display:flex><span>关注度：$2
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>如果发现优化空间，请提供具体的改进方案。
+</span></span></code></pre></div><h3 id=frontmatter-配置字段>Frontmatter 配置字段</h3><table><thead><tr><th>字段</th><th>说明</th><th>示例</th></tr></thead><tbody><tr><td><code>description</code></td><td>该命令的功能简述，用于补全提示时的展示文本</td><td><code>"分析性能瓶颈"</code></td></tr><tr><td><code>allowed-tools</code></td><td>被授予免确认直接调用权限的工具集</td><td><code>Bash(git add:*), Read</code></td></tr><tr><td><code>argument-hint</code></td><td>提示用户输入参数时的格式范例</td><td><code>[文件] [优先级]</code></td></tr><tr><td><code>model</code></td><td>限定该命令执行时所调用的具体模型</td><td><code>claude-sonnet-4-20250514</code></td></tr></tbody></table><h3 id=参数语法>参数语法</h3><table><thead><tr><th>参数</th><th>说明</th><th>示例</th></tr></thead><tbody><tr><td><code>$ARGUMENTS</code></td><td>聚合所有调用时传入的参数值</td><td><code>/fix 123 high</code> → <code>$ARGUMENTS = "123 high"</code></td></tr><tr><td><code>$1, $2, $3...</code></td><td>按顺序索引的独立参数位</td><td><code>/fix 123 high</code> → <code>$1="123"</code>, <code>$2="high"</code></td></tr><tr><td><code>@文件路径</code></td><td>将指定路径文件的内容嵌入指令</td><td><code>@src/index.ts</code></td></tr><tr><td><code>!bash命令</code></td><td>运行 Shell 指令并将输出插入上下文</td><td><code>!git diff HEAD~1</code></td></tr></tbody></table><h3 id=命名空间>命名空间</h3><p>借助子目录层级对命令进行分类管理：</p><ul><li><code>.claude/commands/frontend/deploy.md</code> → <code>/deploy (project:frontend)</code></li><li><code>.claude/commands/backend/migrate.md</code> → <code>/migrate (project:backend)</code></li></ul><p>Commands 如同悬挂于工坊墙面的凿具与刨具——位置固定了然于胸，用时探手即得。</p><hr><h2 id=三agents你的学徒与助手>三、Agents：你的学徒与助手</h2><p>Agents 犹如工坊中受训的学徒工——分派具体差事后独立作业，完结后回禀成果。</p><h3 id=什么是-agents>什么是 Agents</h3><p>Agents 具备<strong>隔离的会话环境</strong>、<strong>定制化的行为指令</strong>以及<strong>限定的操作范围</strong>。它们自主承接专项事务，处理完毕后向主会话汇总成果。</p><h3 id=与-skill-的区别>与 Skill 的区别</h3><ul><li><strong>Skill</strong> 是"教会 Claude 新知识"</li><li><strong>Agent</strong> 是"派出另一个 Claude 去干活"</li></ul><h3 id=存放位置-1>存放位置</h3><ul><li><strong>项目代理</strong>：<code>.claude/agents/agent-name.md</code></li><li><strong>个人代理</strong>：<code>~/.claude/agents/agent-name.md</code></li><li><strong>插件代理</strong>：插件目录下的 <code>agents/agent-name.md</code></li></ul><h3 id=完整示例>完整示例</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-markdown data-lang=markdown><span style=display:flex><span>---
+</span></span><span style=display:flex><span>name: arch-reviewer
+</span></span><span style=display:flex><span>description: 系统架构评审专家。在模块设计或重构后自动进行架构合理性、接口一致性和依赖清晰度审查。
+</span></span><span style=display:flex><span>tools: Read, Grep, Glob
+</span></span><span style=display:flex><span>model: sonnet
+</span></span><span style=display:flex><span>permissionMode: default
+</span></span><span style=display:flex><span>skills: arch-design
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># 系统提示词
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>你是一位系统架构评审专家，负责确保模块设计的合理性和一致性。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>当被调用时：
+</span></span><span style=display:flex><span><span style=color:#66d9ef>1.</span> 运行 <span style=color:#e6db74>`git diff`</span> 查看最近的变更
+</span></span><span style=display:flex><span><span style=color:#66d9ef>2.</span> 聚焦于修改的接口和模块
+</span></span><span style=display:flex><span><span style=color:#66d9ef>3.</span> 立即开始评审
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>评审清单：
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> 模块划分合理
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> 接口设计一致
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> 依赖关系清晰
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> 扩展性考量充分
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> 无循环依赖
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> 遵循项目架构规范
+</span></span></code></pre></div><h3 id=配置字段详解>配置字段详解</h3><table><thead><tr><th>字段</th><th>必需</th><th>默认值</th><th>说明</th></tr></thead><tbody><tr><td><code>name</code></td><td>是</td><td>-</td><td>身份代号（仅限小写，支持连字符分隔）</td></tr><tr><td><code>description</code></td><td>是</td><td>-</td><td>阐明该代理的适用场景与调用时机</td></tr><tr><td><code>tools</code></td><td>否</td><td>所有工具</td><td>以逗号隔开的可用工具清单</td></tr><tr><td><code>model</code></td><td>否</td><td>配置的子代理模型</td><td>指定该代理运行时所采用的模型实例</td></tr><tr><td><code>permissionMode</code></td><td>否</td><td><code>default</code></td><td>定义代理遇到权限确认时的响应策略</td></tr><tr><td><code>skills</code></td><td>否</td><td>无</td><td>随代理启动时默认载入的能力集合</td></tr></tbody></table><h3 id=核心优势>核心优势</h3><ul><li><strong>上下文隔离</strong>：子代理的中间步骤不会污染主对话</li><li><strong>专业聚焦</strong>：通过专属系统提示词让代理更专注于特定任务</li><li><strong>工具限制</strong>：可限制代理只能使用特定工具，提高安全性</li></ul><h3 id=内置子代理>内置子代理</h3><table><thead><tr><th>代理</th><th>用途</th><th>可用工具</th></tr></thead><tbody><tr><td><strong>Plan Agent</strong></td><td>规划模式下的代码库研究</td><td>Read, Grep, Glob, Bash（只读）</td></tr><tr><td><strong>Explore Agent</strong></td><td>快速、只读的代码库探索</td><td>Read, Grep, Glob, Bash（只读）</td></tr><tr><td><strong>General-Purpose Agent</strong></td><td>复杂的多步骤任务</td><td>所有工具</td></tr></tbody></table><p>Agents 将 Claude Code 从"单机设备"升级为"协作班组"——你能够统筹多位专员并行作业，自身则始终锚定在关键决策环节。</p><hr><h2 id=四skills内化的手艺与肌肉记忆>四、Skills：内化的手艺与肌肉记忆</h2><p>Skills 恰似匠人经年累月形成的身体记忆——无需刻意思索，本能般自然流露。</p><h3 id=什么是-skills>什么是 Skills</h3><p>Skills 属于<strong>条件感应</strong>的能力增强模块，向 Claude 传授特定领域的处理方法。系统依据语义关联度自主识别并加载适用技能，免除人工显式指定的步骤。</p><h3 id=与-command-的区别>与 Command 的区别</h3><ul><li><strong>Command</strong> 是主动技能（按下按钮）</li><li><strong>Skill</strong> 是被动技能（条件触发）</li></ul><h3 id=存放位置-2>存放位置</h3><ul><li><strong>项目技能</strong>：<code>.claude/skills/技能名/SKILL.md</code></li><li><strong>个人技能</strong>：<code>~/.claude/skills/技能名/SKILL.md</code></li><li><strong>插件技能</strong>：插件目录下的 <code>skills/技能名/SKILL.md</code></li></ul><h3 id=目录结构示例>目录结构示例</h3><pre tabindex=0><code>.claude/skills/tech-writing/
+├── SKILL.md              # 核心技能文件（必需）
+├── reference.md          # 详细 API 文档
+├── examples.md           # 使用示例
+└── scripts/
+    └── diagram.py        # 辅助脚本
+</code></pre><h3 id=完整-skillmd-示例>完整 SKILL.md 示例</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-markdown data-lang=markdown><span style=display:flex><span>---
+</span></span><span style=display:flex><span>name: tech-writing
+</span></span><span style=display:flex><span>description: 撰写技术设计文档。当需要产出架构说明、接口定义，或用户询问&#34;如何记录这个设计&#34;时使用。
+</span></span><span style=display:flex><span>allowed-tools: Read, Grep, Glob
+</span></span><span style=display:flex><span>model: claude-opus-4-20250514
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># 技术文档撰写技能
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>撰写技术文档时，请始终遵循以下步骤：
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>1.</span> <span style=font-weight:700>**梳理背景诉求**</span>：说明设计要解决的问题和上下文
+</span></span><span style=display:flex><span><span style=color:#66d9ef>2.</span> <span style=font-weight:700>**绘制系统架构**</span>：使用 ASCII 艺术绘制模块关系图
+</span></span><span style=display:flex><span><span style=color:#66d9ef>3.</span> <span style=font-weight:700>**描述数据流向**</span>：一步步说明请求的处理过程
+</span></span><span style=display:flex><span><span style=color:#66d9ef>4.</span> <span style=font-weight:700>**标注决策考量**</span>：记录关键设计选择和取舍理由
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## 额外资源
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> 完整 API 详情参阅 [<span style=color:#f92672>reference.md</span>](<span style=color:#a6e22e>reference.md</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> 使用示例参阅 [<span style=color:#f92672>examples.md</span>](<span style=color:#a6e22e>examples.md</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## 辅助脚本
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>生成架构图：
+</span></span><span style=display:flex><span>```bash
+</span></span><span style=display:flex><span>python scripts/diagram.py design.md
+</span></span></code></pre></div><pre tabindex=0><code>
+### 元数据字段
+
+| 字段 | 必需 | 说明 |
+|------|------|------|
+| `name` | 是 | 技能代号（限小写与连字符，长度上限 64 字符） |
+| `description` | 是 | 阐释技能用途与触发条件（上限 1024 字符），供系统进行语义关联判断 |
+| `allowed-tools` | 否 | 被授予免确认直接调用权限的工具集 |
+| `model` | 否 | 限定该技能执行时所调用的具体模型 |
+
+### 渐进式披露模式
+
+最佳实践：主 `SKILL.md` 文件保持在 500 行以内，详细内容放在关联文件中。
+
+```markdown
+## 概述
+[核心指令]
+
+## 额外资源
+- 完整 API 详情参阅 [reference.md](reference.md)
+- 使用示例参阅 [examples.md](examples.md)
+
+## 辅助脚本
+运行验证：
+```bash
+python scripts/validate.py input.txt
+</code></pre><pre tabindex=0><code>
+### 技能工作流程
+
+1. **发现**：Claude 启动时加载所有技能的名称和描述
+2. **激活**：当用户请求与某技能描述匹配时，Claude 请求使用该技能
+3. **执行**：Claude 读取完整的 SKILL.md 内容并按指令执行
+
+Skills 让 Claude 学会了&#34;读空气&#34;——它开始理解你话语背后的真实需求。
+
+---
+
+## 五、MCP：外部材料与支援网络
+
+MCP 好比工坊的物资供应渠道——无论何种原料需求，皆能按需调配。
+
+### 什么是 MCP
+
+MCP（Model Context Protocol）作为**统一对接规范**，使 Claude 得以桥接外部服务生态。它突破 Claude 原生能力疆域，打通与外围系统（检索引擎、数据存储、文件管理）的数据通道。
+
+### MCP 与 Skill/Agent 的区别
+
+- **Skill/Agent** 是 Claude 的&#34;内在能力&#34;
+- **MCP** 是&#34;外部连接&#34;，调用外部服务
+
+### 配置位置
+
+- **项目级**：`.mcp.json`
+- **用户级**：`~/.mcp.json`（跨项目可用）
+
+### 示例配置
+
+```json
+{
+  &#34;mcpServers&#34;: {
+    &#34;filesystem&#34;: {
+      &#34;command&#34;: &#34;npx&#34;,
+      &#34;args&#34;: [&#34;-y&#34;, &#34;@modelcontextprotocol/server-filesystem&#34;, &#34;./docs&#34;],
+      &#34;env&#34;: {}
+    },
+    &#34;sqlite&#34;: {
+      &#34;command&#34;: &#34;npx&#34;,
+      &#34;args&#34;: [&#34;-y&#34;, &#34;@modelcontextprotocol/server-sqlite&#34;, &#34;./data.db&#34;],
+      &#34;env&#34;: {}
+    }
+  }
+}
+</code></pre><h3 id=mcp-配置示例>MCP 配置示例</h3><table><thead><tr><th>变量</th><th>默认</th><th>选项</th><th>说明</th></tr></thead><tbody><tr><td><code>DATABASE_PATH</code></td><td><code>./data.db</code></td><td>任意有效路径</td><td>数据库存储文件的所在路径</td></tr><tr><td><code>READ_ONLY</code></td><td><code>false</code></td><td><code>true</code>, <code>false</code></td><td>控制是否仅允许读取操作的标志位</td></tr><tr><td><code>ROOT_DIR</code></td><td><code>./</code></td><td>任意有效目录</td><td>设定文件系统访问的基准目录</td></tr></tbody></table><h3 id=实际应用>实际应用</h3><ul><li>需要文件操作？接入 Filesystem MCP</li><li>需要数据查询？接入 SQLite MCP</li><li>需要版本管理？接入 Git MCP</li></ul><p>MCP 让工坊不再是封闭的。你可以连接无限的外部资源，能力边界被大大扩展。</p><hr><h2 id=六plugin成套的工具箱>六、Plugin：成套的工具箱</h2><p>Plugins 宛若规格统一的工具套装——支持整体收纳、流转与多次启用。</p><h3 id=什么是-plugins>什么是 Plugins</h3><p>Plugin 充当着 Commands、Agents、Skills、Hooks 及 MCP 配置的<strong>集合封装载体</strong>，用于整体交付与复用。</p><p><strong>本质</strong>：Plugin 不是功能本身，是<strong>包装器</strong>。</p><h3 id=目录结构>目录结构</h3><pre tabindex=0><code>my-plugin/
+├── .claude-plugin/
+│   └── plugin.json      # 必需 - 插件清单
+├── commands/            # 可选 - 斜杠命令
+│   └── hello.md
+├── agents/              # 可选 - 子代理
+│   └── arch-reviewer.md
+├── skills/              # 可选 - 技能
+│   └── tech-writing/
+│       └── SKILL.md
+├── hooks/               # 可选 - 钩子
+│   └── hooks.json
+├── .mcp.json            # 可选 - MCP 服务器配置
+├── .lsp.json            # 可选 - LSP 服务器配置
+├── README.md
+└── LICENSE
+</code></pre><h3 id=插件清单-pluginjson>插件清单 (plugin.json)</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;name&#34;</span>: <span style=color:#e6db74>&#34;team-dev-toolkit&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;description&#34;</span>: <span style=color:#e6db74>&#34;团队开发规范检查与格式化工具集&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;version&#34;</span>: <span style=color:#e6db74>&#34;1.0.0&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;author&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;name&#34;</span>: <span style=color:#e6db74>&#34;Your Name&#34;</span>
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;homepage&#34;</span>: <span style=color:#e6db74>&#34;https://github.com/user/team-dev-toolkit&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;repository&#34;</span>: <span style=color:#e6db74>&#34;https://github.com/user/team-dev-toolkit&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;license&#34;</span>: <span style=color:#e6db74>&#34;MIT&#34;</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=清单字段>清单字段</h3><table><thead><tr><th>字段</th><th>必需</th><th>说明</th></tr></thead><tbody><tr><td><code>name</code></td><td>是</td><td>全局唯一的身份代号，同时充当斜杠指令的前缀域</td></tr><tr><td><code>description</code></td><td>是</td><td>展示于插件管理界面的功能简介</td></tr><tr><td><code>version</code></td><td>是</td><td>遵循语义化规范的版本标识（例：1.0.0）</td></tr><tr><td><code>author</code></td><td>否</td><td>创作者的标识信息</td></tr><tr><td><code>homepage</code></td><td>否</td><td>指向插件官方页面的链接地址</td></tr><tr><td><code>repository</code></td><td>否</td><td>存放源代码的版本控制仓库地址</td></tr><tr><td><code>license</code></td><td>否</td><td>所采用的软件授权协议类别</td></tr></tbody></table><h3 id=插件组件详解>插件组件详解</h3><p><strong>Commands（命令）</strong>：</p><ul><li>放在 <code>commands/</code> 目录</li><li>自动添加命名空间：<code>commands/hello.md</code> → <code>/my-plugin:hello</code></li></ul><p><strong>Agents（代理）</strong>：</p><ul><li>放在 <code>agents/</code> 目录</li><li>格式与独立代理文件相同</li></ul><p><strong>Skills（技能）</strong>：</p><ul><li>放在 <code>skills/</code> 目录</li><li>每个技能一个文件夹，包含 <code>SKILL.md</code></li></ul><p><strong>Hooks（钩子）</strong>：</p><ul><li>放在 <code>hooks/hooks.json</code></li><li>定义事件处理器</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;hooks&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;PostToolUse&#34;</span>: [
+</span></span><span style=display:flex><span>      {
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&#34;matcher&#34;</span>: <span style=color:#e6db74>&#34;Write|Edit&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&#34;hooks&#34;</span>: [{<span style=color:#f92672>&#34;type&#34;</span>: <span style=color:#e6db74>&#34;command&#34;</span>, <span style=color:#f92672>&#34;command&#34;</span>: <span style=color:#e6db74>&#34;npm run lint:fix $FILE&#34;</span>}]
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>    ]
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>MCP 服务器</strong>：</p><ul><li>放在 <code>.mcp.json</code></li><li>与独立 MCP 配置格式相同</li></ul><p><strong>LSP 服务器</strong>：</p><ul><li>放在 <code>.lsp.json</code></li><li>定义语言服务器配置</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;go&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;command&#34;</span>: <span style=color:#e6db74>&#34;gopls&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;args&#34;</span>: [<span style=color:#e6db74>&#34;serve&#34;</span>],
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;extensionToLanguage&#34;</span>: {
+</span></span><span style=display:flex><span>      <span style=color:#f92672>&#34;.go&#34;</span>: <span style=color:#e6db74>&#34;go&#34;</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=开发与测试>开发与测试</h3><p><strong>本地测试</strong>：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>claude --plugin-dir ./my-plugin
+</span></span></code></pre></div><p><strong>测试多个插件</strong>：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>claude --plugin-dir ./plugin-one --plugin-dir ./plugin-two
+</span></span></code></pre></div><p><strong>从现有配置创建插件</strong>：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir my-plugin
+</span></span><span style=display:flex><span>mkdir my-plugin/.claude-plugin
+</span></span><span style=display:flex><span>cp -r .claude/commands my-plugin/
+</span></span><span style=display:flex><span>cp -r .claude/agents my-plugin/
+</span></span><span style=display:flex><span>cp -r .claude/skills my-plugin/
+</span></span></code></pre></div><h3 id=分发方式>分发方式</h3><ol><li>添加 <code>README.md</code> 说明安装和使用方法</li><li>使用语义版本号管理版本</li><li>发布到插件市场</li><li>用户通过 <code>/plugin install plugin-name@marketplace-name</code> 安装</li></ol><p>Plugin 让个人经验变成了团队资产。好的工坊，值得被复制。</p><hr><h2 id=七如何选择决策指南>七、如何选择：决策指南</h2><p>好的工匠知道什么活用什么工具。以下是选择决策树：</p><pre tabindex=0><code>遇到任务 ↓
+├─ 明确知道要做什么？
+│  └─ 是 → Command（显式调用）
+│  └─ 否 → 继续
+├─ 任务复杂，可能污染对话？
+│  └─ 是 → Agent（独立上下文）
+│  └─ 否 → 继续
+├─ 希望自动识别处理？
+│  └─ 是 → Skill（语义触发）
+│
+└─ 需要外部数据/工具？
+   └─ 是 → MCP（外部连接）
+</code></pre><h3 id=选择对比表>选择对比表</h3><table><thead><tr><th>场景</th><th>选择</th><th>原因</th></tr></thead><tbody><tr><td>高频确定性任务</td><td>Command</td><td>响应精确且执行迅速</td></tr><tr><td>复杂多步骤任务</td><td>Agent</td><td>环境隔离且职责专注</td></tr><tr><td>模糊需求处理</td><td>Skill</td><td>自适应识别并自主触发</td></tr><tr><td>需要外部数据</td><td>MCP</td><td>能力外延与系统互联</td></tr><tr><td>团队标准化</td><td>Plugin</td><td>整体封装便于共享复现</td></tr></tbody></table><hr><h2 id=八打造属于你的工坊>八、打造属于你的工坊</h2><h3 id=总结>总结</h3><table><thead><tr><th>机制</th><th>一句话定义</th><th>核心价值</th></tr></thead><tbody><tr><td><strong>Command</strong></td><td>手动激活的快捷指令模板</td><td>高频率操作，精确调控</td></tr><tr><td><strong>Agent</strong></td><td>隔离会话的专业执行单元</td><td>复杂事务，防止上下文干扰</td></tr><tr><td><strong>Skill</strong></td><td>条件感应的能力增强模块</td><td>自适应匹配，零感知调用</td></tr><tr><td><strong>MCP</strong></td><td>外部系统对接规范</td><td>边界拓展，生态互联</td></tr><tr><td><strong>Plugin</strong></td><td>集合封装的交付载体</td><td>群体复用，规范统一</td></tr></tbody></table><p>Claude Code 的价值核心，并非源于其原生智能水平，而在于赋予使用者<strong>构建个性化作业管线</strong>的权限。</p><p>自触手可及的器具（Commands），到身体记忆般的技艺（Skills），再至可托付的协作人（Agents）与无边界的原料库（MCP）——这套体系支持持续迭代与进化。</p><p>现在，开始布置你的工坊吧。</p><div class=post-tags><a href=/tags/claudecode class=post-tag>#ClaudeCode</a>
+<a href=/tags/agent class=post-tag>#Agent</a>
+<a href=/tags/skill class=post-tag>#Skill</a>
+<a href=/tags/mcp class=post-tag>#Mcp</a>
+<a href=/tags/%E5%AE%9E%E8%B7%B5%E6%8C%87%E5%8D%97 class=post-tag>#实践指南</a>
+<a href=/tags/ai class=post-tag>#AI</a>
+<a href=/tags/%E6%99%BA%E8%83%BD%E4%BD%93 class=post-tag>#智能体</a>
+<a href=/tags/anthropic class=post-tag>#Anthropic</a>
+<a href=/tags/%E4%BB%A3%E7%A0%81 class=post-tag>#代码</a></div><nav class=post-nav><a href=/posts/%E6%88%91%E4%B8%8D%E5%85%BB%E9%BE%99%E8%99%BE%E5%9B%A0%E4%B8%BA%E6%88%91%E6%9C%89claudecode/ class=prev-post><span class=nav-label>← 上一篇</span>
+<span class=nav-title>我不养龙虾因为我有ClaudeCode</span>
+</a><a href=/posts/%E7%AC%AC4%E7%AB%A0-%E4%BA%8B%E4%BB%B6%E7%B3%BB%E7%BB%9F/ class=next-post><span class=nav-label>下一篇 →</span>
+<span class=nav-title>第4章 事件系统</span></a></nav><script src=https://giscus.app/client.js data-repo=heheboy/heheboy.github.io data-repo-id=R_kgDORzG4BQ data-category=Announcements data-category-id=DIC_kwDORzG4Bc4C54kN data-mapping=pathname data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=light data-lang=zh-CN crossorigin=anonymous async></script></article></div><aside class=sidebar><div class="sidebar-widget author-widget"><img class=author-avatar src=/img/avatar.jpg alt=熟童><h3 class=author-name>熟童</h3><p class=author-bio>熟童，一个在代码、咖啡与虚拟世界之间反复横跳的人。写程序、做游戏、研究AI，也会认真对待一杯咖啡的参数曲线。这里记录的不只是技术，还有那些被实现出来的想法。相信技术不只是工具，它也可以有温度。</p><div class=author-social><a href=https://github.com/heheboy target=_blank rel=noopener aria-label=GitHub><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 0C5.37.0.0 5.37.0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57.0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925.0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18.0.0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225.0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22.0 1.605-.015 2.895-.015 3.3.0.315.225.69.825.57A12.02 12.02.0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+</a><a href=https://space.bilibili.com/8756982 target=_blank rel=noopener aria-label=Bilibili><svg viewBox="0 0 24 24"><path fill="currentColor" d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858.0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234.0 11.704-1.778L8.46 4.45V4.267a1.227 1.227.0 112.453.0V5.32l2.823-2.695a1.234 1.234.0 011.704 1.778l-1.687 1.12zm-3.28 9.653c-.56.0-1.013.453-1.013 1.013s.453 1.013 1.013 1.013 1.013-.453 1.013-1.013-.453-1.013-1.013-1.013zm-6 0c-.56.0-1.013.453-1.013 1.013s.453 1.013 1.013 1.013 1.013-.453 1.013-1.013-.453-1.013-1.013-1.013z"/></svg>
+</a><a href=https://www.facebook.com/dio.zeng.2025 target=_blank rel=noopener aria-label=Facebook><svg viewBox="0 0 24 24"><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312.0 2.686.235 2.686.235v2.953H15.83c-1.491.0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><div class=social-wechat-wrapper><a href=# class=social-wechat-trigger aria-label=WeChat><svg viewBox="0 0 24 24"><path fill="currentColor" d="M8.691 2.188C3.891 2.188.0 5.476.0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59.0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213.0.163.13.295.29.295a.326.326.0 00.167-.054l1.903-1.114a.864.864.0 01.717-.098 10.16 10.16.0 002.837.403c.276.0.543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642.0 1.162.529 1.162 1.18A1.17 1.17.0 015.785 8.349 1.17 1.17.0 014.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813.0c.642.0 1.162.529 1.162 1.18a1.17 1.17.0 01-1.162 1.178 1.17 1.17.0 01-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826.0 1.622-.12 2.361-.336a.722.722.0 01.598.082l1.584.926a.272.272.0 00.14.047c.134.0.24-.111.24-.247.0-.06-.023-.12-.038-.177l-.327-1.233a.582.582.0 01-.023-.156.49.49.0 01.201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088V8.89c-.135-.01-.27-.027-.407-.03zm-2.53 3.274c.535.0.969.44.969.982a.976.976.0 01-.969.983.976.976.0 01-.969-.983c0-.542.434-.982.97-.982zm4.844.0c.535.0.969.44.969.982a.976.976.0 01-.969.983.976.976.0 01-.969-.983c0-.542.434-.982.969-.982z"/></svg></a><div class=wechat-qr-popup><img src=/img/wechat-qr.png alt="WeChat QR Code">
+<span>扫码加我</span></div></div><a href=https://www.instagram.com/bengbeng9548/ target=_blank rel=noopener aria-label=Instagram><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.163c3.204.0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849.0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204.0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849.0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741.0 8.333.014 7.053.072c-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.668.072 4.948c.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403.0-6.162 2.759-6.162 6.162S8.597 18.163 12 18.163s6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zM12 16c-2.209.0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796.0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795.0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a><div class=social-email-wrapper><a href=mailto:bengbeng9548@qq.com class=social-email aria-label=Email><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 4H4c-1.1.0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1.0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+<span>bengbeng9548@qq.com</span></a></div></div></div><div class="sidebar-widget categories-widget"><h4>分类</h4><div class=category-cloud><a href=/categories/%E5%92%96%E5%95%A1%E7%9B%B8%E5%85%B3/ class=category-link>咖啡相关
+<span class=category-count>(12)</span>
+</a><a href=/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/ class=category-link>游戏开发
+<span class=category-count>(12)</span>
+</a><a href=/categories/ai%E7%9B%B8%E5%85%B3/ class=category-link>AI相关
+<span class=category-count>(2)</span>
+</a><a href=/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/ class=category-link>生活随记
+<span class=category-count>(1)</span></a></div></div><div class="sidebar-widget tags-widget"><h4>标签</h4><div class=tag-cloud><a href=/tags/c%23/ class=tag-link style=font-size:1.5em>C#
+</a><a href=/tags/csharp/ class=tag-link style=font-size:1.5em>CSharp
+</a><a href=/tags/godot/ class=tag-link style=font-size:1.5em>Godot
+</a><a href=/tags/%E5%92%96%E5%95%A1/ class=tag-link style=font-size:1.5em>咖啡
+</a><a href=/tags/%E5%92%96%E5%95%A1%E8%B1%86/ class=tag-link style=font-size:1.5em>咖啡豆
+</a><a href=/tags/%E5%BC%80%E5%8F%91/ class=tag-link style=font-size:1.5em>开发
+</a><a href=/tags/%E5%92%96%E5%95%A1%E7%83%98%E7%84%99/ class=tag-link style=font-size:1.5em>咖啡烘焙
+</a><a href=/tags/%E6%9E%B6%E6%9E%84/ class=tag-link style=font-size:1.5em>架构
+</a><a href=/tags/agent/ class=tag-link style=font-size:1em>Agent
+</a><a href=/tags/ai/ class=tag-link style=font-size:1em>AI
+</a><a href=/tags/claudecode/ class=tag-link style=font-size:1em>ClaudeCode
+</a><a href=/tags/%E5%92%96%E5%95%A1%E7%94%9F%E8%B1%86/ class=tag-link style=font-size:1em>咖啡生豆
+</a><a href=/tags/%E6%99%BA%E8%83%BD%E4%BD%93/ class=tag-link style=font-size:1em>智能体
+</a><a href=/tags/%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF/ class=tag-link style=font-size:1em>烘焙曲线
+</a><a href=/tags/anthropic/ class=tag-link style=font-size:.9em>Anthropic
+</a><a href=/tags/cc/ class=tag-link style=font-size:.9em>Cc
+</a><a href=/tags/mcp/ class=tag-link style=font-size:.9em>Mcp
+</a><a href=/tags/openclaw/ class=tag-link style=font-size:.9em>OpenClaw
+</a><a href=/tags/skill/ class=tag-link style=font-size:.9em>Skill
+</a><a href=/tags/ui/ class=tag-link style=font-size:.9em>UI</a></div></div><div class="sidebar-widget links-widget"><h4>友情链接</h4><div class=links-list><a href=https://gohugo.io target=_blank rel=noopener class=link-item title="Hugo 静态网站生成器官方文档"><span class=link-name>Hugo 官方</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+</a><a href=https://github.com/heheboy/hugo-cms target=_blank rel=noopener class=link-item title=hugo-cms的项目连接><span class=link-name>Hugo-cms</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+</a><a href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener class=link-item title=主题的项目连接><span class=link-name>hugo-cms-theme</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></a></div></div></aside></div></main><footer class=site-footer><div class=footer-content><p class=copyright>&copy; 2026 熟童.
+All rights reserved.</p><div class=footer-info><span class=footer-info-item><a href=https://github.com/heheboy/hugo-cms target=_blank rel=noopener>本网站由Hugo驱动,使用Hugo-cms制作
+</a></span><span class=footer-info-item><a href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener>主题采用 hugo-cms-theme
+</a><a class=github-star-link href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener title="GitHub Stars"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 0c4.42.0 8 3.58 8 8a8.013 8.013.0 01-5.45 7.59c-.4.08-.55-.17-.55-.38.0-.27.01-1.13.01-2.2.0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95.0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12.0.0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27s-1.36.09-2 .27c-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15.0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94.0.67.01 1.3.01 1.49.0.21-.15.45-.55.38A7.995 7.995.0 010 8c0-4.42 3.58-8 8-8z"/></svg>
+<span>Star</span></a></span></div><div class=footer-links><a href=/index.xml class=footer-link target=_blank rel=noopener aria-label=RSS订阅><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6.503 20.752C6.503 22.546 5.047 24 3.252 24c-1.796.0-3.252-1.454-3.252-3.248s1.456-3.248 3.252-3.248c1.795.001 3.251 1.454 3.251 3.248zM0 8.18v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817C15.777 15.29 8.721 8.242.0 8.18zm0-3.368C10.58 4.858 19.152 13.406 19.183 24H24c-.03-13.231-10.736-23.954-24-24v4.812z"/></svg>
+<span>RSS 订阅</span>
+</a><span class=footer-link-separator>|</span>
+<a href=/sitemap.xml class=footer-link target=_blank rel=noopener aria-label=网站地图><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 3l-6 1.5L8.501 3l-6 1.5v15l6-1.5 5.999 1.5 6-1.5V3zM15 16.656l-5.999-1.5V3.844L15 5.344v11.312zm1-11.312 4 .999v11.312l-4-.999V5.344zm-7 .499-4-.999v11.312l4 .999V5.843z"/></svg>
+<span>网站地图</span></a></div></div></footer><script>(function(){const t=document.querySelector(".theme-toggle");if(!t)return;const e=document.documentElement,n=localStorage.getItem("theme");n&&e.setAttribute("data-theme",n),t.addEventListener("click",()=>{const n=e.getAttribute("data-theme"),t=n==="dark"?"light":"dark";e.setAttribute("data-theme",t),localStorage.setItem("theme",t)})})()</script><script>(function(){const e=document.querySelector(".nav-toggle"),t=document.querySelector(".nav-menu");e&&e.addEventListener("click",()=>{t.classList.toggle("active"),e.classList.toggle("active")})})()</script></body></html>

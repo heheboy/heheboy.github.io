@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>烘焙曲线 on 熟童·实验室</title><link>https://heheboy.github.io/tags/%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF/</link><description>Recent content in 烘焙曲线 on 熟童·实验室</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sat, 25 Apr 2026 01:57:17 +0800</lastBuildDate><atom:link href="https://heheboy.github.io/tags/%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF/index.xml" rel="self" type="application/rss+xml"/><item><title>第11章 特定产地豆的烘焙曲线设计</title><link>https://heheboy.github.io/posts/%E7%AC%AC11%E7%AB%A0-%E7%89%B9%E5%AE%9A%E4%BA%A7%E5%9C%B0%E8%B1%86%E7%9A%84%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF%E8%AE%BE%E8%AE%A1/</link><pubDate>Sat, 25 Apr 2026 01:57:17 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC11%E7%AB%A0-%E7%89%B9%E5%AE%9A%E4%BA%A7%E5%9C%B0%E8%B1%86%E7%9A%84%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF%E8%AE%BE%E8%AE%A1/</guid><description>&lt;h2 id="111-非洲产区"&gt;11.1 非洲产区&lt;/h2&gt;
+&lt;h3 id="1111-埃塞俄比亚ethiopia"&gt;11.1.1 埃塞俄比亚（Ethiopia）&lt;/h3&gt;
+&lt;h4 id="耶加雪菲yirgacheffe水洗"&gt;耶加雪菲（Yirgacheffe）水洗&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;生豆特性&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;基本参数：
+├── 海拔：1750-2200m
+├── 密度：1.18-1.22 g/cm³（极高密度）
+├── 水分：11-12%
+├── 品种：原生种（Heirloom）、74110、74112
+├── 处理法：水洗为主
+├── 粒径：偏小（16-17#）
+└── 收获期：10月-次年1月
+
+风味特征：
+├── 花香：茉莉、橙花
+├── 酸质：柑橘、柠檬、茶感
+├── 甜感：蜂蜜、红糖
+├── 茶感：伯爵茶、绿茶
+└── 整体：精致、优雅、复杂
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;推荐烘焙曲线&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>第8章 烘焙曲线设计原理</title><link>https://heheboy.github.io/posts/%E7%AC%AC8%E7%AB%A0-%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86/</link><pubDate>Thu, 09 Apr 2026 23:01:30 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC8%E7%AB%A0-%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86/</guid><description>&lt;h2 id="81-烘焙曲线的组成要素"&gt;8.1 烘焙曲线的组成要素&lt;/h2&gt;
+&lt;h3 id="811-曲线维度定义"&gt;8.1.1 曲线维度定义&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;烘焙曲线的三个维度：
+
+时间（X轴）：从开始到结束的全程
+├── 总时间：8-15分钟（典型）
+├── 各阶段时长分配
+└── 发展时间比率（DTR）
+
+温度（Y轴）：豆温变化轨迹
+├── 入豆温：160-220°C
+├── 回温点：80-120°C
+├── 一爆温：195-205°C
+├── 二爆温：220-230°C
+└── 下豆温：200-235°C
+
+速率（导数）：升温速率（ROR）
+├── 干燥期：10-15°C/min
+├── 梅纳期：6-10°C/min
+├── 焦糖化期：5-8°C/min
+├── 一爆期：3-6°C/min
+└── 发展期：2-5°C/min
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="812-标准曲线模板"&gt;8.1.2 标准曲线模板&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;浅烘曲线（Light Roast）&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>

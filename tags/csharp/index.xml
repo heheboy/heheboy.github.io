@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CSharp on 熟童·实验室</title><link>https://heheboy.github.io/tags/csharp/</link><description>Recent content in CSharp on 熟童·实验室</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sat, 25 Apr 2026 01:53:34 +0800</lastBuildDate><atom:link href="https://heheboy.github.io/tags/csharp/index.xml" rel="self" type="application/rss+xml"/><item><title>第12章 状态同步策略</title><link>https://heheboy.github.io/posts/%E7%AC%AC12%E7%AB%A0-%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5%E7%AD%96%E7%95%A5/</link><pubDate>Sat, 25 Apr 2026 01:53:34 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC12%E7%AB%A0-%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5%E7%AD%96%E7%95%A5/</guid><description>&lt;h2 id="121-状态快照同步snapshot-interpolation"&gt;12.1 状态快照同步（Snapshot Interpolation）&lt;/h2&gt;
+&lt;p&gt;状态快照同步是现代多人游戏中最常用的同步技术，它通过定期发送完整游戏状态快照来保持客户端一致性。&lt;/p&gt;
+&lt;h3 id="1211-快照系统架构"&gt;12.1.1 快照系统架构&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;设计思路与原理&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;状态快照同步是多人游戏最常用的同步方式，服务器定期广播游戏世界的完整状态，客户端根据快照更新显示。&lt;/p&gt;
+&lt;p&gt;核心概念：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;快照&lt;/strong&gt;：某一时刻游戏世界的完整状态&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;序列号&lt;/strong&gt;：用于识别和排序快照&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;时间戳&lt;/strong&gt;：服务器生成快照的时间&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;插值延迟&lt;/strong&gt;：客户端延迟渲染以获得平滑效果&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;同步流程：&lt;/p&gt;</description></item><item><title>第11章 网络基础架构</title><link>https://heheboy.github.io/posts/%E7%AC%AC11%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84/</link><pubDate>Sat, 25 Apr 2026 01:52:33 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC11%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84/</guid><description>&lt;h2 id="111-多人游戏架构模式"&gt;11.1 多人游戏架构模式&lt;/h2&gt;
+&lt;p&gt;在多人游戏开发中，选择合适的网络架构是至关重要的决策，它直接影响游戏的性能、安全性、开发复杂度以及玩家体验。&lt;/p&gt;
+&lt;h3 id="1111-客户端-服务器架构clientserver"&gt;11.1.1 客户端-服务器架构（Client/Server）&lt;/h3&gt;
+&lt;p&gt;C/S架构是当前多人游戏中最常用的模式，特点是所有游戏逻辑和状态都由服务器权威控制。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;架构原理：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+│ 客户端A │◄────►│ │◄────►│ 客户端B │
+└─────────────┘ │ 服务器 │ └─────────────┘
+┌─────────────┐ │ (权威) │ ┌─────────────┐
+│ 客户端C │◄────►│ │◄────►│ 客户端D │
+└─────────────┘ └─────────────┘ └─────────────┘
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;优势：&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>第10章 Ui架构</title><link>https://heheboy.github.io/posts/%E7%AC%AC10%E7%AB%A0-ui%E6%9E%B6%E6%9E%84/</link><pubDate>Sat, 25 Apr 2026 01:50:59 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC10%E7%AB%A0-ui%E6%9E%B6%E6%9E%84/</guid><description>&lt;p&gt;UI架构是游戏开发中至关重要的部分。本章介绍MVVM模式在Godot中的实现、UI状态机和弹窗栈管理，帮助开发者构建清晰、可维护的UI系统。&lt;/p&gt;
+&lt;h2 id="101-mvvm在godot中的实现"&gt;10.1 MVVM在Godot中的实现&lt;/h2&gt;
+&lt;h3 id="1010-设计原理与思路"&gt;10.1.0 设计原理与思路&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;MVVM模式的核心概念&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;MVVM（Model-View-ViewModel）是一种将UI逻辑与业务逻辑分离的架构模式，其设计理念可用以下层次结构表示：&lt;/p&gt;</description></item><item><title>第9章 配置与数据</title><link>https://heheboy.github.io/posts/%E7%AC%AC9%E7%AB%A0-%E9%85%8D%E7%BD%AE%E4%B8%8E%E6%95%B0%E6%8D%AE/</link><pubDate>Thu, 09 Apr 2026 22:57:45 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC9%E7%AB%A0-%E9%85%8D%E7%BD%AE%E4%B8%8E%E6%95%B0%E6%8D%AE/</guid><description>&lt;p&gt;配置与数据管理是游戏开发的重要组成部分。本章介绍Resource驱动配置系统、存档系统和本地化框架，帮助开发者高效管理游戏数据和配置。&lt;/p&gt;
+&lt;h2 id="91-resource驱动配置系统"&gt;9.1 Resource驱动配置系统&lt;/h2&gt;
+&lt;h3 id="910-设计原理与思路"&gt;9.1.0 设计原理与思路&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Resource系统的核心优势&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Godot的Resource系统是游戏配置管理的理想选择，其设计理念源于数据驱动开发（Data-Driven Development）。相比传统的硬编码或外部配置文件，Resource具有以下独特优势：&lt;/p&gt;</description></item><item><title>第8章 行为模式</title><link>https://heheboy.github.io/posts/%E7%AC%AC8%E7%AB%A0-%E8%A1%8C%E4%B8%BA%E6%A8%A1%E5%BC%8F/</link><pubDate>Thu, 09 Apr 2026 22:56:38 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC8%E7%AB%A0-%E8%A1%8C%E4%B8%BA%E6%A8%A1%E5%BC%8F/</guid><description>&lt;p&gt;行为模式关注对象之间的通信和职责分配。本章介绍命令模式、策略模式和访问者模式，这些模式能够帮助开发者构建灵活、可扩展的游戏行为系统。&lt;/p&gt;
+&lt;h2 id="81-命令模式"&gt;8.1 命令模式&lt;/h2&gt;
+&lt;p&gt;命令模式将请求封装为对象，支持参数化客户端、队列请求、日志记录和撤销操作。&lt;/p&gt;
+&lt;h3 id="811-设计原理与思路"&gt;8.1.1 设计原理与思路&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;命令模式的Undo/Redo机制&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;命令模式的核心价值在于将操作封装为独立的对象，这使得操作可以被存储、传递、排队和执行。Undo/Redo机制建立在这个基础之上：&lt;/p&gt;</description></item><item><title>第7章 对象与资源管理</title><link>https://heheboy.github.io/posts/%E7%AC%AC7%E7%AB%A0-%E5%AF%B9%E8%B1%A1%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/</link><pubDate>Thu, 09 Apr 2026 22:55:25 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC7%E7%AB%A0-%E5%AF%B9%E8%B1%A1%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/</guid><description>&lt;p&gt;对象与资源管理是游戏开发中的核心问题。本章介绍三种关键的设计模式：对象池模式、工厂模式和服务定位器模式，帮助开发者高效管理游戏对象的生命周期和创建过程。&lt;/p&gt;
+&lt;h2 id="71-对象池模式"&gt;7.1 对象池模式&lt;/h2&gt;
+&lt;p&gt;对象池模式通过预先创建并复用对象来避免频繁的内存分配和垃圾回收，显著提升游戏性能。&lt;/p&gt;
+&lt;h3 id="711-设计原理与思路"&gt;7.1.1 设计原理与思路&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;对象池模式的核心概念&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;对象池模式是一种创建型设计模式，其核心思想是预先创建一组对象并保存在&amp;quot;池&amp;quot;中，当需要使用时从池中获取，使用完毕后归还到池中而不是销毁。这种模式避免了频繁的内存分配和垃圾回收（GC），特别适用于需要大量创建和销毁对象的场景。&lt;/p&gt;</description></item><item><title>第6章 组件与组合</title><link>https://heheboy.github.io/posts/%E7%AC%AC6%E7%AB%A0-%E7%BB%84%E4%BB%B6%E4%B8%8E%E7%BB%84%E5%90%88/</link><pubDate>Tue, 07 Apr 2026 17:38:26 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC6%E7%AB%A0-%E7%BB%84%E4%BB%B6%E4%B8%8E%E7%BB%84%E5%90%88/</guid><description>&lt;p&gt;组件化架构是现代游戏开发的核心设计模式之一。本章将介绍如何在 Godot C# 中构建灵活的组件系统，包括传统组件模式、轻量级 ECS 架构以及依赖注入容器的实现。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="1-设计原理与思路"&gt;1. 设计原理与思路&lt;/h2&gt;
+&lt;h3 id="11-组合优于继承的设计哲学"&gt;1.1 组合优于继承的设计哲学&lt;/h3&gt;
+&lt;p&gt;传统的面向对象编程倾向于使用继承来复用代码，但在游戏开发中，继承往往会导致以下问题：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;继承的困境&lt;/strong&gt;：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-csharp" data-lang="csharp"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// 继承导致的类爆炸&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Character&lt;/span&gt; : Node { }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Player&lt;/span&gt; : Character { }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// 玩家可以飞行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;FlyingPlayer&lt;/span&gt; : Player { }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// 玩家可以隐身&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;InvisiblePlayer&lt;/span&gt; : Player { }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// 玩家既可以飞行又可以隐身？&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// public class FlyingInvisiblePlayer : ??? // 多重继承问题&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;组合的解决方案&lt;/strong&gt;：&lt;/p&gt;</description></item><item><title>第5章 状态管理</title><link>https://heheboy.github.io/posts/%E7%AC%AC5%E7%AB%A0-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/</link><pubDate>Tue, 07 Apr 2026 17:36:54 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC5%E7%AB%A0-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/</guid><description>&lt;p&gt;状态管理是游戏开发中的核心问题。角色需要在空闲、奔跑、跳跃、攻击等状态间切换；AI需要在巡逻、追击、攻击等状态间转换；UI需要在不同界面状态间导航。本章将介绍三种状态管理模式：有限状态机（FSM）、分层状态机（Hierarchical FSM）和下推自动机（Pushdown Automata）。&lt;/p&gt;
+&lt;h2 id="1-设计原理与思路"&gt;1. 设计原理与思路&lt;/h2&gt;
+&lt;h3 id="11-状态机的数学模型"&gt;1.1 状态机的数学模型&lt;/h3&gt;
+&lt;p&gt;状态机的理论基础来自计算机科学中的有限自动机理论。一个有限状态机可以形式化地定义为五元组：&lt;/p&gt;</description></item><item><title>第4章 事件系统</title><link>https://heheboy.github.io/posts/%E7%AC%AC4%E7%AB%A0-%E4%BA%8B%E4%BB%B6%E7%B3%BB%E7%BB%9F/</link><pubDate>Tue, 07 Apr 2026 17:34:40 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC4%E7%AB%A0-%E4%BA%8B%E4%BB%B6%E7%B3%BB%E7%BB%9F/</guid><description>&lt;p&gt;事件系统是游戏框架的核心组件之一，它负责管理游戏中各种状态变化的通知机制。一个设计良好的事件系统能够降低模块间的耦合度，提高代码的可维护性和可扩展性。本章将详细介绍如何在 Godot C# 环境中构建一个类型安全、高效且易于使用的事件系统。&lt;/p&gt;
+&lt;h2 id="1-设计原理与思路"&gt;1. 设计原理与思路&lt;/h2&gt;
+&lt;p&gt;事件驱动架构是一种以事件为核心的软件架构模式，它改变了传统游戏开发中直接调用的编程范式。&lt;/p&gt;</description></item><item><title>第3章 全局系统与自动加载</title><link>https://heheboy.github.io/posts/%E7%AC%AC3%E7%AB%A0-%E5%85%A8%E5%B1%80%E7%B3%BB%E7%BB%9F%E4%B8%8E%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD/</link><pubDate>Wed, 01 Apr 2026 12:02:13 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC3%E7%AB%A0-%E5%85%A8%E5%B1%80%E7%B3%BB%E7%BB%9F%E4%B8%8E%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD/</guid><description>&lt;p&gt;全局系统与自动加载是游戏框架的核心基础设施，它们负责管理跨场景共享的数据和服务，协调系统初始化顺序，并提供统一的访问接口。本章将详细介绍如何在 Godot C# 中设计和实现这些关键系统。&lt;/p&gt;
+&lt;h2 id="311-autoload设计原理"&gt;3.1.1 AutoLoad设计原理&lt;/h2&gt;
+&lt;p&gt;Godot的AutoLoad机制是游戏开发中最基础也是最重要的架构模式之一。理解其设计原理有助于正确构建全局系统。&lt;/p&gt;</description></item><item><title>第2章 框架设计原则</title><link>https://heheboy.github.io/posts/%E7%AC%AC2%E7%AB%A0-%E6%A1%86%E6%9E%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</link><pubDate>Wed, 01 Apr 2026 11:58:07 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC2%E7%AB%A0-%E6%A1%86%E6%9E%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</guid><description>&lt;p&gt;良好的框架设计是游戏项目成功的基石。本章将介绍如何在 Godot C# 开发中应用经典的软件设计原则，建立可维护、可扩展的代码架构。&lt;/p&gt;
+&lt;h2 id="211-solid原则在游戏开发中的特殊性"&gt;2.1.1 SOLID原则在游戏开发中的特殊性&lt;/h2&gt;
+&lt;p&gt;SOLID原则源自企业软件开发，但在游戏开发中需要根据实时性、性能要求和架构特点进行适配。&lt;/p&gt;
+&lt;h3 id="单一职责原则的灵活性"&gt;单一职责原则的灵活性&lt;/h3&gt;
+&lt;p&gt;游戏开发中的SRP需要平衡以下因素：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;职责粒度的选择&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;过细粒度&lt;/strong&gt;：每个微小组件单独成类，导致节点数量爆炸&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;过粗粒度&lt;/strong&gt;：一个类承担过多职责，难以维护&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;游戏实践&lt;/strong&gt;：以&amp;quot;一个完整功能&amp;quot;为界限，而非&amp;quot;一个操作&amp;quot;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;示例&lt;/strong&gt;：玩家控制器可以包含移动、跳跃、蹲伏等输入处理，但不应该包含血条UI显示或存档逻辑。&lt;/p&gt;</description></item><item><title>第1章 Godot C# 核心架构</title><link>https://heheboy.github.io/posts/%E7%AC%AC1%E7%AB%A0-godot-c%23-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84/</link><pubDate>Wed, 01 Apr 2026 11:49:51 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC1%E7%AB%A0-godot-c%23-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84/</guid><description>&lt;h2 id="11-概述"&gt;1.1 概述&lt;/h2&gt;
+&lt;p&gt;Godot 引擎从 3.x 版本开始引入 C# 支持，在 4.x 版本中 C# 集成更加成熟和稳定。本章将深入介绍 Godot C# 的核心架构概念，帮助开发者理解如何在这个独特的节点系统中高效使用 C# 进行游戏开发。&lt;/p&gt;
+&lt;h2 id="12-为什么选择-godot--c"&gt;1.2 为什么选择 Godot + C#&lt;/h2&gt;
+&lt;p&gt;在游戏开发领域，开发者面临着众多技术选择。Unity、Unreal Engine、Godot 各有优势，而编程语言的选择同样重要。本节将分析为什么 Godot + C# 是一个值得考虑的技术组合。&lt;/p&gt;</description></item></channel></rss>

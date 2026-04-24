@@ -1,0 +1,1259 @@
+<!doctype html><html lang=zh-CN data-theme=light><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content='对象与资源管理是游戏开发中的核心问题。本章介绍三种关键的设计模式：对象池模式、工厂模式和服务定位器模式，帮助开发者高效管理游戏对象的生命周期和创建过程。
+7.1 对象池模式
+对象池模式通过预先创建并复用对象来避免频繁的内存分配和垃圾回收，显著提升游戏性能。
+7.1.1 设计原理与思路
+对象池模式的核心概念
+对象池模式是一种创建型设计模式，其核心思想是预先创建一组对象并保存在"池"中，当需要使用时从池中获取，使用完毕后归还到池中而不是销毁。这种模式避免了频繁的内存分配和垃圾回收（GC），特别适用于需要大量创建和销毁对象的场景。'><meta name=author content="熟童"><meta name=generator content="Hugo 0.159.0"><title>第7章 对象与资源管理 | 熟童·实验室</title><link rel=canonical href=https://heheboy.github.io/posts/%E7%AC%AC7%E7%AB%A0-%E5%AF%B9%E8%B1%A1%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/><link rel=stylesheet href=/css/main.min.52a33c1c75f1018fce5fd552f8174ace585d07d2689bbdd7854b698275ee0477.css integrity="sha256-UqM8HHXxAY/OX9VS+BdKzlhdB9Jom73XhUtpgnXuBHc="><link rel=icon type=image/x-icon href=/favicon.ico><meta property="og:title" content="第7章 对象与资源管理"><meta property="og:description" content='对象与资源管理是游戏开发中的核心问题。本章介绍三种关键的设计模式：对象池模式、工厂模式和服务定位器模式，帮助开发者高效管理游戏对象的生命周期和创建过程。
+7.1 对象池模式
+对象池模式通过预先创建并复用对象来避免频繁的内存分配和垃圾回收，显著提升游戏性能。
+7.1.1 设计原理与思路
+对象池模式的核心概念
+对象池模式是一种创建型设计模式，其核心思想是预先创建一组对象并保存在"池"中，当需要使用时从池中获取，使用完毕后归还到池中而不是销毁。这种模式避免了频繁的内存分配和垃圾回收（GC），特别适用于需要大量创建和销毁对象的场景。'><meta property="og:url" content="https://heheboy.github.io/posts/%E7%AC%AC7%E7%AB%A0-%E5%AF%B9%E8%B1%A1%E4%B8%8E%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/"><meta property="og:site_name" content="熟童·实验室"><meta property="og:type" content="article"><meta name=twitter:card content="summary_large_image"><meta name=twitter:title content="第7章 对象与资源管理"><meta name=twitter:description content='对象与资源管理是游戏开发中的核心问题。本章介绍三种关键的设计模式：对象池模式、工厂模式和服务定位器模式，帮助开发者高效管理游戏对象的生命周期和创建过程。
+7.1 对象池模式
+对象池模式通过预先创建并复用对象来避免频繁的内存分配和垃圾回收，显著提升游戏性能。
+7.1.1 设计原理与思路
+对象池模式的核心概念
+对象池模式是一种创建型设计模式，其核心思想是预先创建一组对象并保存在"池"中，当需要使用时从池中获取，使用完毕后归还到池中而不是销毁。这种模式避免了频繁的内存分配和垃圾回收（GC），特别适用于需要大量创建和销毁对象的场景。'><meta property="article:published_time" content="2026-04-09T00:00:00+00:00"><meta property="article:modified_time" content="2026-04-09T00:00:00+00:00"><meta property="article:tag" content="Godot"><meta property="article:tag" content="开发"><meta property="article:tag" content="C#"><meta property="article:tag" content="架构"><meta property="article:tag" content="CSharp"></head><body><nav class=main-nav><div class=nav-container><a class=nav-brand href=/>熟童·实验室</a>
+<button class=nav-toggle aria-label="Toggle navigation">
+<span></span>
+<span></span>
+<span></span></button><div class=nav-menu><a class=nav-link href=/>首页</a>
+<a class=nav-link href=/posts/>内容文章</a>
+<a class=nav-link href=/categories/>文章分类</a>
+<a class=nav-link href=/archive/>归档册</a>
+<a class=nav-link href=/tags/>标签</a>
+<a class=nav-link href=/about/>关于本站</a>
+<a class="nav-link nav-search-link" href=/search/ aria-label=搜索><svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61.0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></a></div></div></nav><header class=site-header style=background-image:url(/img/post-bg.jpg)><div class=header-content><h1 class=site-title>第7章 对象与资源管理</h1><p class=site-slogan>让技术长出温度，在精确的逻辑与冷静的结构之中，依然保留人与世界的感知。不只是实现功能，也是在构建表达；不只是解决问题，也是在回应内心。</p></div></header><main class=main-container><div class=content-wrapper><div class=main-content><article class=page-content><header class=page-article-header><h1 class=page-article-title>第7章 对象与资源管理</h1><div class=page-article-meta><time datetime=2026-04-09>2026年4月9日
+</time><span class=meta-separator>·</span>
+<a href=/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91>游戏开发</a></div></header><p>对象与资源管理是游戏开发中的核心问题。本章介绍三种关键的设计模式：对象池模式、工厂模式和服务定位器模式，帮助开发者高效管理游戏对象的生命周期和创建过程。</p><h2 id=71-对象池模式>7.1 对象池模式</h2><p>对象池模式通过预先创建并复用对象来避免频繁的内存分配和垃圾回收，显著提升游戏性能。</p><h3 id=711-设计原理与思路>7.1.1 设计原理与思路</h3><p><strong>对象池模式的核心概念</strong></p><p>对象池模式是一种创建型设计模式，其核心思想是预先创建一组对象并保存在"池"中，当需要使用时从池中获取，使用完毕后归还到池中而不是销毁。这种模式避免了频繁的内存分配和垃圾回收（GC），特别适用于需要大量创建和销毁对象的场景。</p><pre tabindex=0><code>┌─────────────────────────────────────────────────────────────┐
+│                      对象池模式架构                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│   ┌──────────────┐     获取      ┌──────────────────┐       │
+│   │   游戏逻辑    │ ────────────&gt; │                 │       │
+│   │  (需要对象)   │               │     对象池       │       │
+│   └──────────────┘               │                 │       │
+│          ^                       │  ┌───────────┐  │       │
+│          │ 归还                   │  │ 可用对象  │  │       │
+│          │                       │  │  [o] [o]  │  │       │
+│   ┌──────────────┐               │  │  [o] [o]  │  │       │
+│   │   使用中对象  │ &lt;───────────  │  └───────────┘  │       │
+│   │  (活跃状态)   │    创建/复用   │                 │       │
+│   └──────────────┘               └──────────────────┘       │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><p><strong>垃圾回收对游戏性能的影响</strong></p><p>在.NET和Godot环境中，垃圾回收器（GC）会自动管理内存。然而，GC的触发往往会导致明显的性能问题：</p><ol><li><strong>卡顿（Stutter）</strong>：当GC执行时，游戏线程可能被暂停，导致帧率骤降</li><li><strong>不可预测性</strong>：GC触发时机难以控制，可能在关键时刻（如BOSS战）发生</li><li><strong>内存碎片</strong>：频繁的分配和释放导致内存碎片化，降低缓存效率</li></ol><p>通过对象池模式，我们可以将对象的创建集中在游戏加载或关卡切换时，运行时只进行对象的借用和归还，从而显著减少GC压力。</p><p><strong>池化策略的选择（固定vs动态）</strong></p><p>对象池有两种主要策略：</p><table><thead><tr><th>策略类型</th><th>特点</th><th>适用场景</th></tr></thead><tbody><tr><td>固定容量池</td><td>预先分配固定数量对象，超出时等待或报错</td><td>对象数量可预测、内存受限环境</td></tr><tr><td>动态扩展池</td><td>根据需求动态增加池容量</td><td>对象数量波动大、需要灵活性</td></tr></tbody></table><p>固定容量池的优势在于内存使用可控，适合移动设备或内存紧张的情况。动态扩展池更加灵活，但需要设置合理的上限以防止内存无限增长。</p><h3 id=712-使用场景分析>7.1.2 使用场景分析</h3><p><strong>适用场景：频繁创建销毁的对象</strong></p><p>对象池模式特别适合以下游戏元素：</p><ol><li><strong>子弹和投射物</strong>：射击游戏中每秒钟可能有数十甚至数百发子弹发射</li><li><strong>粒子效果</strong>：爆炸、火花、烟雾等特效往往需要大量小型对象</li><li><strong>敌人生成</strong>：波次战斗中的敌人频繁出现和消失</li><li><strong>UI元素</strong>：滚动列表中的列表项、伤害数字弹出等</li><li><strong>音频源</strong>：频繁的音效播放需要复用音频组件</li></ol><p><strong>不适用场景：长期存在的对象</strong></p><p>以下情况不适合使用对象池：</p><ol><li><strong>玩家角色</strong>：通常整个游戏过程中只有一个，不需要池化</li><li><strong>核心游戏管理器</strong>：长期存在的单例对象</li><li><strong>关卡地形</strong>：静态场景元素，创建后很少销毁</li><li><strong>大型资源</strong>：如整个地图、过场动画对象等</li></ol><p><strong>典型案例：弹幕游戏、粒子系统</strong></p><p>弹幕游戏（Bullet Hell/Shmup）是对象池模式的经典应用场景。在东方Project系列游戏中，屏幕上同时存在数千颗子弹，每颗子弹都有独立的位置、速度、旋转和生命周期。使用对象池可以将子弹对象预先创建好，避免在游戏过程中频繁分配内存。</p><pre tabindex=0><code>弹幕游戏对象池示意图
+
+初始状态:              游戏中:               子弹回收:
+┌──────────┐          ┌──────────┐          ┌──────────┐
+│ 子弹池    │          │ 子弹池    │          │ 子弹池    │
+│ [b][b]   │   ──&gt;    │ [b]      │   ──&gt;    │ [b][b]   │
+│ [b][b]   │  发射    │ [b]      │  命中    │ [b][b]   │
+│ [b][b]   │          │          │  销毁    │ [b][b]   │
+└──────────┘          └──────────┘          └──────────┘
+   6可用                  2可用                  6可用
+</code></pre><h3 id=713-ipoolable-接口>7.1.3 IPoolable 接口</h3><p>首先定义可池化对象的接口。为什么这样设计？将池化行为抽象为接口，可以让任何类实现池化能力，而不需要继承特定的基类，保持代码的灵活性。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.Pooling
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 可池化对象接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 实现此接口的类可以被对象池管理</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IPoolable</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 当对象从池中取出时调用</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 用于初始化对象状态</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> OnSpawn();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 当对象返回池中或销毁时调用</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 用于清理对象状态</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> OnDespawn();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 对象是否可用</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>bool</span> IsAvailable { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=714-实现细节讲解>7.1.4 实现细节讲解</h3><p><strong>IPoolable接口设计考量</strong></p><p><code>IPoolable</code>接口的设计基于以下考量：</p><ol><li><strong>OnSpawn方法</strong>：对象从池中被"取出"时调用，负责重置对象到初始状态。例如，子弹需要重置位置、速度、生命值等。</li><li><strong>OnDespawn方法</strong>：对象被"归还"到池中时调用，负责清理状态，避免影响下次使用。例如，禁用物理碰撞、停止粒子发射等。</li><li><strong>IsAvailable属性</strong>：标记对象当前是否在池中可用，防止重复归还或获取。</li></ol><p><strong>预加载策略的实现</strong></p><p>预加载（Prewarm）在游戏启动或关卡加载时预先创建对象，避免游戏过程中的分配开销。实现时需要考虑：</p><ol><li><strong>渐进式加载</strong>：大量对象时，分帧创建避免卡顿</li><li><strong>异步加载</strong>：使用后台线程创建对象（注意线程安全）</li><li><strong>优先级加载</strong>：优先加载关键对象，次要对象延迟加载</li></ol><p><strong>容量动态调整的算法</strong></p><p>动态调整池容量需要平衡内存占用和分配频率：</p><pre tabindex=0><code>扩展策略：
+- 当池为空且需要新对象时，按配置增量扩展（如增加50%）
+- 设置最大容量上限，防止无限增长
+- 记录峰值使用量，作为下次预加载的参考
+
+收缩策略：
+- 定期检查池使用率
+- 当空闲对象超过阈值（如80%）时，逐步释放
+- 避免频繁扩缩容，设置缓冲区间
+</code></pre><h3 id=715-泛型对象池实现>7.1.5 泛型对象池实现</h3><p><strong>设计思路与原理</strong></p><p>泛型对象池是对象池模式的高级实现，通过C#泛型机制提供类型安全的对象复用能力。与简单对象池相比，泛型实现将池化逻辑与具体对象类型分离，使同一套池化管理代码可以服务于多种不同类型的对象。这种设计的核心思想是"关注点分离"：池的生命周期管理（分配、回收、扩容）由池类负责，而对象的初始化与重置逻辑由对象自身通过<code>IPoolable</code>接口实现。</p><p>泛型约束<code>where T : class, IPoolable, new()</code>确保只有符合特定条件的类型才能使用对象池：必须是引用类型（class）以避免装箱拆箱、必须实现池化接口以支持重置、必须有无参构造函数以支持实例化。这种编译时约束比运行时检查更可靠，也更高效。</p><p><strong>核心实现要点</strong></p><ol><li><p><strong>双重容器结构</strong>：使用<code>Queue&lt;T></code>存储可用对象（O(1)获取）和<code>List&lt;T></code>追踪所有对象（便于统计和清理）。队列的FIFO特性确保对象使用均匀，避免某些对象长期闲置。</p></li><li><p><strong>懒加载与预加载策略</strong>：构造函数支持<code>prewarm</code>参数，允许在初始化时批量创建对象，避免游戏运行时的突发分配。这对于子弹、特效等高频对象尤为重要。</p></li><li><p><strong>容量边界控制</strong>：通过<code>maxCapacity</code>限制池大小，防止内存无限增长。<code>allowExpansion</code>标志区分"硬限制"（拒绝新请求）和"软限制"（允许临时超容）。</p></li><li><p><strong>对象生命周期回调</strong>：通过<code>IPoolable.OnSpawn</code>和<code>OnDespawn</code>方法，让对象在出场和回收时执行自定义逻辑，如重置状态、停用粒子系统等。</p></li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> System;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.Pooling
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 泛型对象池</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 用于高效管理可复用对象的创建和回收</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;typeparam name=&#34;T&#34;&gt;对象类型，必须实现 IPoolable 和 new()&lt;/typeparam&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ObjectPool</span>&lt;T&gt; <span style=color:#66d9ef>where</span> T : class, IPoolable, <span style=color:#66d9ef>new</span>()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 可用对象队列</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Queue&lt;T&gt; _availableObjects;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 所有对象的集合（用于追踪）</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> List&lt;T&gt; _allObjects;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 池配置</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> <span style=color:#66d9ef>int</span> _initialCapacity;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> <span style=color:#66d9ef>int</span> _maxCapacity;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> <span style=color:#66d9ef>bool</span> _allowExpansion;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 统计信息</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> TotalCount =&gt; _allObjects.Count;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> AvailableCount =&gt; _availableObjects.Count;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> InUseCount =&gt; _allObjects.Count - _availableObjects.Count;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 构造函数</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;param name=&#34;initialCapacity&#34;&gt;初始容量&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;param name=&#34;maxCapacity&#34;&gt;最大容量，0表示无限制&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;param name=&#34;prewarm&#34;&gt;是否预创建对象&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> ObjectPool(<span style=color:#66d9ef>int</span> initialCapacity = <span style=color:#ae81ff>10</span>, <span style=color:#66d9ef>int</span> maxCapacity = <span style=color:#ae81ff>100</span>, <span style=color:#66d9ef>bool</span> prewarm = <span style=color:#66d9ef>false</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _initialCapacity = initialCapacity;
+</span></span><span style=display:flex><span>            _maxCapacity = maxCapacity;
+</span></span><span style=display:flex><span>            _allowExpansion = maxCapacity &lt;= <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _availableObjects = <span style=color:#66d9ef>new</span> Queue&lt;T&gt;(initialCapacity);
+</span></span><span style=display:flex><span>            _allObjects = <span style=color:#66d9ef>new</span> List&lt;T&gt;(initialCapacity);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (prewarm)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                Prewarm(initialCapacity);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 预创建指定数量的对象</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Prewarm(<span style=color:#66d9ef>int</span> count)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>int</span> targetCount = Math.Min(count, _maxCapacity &gt; <span style=color:#ae81ff>0</span> ? _maxCapacity : <span style=color:#66d9ef>int</span>.MaxValue);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i = _allObjects.Count; i &lt; targetCount; i++)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                T obj = CreateNewObject();
+</span></span><span style=display:flex><span>                obj.IsAvailable = <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>                _availableObjects.Enqueue(obj);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 从池中获取对象</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> T Get()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            T obj;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_availableObjects.Count &gt; <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 从队列中取出可用对象</span>
+</span></span><span style=display:flex><span>                obj = _availableObjects.Dequeue();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (_allowExpansion || _allObjects.Count &lt; _maxCapacity)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 创建新对象</span>
+</span></span><span style=display:flex><span>                obj = CreateNewObject();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 池已满，返回null或抛出异常</span>
+</span></span><span style=display:flex><span>                GD.PushWarning(<span style=color:#e6db74>$&#34;对象池已达到最大容量: {_maxCapacity}&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            obj.IsAvailable = <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>            obj.OnSpawn();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> obj;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 将对象返回池中</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Return(T obj)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (obj == <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushWarning(<span style=color:#e6db74>&#34;尝试将null对象返回池中&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (obj.IsAvailable)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 对象已经在池中</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            obj.OnDespawn();
+</span></span><span style=display:flex><span>            obj.IsAvailable = <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>            _availableObjects.Enqueue(obj);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 创建新对象</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> T CreateNewObject()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            T obj = <span style=color:#66d9ef>new</span> T();
+</span></span><span style=display:flex><span>            _allObjects.Add(obj);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> obj;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 清空对象池</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;param name=&#34;disposeObjects&#34;&gt;是否调用对象的清理方法&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Clear(<span style=color:#66d9ef>bool</span> disposeObjects = <span style=color:#66d9ef>true</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (disposeObjects)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> obj <span style=color:#66d9ef>in</span> _allObjects)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>if</span> (!obj.IsAvailable)
+</span></span><span style=display:flex><span>                    {
+</span></span><span style=display:flex><span>                        obj.OnDespawn();
+</span></span><span style=display:flex><span>                    }
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _availableObjects.Clear();
+</span></span><span style=display:flex><span>            _allObjects.Clear();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 调整池容量</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Trim(<span style=color:#66d9ef>int</span> targetCapacity)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>while</span> (_availableObjects.Count &gt; targetCapacity)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                T obj = _availableObjects.Dequeue();
+</span></span><span style=display:flex><span>                _allObjects.Remove(obj);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：高频创建销毁的对象，如射击游戏中的子弹、粒子特效、频繁刷新的敌人、UI列表项等。当对象创建成本较高（涉及资源加载、复杂初始化）或GC压力成为性能瓶颈时，对象池能显著提升性能。</p></li><li><p><strong>注意事项</strong>：</p><ol><li>池化对象必须正确实现<code>OnDespawn</code>方法，完全重置对象状态，避免"状态泄漏"</li><li>不要在<code>OnSpawn</code>中执行重量级初始化，应保持轻量</li><li>注意线程安全，Godot节点操作必须在主线程执行</li><li>定期调用<code>Trim</code>方法释放多余对象，防止内存持续增长</li></ol></li><li><p><strong>性能考虑</strong>：对象池减少了GC压力，但增加了常驻内存占用。建议为每种对象类型设置合理的初始容量（通常为峰值使用量的70-80%），并通过<code>Trim</code>方法在关卡切换或内存紧张时收缩。</p></li><li><p><strong>扩展建议</strong>：</p><ol><li>可以添加优先级队列，区分"热对象"和"冷对象"</li><li>实现异步预加载，在后台线程创建对象（注意Godot节点的线程限制）</li><li>添加调试接口，可视化展示池状态和使用统计</li><li>考虑实现分层池，区分"常驻池"和"临时池"</li></ol></li></ul><hr><h3 id=716-性能与权衡>7.1.6 性能与权衡</h3><p><strong>内存占用vs分配开销的权衡</strong></p><p>对象池的核心权衡是内存占用与分配开销之间的平衡：</p><pre tabindex=0><code>无对象池场景:              使用对象池场景:
+分配 ──┐                   分配 ──┐
+     │                          │
+┌────┴────┐               ┌────┴────┐
+│ 帧1     │               │ 加载时   │
+│ 分配A   │               │ 分配池   │
+└─────────┘               └─────────┘
+     │                          │
+┌────┴────┐               ┌────┴────┐
+│ 帧2     │               │ 运行中   │
+│ 销毁A   │               │ 借用/归还 │
+│ 分配B   │               │ 无GC    │
+└─────────┘               └─────────┘
+     │                          │
+    GC                       低GC
+   (卡顿)                   (流畅)
+</code></pre><p><strong>池大小的选择策略</strong></p><p>选择合适的池大小需要考虑以下因素：</p><ol><li><strong>峰值使用量</strong>：分析游戏运行时的最大同时活跃对象数</li><li><strong>内存预算</strong>：根据目标平台设置合理的内存上限</li><li><strong>增长策略</strong>：设置初始容量和最大容量，允许一定程度的动态扩展</li><li><strong>监控调优</strong>：使用统计信息追踪池的使用率，持续优化配置</li></ol><p><strong>与对象缓存的对比</strong></p><p>对象池与对象缓存经常被混淆，它们的区别如下：</p><table><thead><tr><th>特性</th><th>对象池</th><th>对象缓存</th></tr></thead><tbody><tr><td>目的</td><td>复用对象实例，避免GC</td><td>快速访问计算结果或资源</td></tr><tr><td>生命周期</td><td>对象长期存在，状态可重置</td><td>对象可能有过期时间</td></tr><tr><td>使用方式</td><td>获取/归还模式</td><td>读取/写入模式</td></tr><tr><td>典型应用</td><td>子弹、粒子、敌人</td><td>纹理、数据表、计算结果</td></tr></tbody></table><h3 id=717-godot-节点对象池>7.1.7 Godot 节点对象池</h3><p>针对 Godot 节点的特殊实现：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.Pooling
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// Godot 节点对象池</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 专门用于管理 Godot 节点的创建和回收</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>NodeObjectPool</span>&lt;T&gt; <span style=color:#66d9ef>where</span> T : Node, IPoolable
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> PackedScene _prefab;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Node _parent;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Queue&lt;T&gt; _availableObjects;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> List&lt;T&gt; _allObjects;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> <span style=color:#66d9ef>int</span> _maxCapacity;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> <span style=color:#66d9ef>bool</span> _allowExpansion;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> TotalCount =&gt; _allObjects.Count;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> AvailableCount =&gt; _availableObjects.Count;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 构造函数</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;param name=&#34;prefab&#34;&gt;节点预制体&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;param name=&#34;parent&#34;&gt;父节点（用于存放未激活的池对象）&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;param name=&#34;maxCapacity&#34;&gt;最大容量&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> NodeObjectPool(PackedScene prefab, Node parent, <span style=color:#66d9ef>int</span> maxCapacity = <span style=color:#ae81ff>100</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _prefab = prefab;
+</span></span><span style=display:flex><span>            _parent = parent;
+</span></span><span style=display:flex><span>            _maxCapacity = maxCapacity;
+</span></span><span style=display:flex><span>            _allowExpansion = maxCapacity &lt;= <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _availableObjects = <span style=color:#66d9ef>new</span> Queue&lt;T&gt;();
+</span></span><span style=display:flex><span>            _allObjects = <span style=color:#66d9ef>new</span> List&lt;T&gt;();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 从池中获取节点</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> T Get(Node newParent = <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            T node;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_availableObjects.Count &gt; <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                node = _availableObjects.Dequeue();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (_allowExpansion || _allObjects.Count &lt; _maxCapacity)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                node = _prefab.Instantiate&lt;T&gt;();
+</span></span><span style=display:flex><span>                _allObjects.Add(node);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushWarning(<span style=color:#e6db74>$&#34;节点对象池已满: {_maxCapacity}&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 设置父节点</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (newParent != <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                newParent.AddChild(node);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _parent.AddChild(node);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            node.IsAvailable = <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>            node.OnSpawn();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> node;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 将节点返回池中</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Return(T node)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (node == <span style=color:#66d9ef>null</span> || node.IsAvailable)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            node.OnDespawn();
+</span></span><span style=display:flex><span>            node.IsAvailable = <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 从当前父节点移除</span>
+</span></span><span style=display:flex><span>            Node currentParent = node.GetParent();
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (currentParent != <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                currentParent.RemoveChild(node);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 放回池父节点下（隐藏）</span>
+</span></span><span style=display:flex><span>            _parent.AddChild(node);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _availableObjects.Enqueue(node);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 清空对象池</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Clear()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> node <span style=color:#66d9ef>in</span> _allObjects)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (node.IsInsideTree())
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    node.GetParent()?.RemoveChild(node);
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>                node.QueueFree();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _availableObjects.Clear();
+</span></span><span style=display:flex><span>            _allObjects.Clear();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=718-实战指南>7.1.8 实战指南</h3><p><strong>实施步骤</strong></p><ol><li><strong>识别池化候选</strong>：分析游戏中频繁创建销毁的对象类型</li><li><strong>实现IPoolable接口</strong>：为候选对象实现必要的生命周期方法</li><li><strong>配置对象池</strong>：根据预期使用量设置初始容量和最大容量</li><li><strong>预加载对象</strong>：在合适的时机（如关卡加载）预创建对象</li><li><strong>替换实例化代码</strong>：将<code>Instantiate</code>调用替换为对象池获取</li><li><strong>确保正确归还</strong>：在对象生命周期结束时调用<code>Return</code>方法</li></ol><p><strong>常见错误：忘记重置对象状态</strong></p><p>最常见的对象池使用错误是忘记在<code>OnSpawn</code>中重置对象状态：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#75715e>// 错误示例</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> OnSpawn()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// 忘记重置速度和生命值！</span>
+</span></span><span style=display:flex><span>    Show();
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 正确示例</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> OnSpawn()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// 重置所有状态</span>
+</span></span><span style=display:flex><span>    _velocity = Vector2.Zero;
+</span></span><span style=display:flex><span>    _health = MaxHealth;
+</span></span><span style=display:flex><span>    _lifetime = MaxLifetime;
+</span></span><span style=display:flex><span>    Show();
+</span></span><span style=display:flex><span>    SetProcess(<span style=color:#66d9ef>true</span>);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>其他常见错误：</p><ol><li><strong>双重归还</strong>：将同一个对象归还两次，需要检查<code>IsAvailable</code>状态</li><li><strong>忘记隐藏</strong>：节点对象归还后仍可见，需要在<code>OnDespawn</code>中调用<code>Hide()</code></li><li><strong>事件未清理</strong>：对象订阅的事件未取消，导致内存泄漏</li><li><strong>协程未停止</strong>：GDScript/C#协程在对象归还后继续运行</li></ol><p><strong>监控与调优</strong></p><p>建立对象池监控机制：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#75715e>// 添加监控字段</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> UsageRate =&gt; TotalCount &gt; <span style=color:#ae81ff>0</span> ? (<span style=color:#66d9ef>float</span>)InUseCount / TotalCount : <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> IsStarved =&gt; AvailableCount == <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 定期输出统计</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> LogStats()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    GD.Print(<span style=color:#e6db74>$&#34;[ObjectPool] 总数: {TotalCount}, 可用: {AvailableCount}, &#34;</span> +
+</span></span><span style=display:flex><span>             <span style=color:#e6db74>$&#34;使用中: {InUseCount}, 使用率: {UsageRate:P1}&#34;</span>);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>根据监控数据调整池大小：</p><ul><li>使用率长期超过80%：增加池容量</li><li>使用率长期低于20%：减少池容量以节省内存</li><li>频繁出现starved状态：增加初始容量或检查归还逻辑</li></ul><h3 id=719-使用示例>7.1.9 使用示例</h3><p><strong>设计思路与原理</strong></p><p>本示例展示如何将对象池应用于游戏中的子弹系统，这是对象池最典型也最有效的应用场景之一。在射击游戏中，子弹的创建和销毁频率极高：一个玩家每秒可能发射10-20发子弹，加上多个敌人同时开火，每秒可能有数百次对象创建和销毁操作。如果不使用对象池，这些操作将导致频繁的垃圾回收，引发明显的帧率波动。</p><p>示例中的<code>Bullet</code>类实现了<code>IPoolable</code>接口，这是使用泛型对象池的前提。关键在于<code>OnSpawn</code>和<code>OnDespawn</code>方法的正确实现：<code>OnSpawn</code>在子弹从池中取出时调用，负责重置所有状态（位置、速度、生命周期）；<code>OnDespawn</code>在子弹归还时调用，负责停止物理模拟、隐藏节点、清理引用。这种"借出-归还"模式确保同一对象实例可以被反复使用，而不会产生状态冲突。</p><p><strong>核心实现要点</strong></p><ol><li><p><strong>状态完全重置</strong>：在<code>OnSpawn</code>中重置所有可变状态（生命值计时器、速度向量），确保每次取出的子弹都是"全新"的</p></li><li><p><strong>视觉与逻辑分离</strong>：使用<code>Show()</code>/<code>Hide()</code>控制可见性，使用<code>SetProcess()</code>控制<code>_Process</code>回调，避免不可见对象继续消耗CPU</p></li><li><p><strong>自管理生命周期</strong>：子弹内部管理自己的生命周期，当<code>LifeTime</code>耗尽时自动调用<code>BulletPool.Instance.Return(this)</code>归还，形成闭环</p></li><li><p><strong>单例池管理器</strong>：<code>BulletPool</code>作为单例提供全局访问，确保整个游戏只有一个子弹池，便于统一管理和监控</p></li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> GameFramework.Core.Pooling;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Examples
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 子弹类 - 可池化对象示例</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Bullet</span> : Node2D, IPoolable
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> Speed = <span style=color:#ae81ff>500f</span>;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> Damage = <span style=color:#ae81ff>10f</span>;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> LifeTime = <span style=color:#ae81ff>3f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> Vector2 _velocity;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>float</span> _lifeTimer;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> IsAvailable { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> OnSpawn()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 重置状态</span>
+</span></span><span style=display:flex><span>            _lifeTimer = LifeTime;
+</span></span><span style=display:flex><span>            Show();
+</span></span><span style=display:flex><span>            SetProcess(<span style=color:#66d9ef>true</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> OnDespawn()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 清理状态</span>
+</span></span><span style=display:flex><span>            Hide();
+</span></span><span style=display:flex><span>            SetProcess(<span style=color:#66d9ef>false</span>);
+</span></span><span style=display:flex><span>            _velocity = Vector2.Zero;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Fire(Vector2 position, Vector2 direction)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            GlobalPosition = position;
+</span></span><span style=display:flex><span>            _velocity = direction.Normalized() * Speed;
+</span></span><span style=display:flex><span>            Rotation = direction.Angle();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _Process(<span style=color:#66d9ef>double</span> delta)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _lifeTimer -= (<span style=color:#66d9ef>float</span>)delta;
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_lifeTimer &lt;= <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 生命周期结束，返回池中</span>
+</span></span><span style=display:flex><span>                BulletPool.Instance.Return(<span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            Position += _velocity * (<span style=color:#66d9ef>float</span>)delta;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 子弹池管理器（单例）</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>BulletPool</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> BulletPool _instance;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> BulletPool Instance =&gt; _instance ??= <span style=color:#66d9ef>new</span> BulletPool();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> NodeObjectPool&lt;Bullet&gt; _pool;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Initialize(PackedScene bulletPrefab, Node parent, <span style=color:#66d9ef>int</span> initialCapacity = <span style=color:#ae81ff>50</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _pool = <span style=color:#66d9ef>new</span> NodeObjectPool&lt;Bullet&gt;(bulletPrefab, parent, <span style=color:#ae81ff>200</span>);
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 预创建一些子弹</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i = <span style=color:#ae81ff>0</span>; i &lt; initialCapacity; i++)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>var</span> bullet = _pool.Get();
+</span></span><span style=display:flex><span>                _pool.Return(bullet);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Bullet Get() =&gt; _pool.Get();
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Return(Bullet bullet) =&gt; _pool.Return(bullet);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：</p><ul><li>射击游戏中的子弹、导弹、激光等投射物</li><li>粒子特效系统（爆炸、火花、烟雾）</li><li>频繁刷新的敌人（塔防游戏、无尽模式）</li><li>UI列表项（背包、任务列表、排行榜）</li><li>音频源对象</li></ul></li><li><p><strong>注意事项</strong>：</p><ol><li><strong>状态泄漏风险</strong>：忘记重置的变量会导致诡异bug（如子弹继承上次的速度方向），务必在<code>OnSpawn</code>中重置所有状态</li><li><strong>归还时机</strong>：确保对象不再被其他地方引用后再归还，否则会出现"幽灵对象"问题</li><li><strong>物理节点特殊处理</strong>：对于RigidBody等物理节点，需要在<code>OnDespawn</code>中重置速度、角速度，并退出物理模拟</li><li><strong>信号断开</strong>：如果对象连接了信号，归还前必须断开，否则下次取出时会重复连接</li></ol></li><li><p><strong>性能考虑</strong>：</p><ul><li>预加载（Prewarm）可以显著减少游戏开始后的卡顿，建议在加载屏幕中初始化对象池</li><li>监控<code>InUseCount</code>和<code>AvailableCount</code>比例，调整池大小以达到最佳内存/性能平衡</li><li>对于极低频使用的对象，可能不需要对象池，直接使用创建/销毁更合适</li></ul></li><li><p><strong>扩展建议</strong>：</p><ol><li>可以实现<code>IPoolable&lt;T></code>的<code>Reset</code>方法，让池在借出前自动调用</li><li>添加对象池调试UI，实时显示各池的使用率、命中率等统计</li><li>实现优先级池，区分不同类型的子弹（如玩家子弹优先级高于敌人子弹）</li><li>考虑实现对象池的分层，如"常驻池"和"关卡池"，后者在关卡切换时清空</li></ol></li></ul><hr><h2 id=72-工厂模式与对象创建>7.2 工厂模式与对象创建</h2><p>工厂模式将对象的创建逻辑封装起来，使代码更加灵活和可测试。</p><h3 id=721-ifactory-接口>7.2.1 IFactory 接口</h3><p><strong>设计思路与原理</strong></p><p>工厂模式是面向对象设计中最重要的创建型模式之一，其核心思想是"将对象的创建与使用分离"。通过定义统一的工厂接口<code>IFactory&lt;T></code>，我们可以将具体的对象创建逻辑从业务代码中抽离，实现依赖抽象而非依赖具体实现的设计原则。</p><p>在游戏开发中，工厂模式的价值尤为突出：</p><ol><li><strong>解耦创建与使用</strong>：业务代码只需要知道"要创建一个T类型的对象"，而不需要知道具体如何创建、使用哪个构造函数、需要哪些依赖</li><li><strong>支持运行时切换</strong>：通过更换工厂实现，可以在运行时切换对象创建策略（如Debug模式创建带调试信息的对象，Release模式创建优化版）</li><li><strong>便于测试</strong>：单元测试时可以使用Mock工厂注入测试替身，隔离被测代码的真实依赖</li><li><strong>集中管理创建逻辑</strong>：对象创建前的验证、默认值设置、初始化等逻辑集中在工厂中，避免代码重复</li></ol><p>接口设计采用泛型<code>IFactory&lt;T></code>，使得同一接口可以服务于不同类型的对象创建，同时保持类型安全。提供无参<code>Create()</code>和带参<code>Create(params object[] args)</code>两种重载，满足大多数创建场景。</p><p><strong>核心实现要点</strong></p><ol><li><p><strong>泛型约束</strong>：<code>where T : class</code>确保工厂创建的是引用类型，避免值类型的装箱问题，同时也支持null返回值</p></li><li><p><strong>双创建方法</strong>：无参版本适合简单对象创建，带参版本支持复杂初始化。使用<code>params object[]</code>而非泛型参数，是为了让工厂实现类可以自由选择参数组合</p></li><li><p><strong>返回值可空</strong>：创建可能失败（如资源加载失败、验证不通过），返回null比抛出异常更符合C#游戏开发的习惯</p></li><li><p><strong>接口而非抽象类</strong>：选择接口而非抽象类，让实现类可以自有选择基类（如继承Godot的RefCounted或自定义基类）</p></li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.Factory
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 工厂接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;typeparam name=&#34;T&#34;&gt;创建的对象类型&lt;/typeparam&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IFactory</span>&lt;T&gt; <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 创建对象</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;returns&gt;创建的对象实例&lt;/returns&gt;</span>
+</span></span><span style=display:flex><span>        T Create();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 使用参数创建对象</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        T Create(<span style=color:#66d9ef>params</span> <span style=color:#66d9ef>object</span>[] args);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：</p><ul><li>复杂对象的创建，需要多步骤初始化或依赖注入</li><li>需要根据配置或运行时条件创建不同类型的对象</li><li>对象创建逻辑需要在多个地方复用</li><li>需要支持A/B测试或功能开关的对象创建</li><li>需要统一创建日志记录或统计</li></ul></li><li><p><strong>注意事项</strong>：</p><ol><li><strong>不要过度使用</strong>：简单对象直接使用<code>new</code>创建更清晰，只有当创建逻辑复杂时才使用工厂</li><li><strong>参数类型安全</strong>：<code>params object[] args</code>失去了编译时类型检查，调用时需要确保参数顺序和类型正确</li><li><strong>避免工厂嵌套</strong>：不要在工厂A中调用工厂B的Create，这会导致创建逻辑难以追踪</li><li><strong>异步创建</strong>：如果创建涉及资源加载等异步操作，考虑使用<code>Task&lt;T> CreateAsync()</code>模式</li></ol></li><li><p><strong>与对象池的协作</strong>：
+工厂模式和对象池可以很好结合：工厂负责"首次创建"对象（包括复杂初始化），对象池负责"后续复用"。可以创建<code>PooledFactory&lt;T></code>装饰器，在工厂前增加池化层。</p></li><li><p><strong>扩展建议</strong>：</p><ol><li>实现<code>IFactory&lt;T, TConfig></code>支持配置对象传入</li><li>添加创建事件<code>OnCreated</code>，便于监听对象创建</li><li>实现工厂装饰器模式，如<code>LoggingFactory&lt;T></code>、<code>CachingFactory&lt;T></code></li><li>考虑使用依赖注入容器自动注册和解析工厂</li></ol></li></ul><hr><h3 id=722-泛型工厂实现>7.2.2 泛型工厂实现</h3><p><strong>设计思路与原理</strong></p><p>泛型工厂基类<code>Factory&lt;T></code>是对<code>IFactory&lt;T></code>接口的具体实现框架，它采用了**模板方法模式（Template Method Pattern）**的设计思想。模板方法模式定义了一个算法的骨架，将某些步骤延迟到子类实现，这样既保证了算法结构的统一，又允许子类灵活定制特定步骤。</p><p>在工厂创建流程中，存在一些"通用步骤"（如验证、后置处理）和"特定步骤"（实际实例化）。基类将通用步骤封装为<code>Create()</code>方法的主流程，而将特定步骤抽象为<code>CreateInstance()</code>和<code>CreateInstance(params object[])</code>两个抽象方法，由具体工厂子类实现。这种设计的优势：</p><ol><li><strong>代码复用</strong>：验证逻辑、错误处理、后置处理等通用代码在基类中实现一次，所有子类共享</li><li><strong>流程管控</strong>：子类只能控制"如何创建"，无法控制"是否创建"，确保验证等安全检查不被绕过</li><li><strong>扩展点明确</strong>：<code>ValidateCreation()</code>和<code>PostCreate()</code>作为虚方法，为子类提供可选的扩展点</li><li><strong>类型安全</strong>：泛型约束确保工厂和创建的对象类型匹配，避免运行时类型错误</li></ol><p><strong>核心实现要点</strong></p><ol><li><p><strong>模板方法结构</strong>：<code>Create()</code>方法是模板方法，定义了<code>ValidateCreation → CreateInstance → PostCreate</code>的固定流程</p></li><li><p><strong>抽象方法约束</strong>：<code>CreateInstance</code>和<code>CreateInstance(params object[])</code>必须实现，强制子类定义具体创建逻辑</p></li><li><p><strong>虚方法扩展</strong>：<code>ValidateCreation</code>和<code>PostCreate</code>提供默认空实现，子类可选择性重写</p></li><li><p><strong>参数转发</strong>：带参<code>Create</code>方法将<code>params object[]</code>原样转发给<code>CreateInstance</code>，保持参数透明</p></li><li><p><strong>错误处理</strong>：验证失败时输出错误日志并返回null，避免异常中断程序流程</p></li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> System;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.Factory
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 泛型工厂基类</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>abstract</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Factory</span>&lt;T&gt; : IFactory&lt;T&gt; <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 创建对象前的验证</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>bool</span> ValidateCreation()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 实际的创建逻辑（子类实现）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>abstract</span> T CreateInstance();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 带参数的实际创建逻辑（子类实现）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>abstract</span> T CreateInstance(<span style=color:#66d9ef>params</span> <span style=color:#66d9ef>object</span>[] args);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 创建后的处理</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>void</span> PostCreate(T instance)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 子类可重写进行初始化</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> T Create()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (!ValidateCreation())
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushError(<span style=color:#e6db74>&#34;工厂创建验证失败&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            T instance = CreateInstance();
+</span></span><span style=display:flex><span>            PostCreate(instance);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> instance;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> T Create(<span style=color:#66d9ef>params</span> <span style=color:#66d9ef>object</span>[] args)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (!ValidateCreation())
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushError(<span style=color:#e6db74>&#34;工厂创建验证失败&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            T instance = CreateInstance(args);
+</span></span><span style=display:flex><span>            PostCreate(instance);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> instance;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 简单工厂 - 使用委托创建对象</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SimpleFactory</span>&lt;T&gt; : Factory&lt;T&gt; <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Func&lt;T&gt; _creationFunc;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Func&lt;<span style=color:#66d9ef>object</span>[], T&gt; _creationFuncWithArgs;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> SimpleFactory(Func&lt;T&gt; creationFunc)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _creationFunc = creationFunc;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> SimpleFactory(Func&lt;<span style=color:#66d9ef>object</span>[], T&gt; creationFuncWithArgs)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _creationFuncWithArgs = creationFuncWithArgs;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> T CreateInstance()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> _creationFunc?.Invoke() ?? <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> InvalidOperationException(<span style=color:#e6db74>&#34;创建函数未设置&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> T CreateInstance(<span style=color:#66d9ef>params</span> <span style=color:#66d9ef>object</span>[] args)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> _creationFuncWithArgs?.Invoke(args) ?? <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> InvalidOperationException(<span style=color:#e6db74>&#34;带参数创建函数未设置&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：</p><ul><li>需要统一创建流程的复杂对象（如游戏实体、UI面板、武器道具）</li><li>创建前需要验证条件（如资源是否加载、配置是否有效）</li><li>创建后需要统一初始化（如设置默认属性、注册到管理系统）</li><li>需要支持多种创建方式（无参、带参）的对象</li></ul></li><li><p><strong>注意事项</strong>：</p><ol><li><strong>抽象方法必须实现</strong>：忘记实现<code>CreateInstance</code>会导致编译错误，这是设计有意为之</li><li><strong>验证方法可重写</strong>：默认<code>ValidateCreation</code>返回true，如需验证请重写</li><li><strong>异常处理</strong>：建议不要在<code>CreateInstance</code>中抛出异常，而是返回null并在工厂中统一处理</li><li><strong>SimpleFactory的使用</strong>：对于简单场景，可以直接使用<code>SimpleFactory</code>传入委托，无需创建新类</li></ol></li><li><p><strong>性能考虑</strong>：</p><ul><li>虚方法调用有微小开销，但在游戏对象创建场景中可忽略</li><li><code>SimpleFactory</code>使用委托调用，比直接方法调用稍慢，但提供了更大灵活性</li><li>避免在<code>ValidateCreation</code>中执行重量级操作，应该在游戏初始化阶段完成</li></ul></li><li><p><strong>扩展建议</strong>：</p><ol><li>可以实现异步工厂<code>AsyncFactory&lt;T></code>，支持<code>Task&lt;T> CreateAsync()</code></li><li>添加<code>PreCreate</code>虚方法，在验证前执行</li><li>实现工厂链<code>ChainedFactory&lt;T></code>，支持按优先级尝试多个工厂</li><li>添加对象池集成，自动将创建的对象加入池</li></ol></li></ul><hr><h3 id=723-prefabfactory-实现>7.2.3 PrefabFactory 实现</h3><p><strong>设计思路与原理</strong></p><p><code>PrefabFactory</code>是工厂模式在Godot引擎中的特化实现，专门用于从<code>PackedScene</code>（预制体）创建节点实例。Godot的场景系统是其核心特性，游戏中绝大多数对象（角色、敌人、UI元素、特效等）都是通过实例化预制体创建的。<code>PrefabFactory</code>将Godot的预制体加载和实例化过程封装起来，提供类型安全、可配置、可扩展的创建机制。</p><p>设计这个工厂类的核心动机是解决Godot预制体使用中的常见问题：</p><ol><li><strong>路径硬编码</strong>：直接在代码中写<code>GD.Load&lt;PackedScene>("res://...")</code>导致路径分散，难以维护</li><li><strong>类型不安全</strong>：<code>Instantiate()</code>返回<code>Node</code>，需要手动转换，容易类型错误</li><li><strong>重复代码</strong>：每次创建预制体都要写加载、验证、实例化、添加到场景等重复代码</li><li><strong>难以测试</strong>：直接调用Godot API难以在单元测试中Mock</li></ol><p><code>PrefabFactory&lt;T></code>通过泛型参数<code>T : Node</code>确保类型安全，在编译期就保证创建的节点类型正确。同时支持路径加载和预加载两种模式，既保留了灵活性，又支持性能优化。</p><p><strong>核心实现要点</strong></p><ol><li><p><strong>双构造器重载</strong>：支持从路径加载（开发便利）和从已加载<code>PackedScene</code>创建（性能优化）</p></li><li><p><strong>默认父节点</strong>：可选的<code>defaultParent</code>参数简化实例化流程，自动将新节点添加到指定父节点</p></li><li><p><strong>验证覆盖</strong>：重写<code>ValidateCreation</code>检查预制体是否成功加载，避免空引用</p></li><li><p><strong>实例化定制</strong>：重写<code>CreateInstance</code>调用<code>Instantiate&lt;T>()</code>，自动完成类型转换</p></li><li><p><strong>后置处理</strong>：在<code>PostCreate</code>中可以统一设置新节点的初始属性</p></li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.Factory
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// Godot 预制体工厂</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 用于从 PackedScene 创建节点实例</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>PrefabFactory</span>&lt;T&gt; : Factory&lt;T&gt; <span style=color:#66d9ef>where</span> T : Node
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> PackedScene _prefab;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Node _defaultParent;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 构造函数</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;param name=&#34;prefabPath&#34;&gt;预制体资源路径&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;param name=&#34;defaultParent&#34;&gt;默认父节点&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> PrefabFactory(<span style=color:#66d9ef>string</span> prefabPath, Node defaultParent = <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _prefab = GD.Load&lt;PackedScene&gt;(prefabPath);
+</span></span><span style=display:flex><span>            _defaultParent = defaultParent;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_prefab == <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushError(<span style=color:#e6db74>$&#34;无法加载预制体: {prefabPath}&#34;</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 使用已加载的预制体</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> PrefabFactory(PackedScene prefab, Node defaultParent = <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _prefab = prefab;
+</span></span><span style=display:flex><span>            _defaultParent = defaultParent;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>bool</span> ValidateCreation()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> _prefab != <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> T CreateInstance()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            T instance = _prefab.Instantiate&lt;T&gt;();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_defaultParent != <span style=color:#66d9ef>null</span> &amp;&amp; instance != <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _defaultParent.AddChild(instance);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> instance;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>override</span> T CreateInstance(<span style=color:#66d9ef>params</span> <span style=color:#66d9ef>object</span>[] args)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            T instance = _prefab.Instantiate&lt;T&gt;();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (args.Length &gt; <span style=color:#ae81ff>0</span> &amp;&amp; args[<span style=color:#ae81ff>0</span>] <span style=color:#66d9ef>is</span> Node parent)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                parent.AddChild(instance);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (_defaultParent != <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _defaultParent.AddChild(instance);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 应用额外参数</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (args.Length &gt; <span style=color:#ae81ff>1</span> &amp;&amp; instance <span style=color:#66d9ef>is</span> IFactoryInitializable initializable)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                initializable.Initialize(args[<span style=color:#ae81ff>1.</span>.]);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> instance;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 可工厂初始化接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IFactoryInitializable</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> Initialize(<span style=color:#66d9ef>object</span>[] args);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：所有需要从预制体创建Godot节点的场景，如敌人刷新、子弹发射、UI面板弹出、道具掉落等。</p></li><li><p><strong>注意事项</strong>：</p><ol><li>预制体路径建议使用常量定义，避免硬编码字符串</li><li>预加载的<code>PackedScene</code>可以重复使用，避免每次创建都重新加载资源</li><li>确保预制体的根节点类型与泛型参数<code>T</code>匹配</li><li>如果需要在特定父节点下创建，使用带<code>defaultParent</code>参数的构造函数</li></ol></li><li><p><strong>性能考虑</strong>：预加载模式适合高频创建的对象（如子弹），路径加载模式适合低频对象。</p></li><li><p><strong>扩展建议</strong>：可以实现<code>PrefabFactory&lt;T, TConfig></code>支持传入配置参数初始化节点。</p></li></ul><hr><h3 id=724-工厂注册表>7.2.4 工厂注册表</h3><p><strong>设计思路与原理</strong></p><p>工厂注册表是服务定位器模式在工厂系统中的具体应用，提供一个中心化的工厂管理器。通过注册表，业务代码无需直接引用具体工厂实例，而是通过类型或键来获取工厂，实现更高层次的解耦。这种设计特别适合大型项目，避免工厂实例在多个类中重复创建或传递。</p><p><strong>核心实现要点</strong></p><ol><li>单例模式确保全局唯一注册表</li><li>泛型注册和获取保持类型安全</li><li>支持按类型和按字符串键两种注册方式</li><li>延迟初始化选项提高启动性能</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> System;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.Factory
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 工厂注册表</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 集中管理所有工厂实例</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>FactoryRegistry</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> FactoryRegistry _instance;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> FactoryRegistry Instance =&gt; _instance ??= <span style=color:#66d9ef>new</span> FactoryRegistry();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> Dictionary&lt;Type, <span style=color:#66d9ef>object</span>&gt; _factories = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 注册工厂</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Register&lt;T&gt;(IFactory&lt;T&gt; factory) <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _factories[<span style=color:#66d9ef>typeof</span>(T)] = factory;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 获取工厂</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> IFactory&lt;T&gt; GetFactory&lt;T&gt;() <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_factories.TryGetValue(<span style=color:#66d9ef>typeof</span>(T), <span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> factory))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> factory <span style=color:#66d9ef>as</span> IFactory&lt;T&gt;;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            GD.PushError(<span style=color:#e6db74>$&#34;未找到类型 {typeof(T).Name} 的工厂&#34;</span>);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 创建对象（便捷方法）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> T Create&lt;T&gt;() <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> factory = GetFactory&lt;T&gt;();
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> factory?.Create();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 创建对象（带参数）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> T Create&lt;T&gt;(<span style=color:#66d9ef>params</span> <span style=color:#66d9ef>object</span>[] args) <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> factory = GetFactory&lt;T&gt;();
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> factory?.Create(args);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 注销工厂</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Unregister&lt;T&gt;() <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _factories.Remove(<span style=color:#66d9ef>typeof</span>(T));
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 清空所有工厂</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Clear()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _factories.Clear();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：大型项目中工厂实例需要集中管理、跨模块共享工厂、需要运行时动态切换工厂实现。</p></li><li><p><strong>注意事项</strong>：</p><ol><li>注册表是全局单例，注意不要在多个地方重复注册同一类型</li><li>使用<code>Lazy</code>选项延迟初始化工厂，避免游戏启动时大量对象创建</li><li>模块卸载时调用<code>Unregister</code>或<code>Clear</code>清理，防止内存泄漏</li><li>工厂接口变更时需要更新所有注册点</li></ol></li><li><p><strong>与DI容器的对比</strong>：注册表比依赖注入容器轻量，适合中小项目；大型项目建议迁移到完整DI容器。</p></li></ul><hr><h2 id=73-服务定位器>7.3 服务定位器</h2><p>服务定位器模式提供了一种全局访问服务的机制，同时保持松耦合。</p><h3 id=731-服务定位器实现>7.3.1 服务定位器实现</h3><p><strong>设计思路与原理</strong></p><p>服务定位器模式是一种集中式服务管理机制，提供一个全局访问点来获取各种服务实例。与依赖注入（DI）的"推"模式不同，服务定位器采用"拉"模式：服务消费者主动向定位器请求所需服务。这种模式在需要快速接入、不便重构为DI的遗留代码中特别有用，也适合作为DI容器的轻量级替代方案。</p><p>核心设计权衡：服务定位器实现了服务消费者与服务实现的解耦，但引入了全局依赖（定位器本身）。相比DI的构造函数注入，服务定位器隐藏了依赖关系，使代码更简洁但测试性稍差。在游戏开发中，这种权衡通常是可以接受的，特别是在原型阶段或中小型项目。</p><p><strong>核心实现要点</strong></p><ol><li>单例模式确保全局唯一访问点</li><li>泛型注册和获取保持类型安全</li><li>支持实例注册和工厂注册两种模式</li><li>延迟初始化支持提高启动性能</li><li>服务生命周期管理（单例/瞬态）</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> System;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.ServiceLocator
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 服务定位器</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 管理应用程序中的全局服务</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ServiceLocator</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 已注册的服务实例</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>readonly</span> Dictionary&lt;Type, <span style=color:#66d9ef>object</span>&gt; _services = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 延迟加载的服务工厂</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>readonly</span> Dictionary&lt;Type, Func&lt;<span style=color:#66d9ef>object</span>&gt;&gt; _serviceFactories = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 服务初始化状态</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>readonly</span> Dictionary&lt;Type, <span style=color:#66d9ef>bool</span>&gt; _initialized = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 注册服务实例</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> Register&lt;T&gt;(T service) <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            Type type = <span style=color:#66d9ef>typeof</span>(T);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_services.ContainsKey(type))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushWarning(<span style=color:#e6db74>$&#34;服务 {type.Name} 已注册，将被覆盖&#34;</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _services[type] = service;
+</span></span><span style=display:flex><span>            _initialized[type] = <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 注册延迟加载服务</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> RegisterLazy&lt;T&gt;(Func&lt;T&gt; factory) <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            Type type = <span style=color:#66d9ef>typeof</span>(T);
+</span></span><span style=display:flex><span>            _serviceFactories[type] = factory;
+</span></span><span style=display:flex><span>            _initialized[type] = <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 获取服务</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> T Get&lt;T&gt;() <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            Type type = <span style=color:#66d9ef>typeof</span>(T);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 直接返回已实例化的服务</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_services.TryGetValue(type, <span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> service))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> service <span style=color:#66d9ef>as</span> T;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 延迟加载</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_serviceFactories.TryGetValue(type, <span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> factory))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                T instance = factory() <span style=color:#66d9ef>as</span> T;
+</span></span><span style=display:flex><span>                _services[type] = instance;
+</span></span><span style=display:flex><span>                _initialized[type] = <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> instance;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            GD.PushError(<span style=color:#e6db74>$&#34;服务 {type.Name} 未注册&#34;</span>);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 尝试获取服务</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>bool</span> TryGet&lt;T&gt;(<span style=color:#66d9ef>out</span> T service) <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            service = Get&lt;T&gt;();
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> service != <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 检查服务是否已注册</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>bool</span> IsRegistered&lt;T&gt;() <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            Type type = <span style=color:#66d9ef>typeof</span>(T);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> _services.ContainsKey(type) || _serviceFactories.ContainsKey(type);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 检查服务是否已初始化</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>bool</span> IsInitialized&lt;T&gt;() <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> _initialized.TryGetValue(<span style=color:#66d9ef>typeof</span>(T), <span style=color:#66d9ef>out</span> <span style=color:#66d9ef>bool</span> <span style=color:#66d9ef>init</span>) &amp;&amp; <span style=color:#66d9ef>init</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 注销服务</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> Unregister&lt;T&gt;() <span style=color:#66d9ef>where</span> T : <span style=color:#66d9ef>class</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            Type type = <span style=color:#66d9ef>typeof</span>(T);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_services.ContainsKey(type))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 如果服务实现了 IDisposable，调用 Dispose</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (_services[type] <span style=color:#66d9ef>is</span> IDisposable disposable)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    disposable.Dispose();
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                _services.Remove(type);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _serviceFactories.Remove(type);
+</span></span><span style=display:flex><span>            _initialized.Remove(type);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 清空所有服务</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> Clear()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 清理所有可释放的服务</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> service <span style=color:#66d9ef>in</span> _services.Values)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (service <span style=color:#66d9ef>is</span> IDisposable disposable)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    disposable.Dispose();
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _services.Clear();
+</span></span><span style=display:flex><span>            _serviceFactories.Clear();
+</span></span><span style=display:flex><span>            _initialized.Clear();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 获取所有已注册的服务类型</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> IEnumerable&lt;Type&gt; GetRegisteredTypes()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> types = <span style=color:#66d9ef>new</span> HashSet&lt;Type&gt;(_services.Keys);
+</span></span><span style=display:flex><span>            types.UnionWith(_serviceFactories.Keys);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> types;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：全局系统（如音频管理器、输入管理器、存档系统）、跨模块共享服务、需要延迟初始化的重型服务。</p></li><li><p><strong>注意事项</strong>：</p><ol><li>避免在服务构造函数中调用<code>Get</code>获取其他服务，可能导致循环依赖</li><li>使用<code>IsRegistered</code>检查服务是否存在，避免<code>InvalidOperationException</code></li><li>线程安全：Godot节点服务必须在主线程注册和获取</li><li>清理时机：场景切换时调用<code>Clear</code>释放服务，防止内存泄漏</li></ol></li><li><p><strong>与DI对比</strong>：服务定位器适合快速接入，DI适合大型项目长期维护。可以混合使用：核心系统用DI，临时工具类用定位器。</p></li><li><p><strong>扩展建议</strong>：可以实现<code>IService</code>接口的<code>Priority</code>属性，支持按优先级初始化；添加服务初始化依赖图，自动处理初始化顺序。</p></li></ul><hr><h3 id=732-服务接口定义>7.3.2 服务接口定义</h3><p><strong>设计思路与原理</strong></p><p><code>IService</code>接口是服务定位器模式中的契约层，为所有服务提供统一的类型标识。虽然接口本身只包含初始化顺序属性，但它的存在使服务类型在编译期就能被识别，支持泛型约束和反射操作。</p><p>采用接口而非抽象类的设计，让服务可以灵活选择继承基类（如Godot的<code>Node</code>或<code>RefCounted</code>）。这种"标记接口"模式在C#和Java中广泛应用，如<code>INotifyPropertyChanged</code>、<code>IDisposable</code>等。</p><p><code>InitializeOrder</code>属性解决服务初始化顺序问题：某些服务（如配置管理器）需要在其他服务之前初始化。通过为每个服务指定顺序值，定位器可以按正确顺序初始化，避免"服务A依赖服务B但B还未初始化"的错误。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.ServiceLocator
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 服务接口标记</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 所有服务应实现此接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IService</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 服务是否已初始化</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>bool</span> IsInitialized { <span style=color:#66d9ef>get</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 初始化服务</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> Initialize();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 关闭服务</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> Shutdown();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 可更新服务接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IUpdatableService</span> : IService
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 每帧更新</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> Update(<span style=color:#66d9ef>double</span> deltaTime);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 优先级服务接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 用于确定服务初始化顺序</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IPrioritizedService</span> : IService
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 优先级（越小越优先）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>int</span> Priority { <span style=color:#66d9ef>get</span>; }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：所有需要注册到服务定位器的服务类、需要按顺序初始化的系统、需要每帧更新的服务。</p></li><li><p><strong>注意事项</strong>：</p><ol><li>简单服务只需实现<code>IService</code>，需要每帧更新的服务实现<code>IUpdatableService</code></li><li>初始化顺序值建议使用枚举或常量定义，避免魔法数字</li><li><code>Initialize</code>中只进行轻量级设置，重量级初始化应延迟到首次使用</li><li><code>Shutdown</code>中必须释放所有资源，断开信号连接，防止内存泄漏</li></ol></li><li><p><strong>扩展建议</strong>：可以实现<code>IConfigurableService</code>接口支持配置注入；实现<code> IDebuggableService</code>接口支持调试面板展示。</p></li></ul><hr><h3 id=733-服务管理器>7.3.3 服务管理器</h3><p><strong>设计思路与原理</strong></p><p><code>ServiceManager</code>是服务定位器模式的Godot集成层，继承自<code>Node</code>以利用Godot的场景树生命周期。它解决了一个关键问题：服务需要在哪里初始化？Godot的节点系统提供了自然的生命周期管理（<code>_Ready</code>、<code>_Process</code>、<code>_ExitTree</code>），将服务管理器实现为节点可以无缝融入Godot的架构。</p><p>作为<code>Node</code>的子类，ServiceManager可以：</p><ol><li>被添加到AutoLoad（自动加载）节点，确保游戏启动时自动创建</li><li>在<code>_Process</code>中驱动所有<code>IUpdatableService</code>的更新</li><li>在场景退出时自动调用所有服务的<code>Shutdown</code></li><li>利用Godot的Pause模式处理游戏暂停时的服务行为</li></ol><p>设计采用组合模式：ServiceManager不直接管理服务，而是委托给<code>ServiceLocator</code>静态类。这种分离使非Godot环境（如单元测试、工具脚本）也能使用服务定位器功能，而ServiceManager专注于Godot集成。</p><p><strong>核心实现要点</strong></p><ol><li>继承Node实现Godot生命周期集成</li><li>在<code>_Ready</code>中初始化所有已注册服务（按优先级排序）</li><li>在<code>_Process</code>中更新所有可更新服务</li><li>支持游戏暂停时暂停服务更新</li><li>在<code>_ExitTree</code>中优雅关闭所有服务</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> System;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Linq;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core.ServiceLocator
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 服务管理器</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 管理服务的生命周期和更新</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ServiceManager</span> : Node
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 服务更新节点</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ServiceUpdater</span> : Node
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>readonly</span> List&lt;IUpdatableService&gt; _updatableServices = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> AddService(IUpdatableService service)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _updatableServices.Add(service);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> RemoveService(IUpdatableService service)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _updatableServices.Remove(service);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _Process(<span style=color:#66d9ef>double</span> delta)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> service <span style=color:#66d9ef>in</span> _updatableServices)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>if</span> (service.IsInitialized)
+</span></span><span style=display:flex><span>                    {
+</span></span><span style=display:flex><span>                        service.Update(delta);
+</span></span><span style=display:flex><span>                    }
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> ServiceUpdater _updater;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _Ready()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _updater = <span style=color:#66d9ef>new</span> ServiceUpdater();
+</span></span><span style=display:flex><span>            AddChild(_updater);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 初始化所有已注册服务</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> InitializeAllServices()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> services = ServiceLocator.GetRegisteredTypes()
+</span></span><span style=display:flex><span>                .Select(t =&gt; ServiceLocator.Get&lt;<span style=color:#66d9ef>object</span>&gt;())
+</span></span><span style=display:flex><span>                .OfType&lt;IService&gt;()
+</span></span><span style=display:flex><span>                .OrderBy(s =&gt; s <span style=color:#66d9ef>is</span> IPrioritizedService p ? p.Priority : <span style=color:#66d9ef>int</span>.MaxValue)
+</span></span><span style=display:flex><span>                .ToList();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> service <span style=color:#66d9ef>in</span> services)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (!service.IsInitialized)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    service.Initialize();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>if</span> (service <span style=color:#66d9ef>is</span> IUpdatableService updatable)
+</span></span><span style=display:flex><span>                    {
+</span></span><span style=display:flex><span>                        _updater.AddService(updatable);
+</span></span><span style=display:flex><span>                    }
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 关闭所有服务</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> ShutdownAllServices()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> services = ServiceLocator.GetRegisteredTypes()
+</span></span><span style=display:flex><span>                .Select(t =&gt; ServiceLocator.Get&lt;<span style=color:#66d9ef>object</span>&gt;())
+</span></span><span style=display:flex><span>                .OfType&lt;IService&gt;()
+</span></span><span style=display:flex><span>                .ToList();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> service <span style=color:#66d9ef>in</span> services)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (service.IsInitialized)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>if</span> (service <span style=color:#66d9ef>is</span> IUpdatableService updatable)
+</span></span><span style=display:flex><span>                    {
+</span></span><span style=display:flex><span>                        _updater.RemoveService(updatable);
+</span></span><span style=display:flex><span>                    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                    service.Shutdown();
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _ExitTree()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            ShutdownAllServices();
+</span></span><span style=display:flex><span>            ServiceLocator.Clear();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：需要集中管理服务生命周期的Godot项目、需要按优先级初始化多个服务的场景、需要在游戏暂停时控制服务更新的场景。</p></li><li><p><strong>注意事项</strong>：</p><ol><li>必须在Godot项目设置的AutoLoad中添加ServiceManager节点</li><li>确保ServiceManager的初始化顺序早于其他脚本（设置较小的Order值）</li><li>不要直接创建ServiceManager实例，应使用AutoLoad提供的单例</li><li>在服务<code>Initialize</code>方法中不要调用其他未初始化的服务</li></ol></li><li><p><strong>扩展建议</strong>：可以实现服务热重载，在运行时重新初始化服务；添加服务依赖图可视化工具，帮助调试初始化顺序问题。</p></li></ul><hr><h3 id=734-使用示例>7.3.4 使用示例</h3><p><strong>设计思路与原理</strong></p><p>本示例展示一个完整的游戏设置服务（<code>GameSettingsService</code>），演示如何实现<code>IService</code>、<code>IPrioritizedService</code>和<code>IUpdatableService</code>接口。设置服务是游戏中最常见的基础服务之一，负责管理音量、画质、控制等玩家偏好。将其设计为服务的好处：</p><ol><li><strong>全局访问</strong>：任何代码都可以通过<code>ServiceLocator.Get&lt;GameSettingsService>()</code>获取当前设置</li><li><strong>持久化集成</strong>：服务初始化时加载存档设置，变更时自动保存</li><li><strong>实时更新</strong>：音量等服务需要每帧更新，实现<code>IUpdatableService</code>让管理器驱动更新</li><li><strong>高优先级</strong>：设置服务优先级设为0（最高），确保在其他服务之前初始化</li></ol><p>示例展示了服务的典型生命周期：<code>Initialize</code>加载存档配置，<code>Update</code>应用设置变更（如动态调整音量），<code>Shutdown</code>确保所有设置被保存。这种设计使设置管理完全自动化，业务代码只需修改属性值，无需关心持久化和应用。</p><p><strong>核心实现要点</strong></p><ol><li>多接口实现：同时实现服务基础接口和可选接口（优先级、可更新）</li><li>属性变更通知：示例中省略，实际应实现<code>INotifyPropertyChanged</code>支持数据绑定</li><li>延迟保存：示例在<code>Shutdown</code>中保存，实际应实现脏标记和延迟保存避免频繁IO</li><li>音量线性转换：示例展示了从对数音量（人类感知）到线性增益（音频API）的转换</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> GameFramework.Core.ServiceLocator;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Examples
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 游戏服务示例</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>GameSettingsService</span> : IService, IPrioritizedService, IUpdatableService
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> IsInitialized { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> Priority =&gt; <span style=color:#ae81ff>0</span>; <span style=color:#75715e>// 最高优先级</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> MasterVolume { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>1.0f</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> MusicVolume { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>0.8f</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> SfxVolume { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>0.8f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Initialize()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 加载设置</span>
+</span></span><span style=display:flex><span>            LoadSettings();
+</span></span><span style=display:flex><span>            IsInitialized = <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>            GD.Print(<span style=color:#e6db74>&#34;游戏设置服务已初始化&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Shutdown()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 保存设置</span>
+</span></span><span style=display:flex><span>            SaveSettings();
+</span></span><span style=display:flex><span>            IsInitialized = <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Update(<span style=color:#66d9ef>double</span> deltaTime)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 可以在这里处理自动保存等</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> LoadSettings()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 从文件加载设置</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> SaveSettings()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 保存到文件</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 音频服务示例</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>AudioService</span> : IService, IPrioritizedService
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> IsInitialized { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> Priority =&gt; <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Initialize()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 初始化音频系统</span>
+</span></span><span style=display:flex><span>            IsInitialized = <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>            GD.Print(<span style=color:#e6db74>&#34;音频服务已初始化&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Shutdown()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            IsInitialized = <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> PlayMusic(<span style=color:#66d9ef>string</span> musicPath)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 播放音乐</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> PlaySfx(<span style=color:#66d9ef>string</span> sfxPath)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 播放音效</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 游戏入口 - 服务注册和初始化</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>GameEntry</span> : Node
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> ServiceManager ServiceManager;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _Ready()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 注册服务</span>
+</span></span><span style=display:flex><span>            RegisterServices();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 初始化所有服务</span>
+</span></span><span style=display:flex><span>            ServiceManager.InitializeAllServices();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 使用服务</span>
+</span></span><span style=display:flex><span>            UseServices();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> RegisterServices()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 注册设置服务</span>
+</span></span><span style=display:flex><span>            ServiceLocator.Register(<span style=color:#66d9ef>new</span> GameSettingsService());
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 注册音频服务（依赖设置服务）</span>
+</span></span><span style=display:flex><span>            ServiceLocator.Register(<span style=color:#66d9ef>new</span> AudioService());
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 延迟加载示例</span>
+</span></span><span style=display:flex><span>            ServiceLocator.RegisterLazy&lt;IDataService&gt;(() =&gt; <span style=color:#66d9ef>new</span> DataService());
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> UseServices()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 获取并使用服务</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (ServiceLocator.TryGet&lt;GameSettingsService&gt;(<span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> settings))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                settings.MasterVolume = <span style=color:#ae81ff>0.5f</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (ServiceLocator.TryGet&lt;AudioService&gt;(<span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> audio))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                audio.PlayMusic(<span style=color:#e6db74>&#34;res://assets/music/main.ogg&#34;</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>IDataService</span> : IService { }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>DataService</span> : IDataService
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> IsInitialized { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Initialize() { IsInitialized = <span style=color:#66d9ef>true</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Shutdown() { IsInitialized = <span style=color:#66d9ef>false</span>; }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>使用说明与最佳实践</strong></p><ul><li><p><strong>适用场景</strong>：</p><ul><li>全局系统管理（音频、输入、存档、网络）</li><li>跨模块共享的配置和数据服务</li><li>需要按优先级初始化的依赖系统</li><li>延迟加载的大型服务（如数据服务）</li></ul></li><li><p><strong>注意事项</strong>：</p><ol><li>服务注册顺序：虽然定位器会按优先级初始化，但注册顺序建议与依赖关系一致</li><li>循环依赖：避免服务A的Initialize中调用服务B，同时服务B的Initialize中调用服务A</li><li>延迟加载：<code>RegisterLazy</code>适合重量级服务，但要注意首次访问的卡顿问题</li><li>TryGet优先：使用<code>TryGet</code>而非<code>Get</code>避免异常，特别是在服务可能未注册的场景</li></ol></li><li><p><strong>服务设计建议</strong>：</p><ul><li>保持服务单一职责，一个服务只做一件事</li><li>服务接口应精简，避免暴露过多实现细节</li><li>考虑实现服务接口的多个版本（如<code>IAudioService</code>的<code>FmodAudioService</code>和<code>GodotAudioService</code>）</li><li>添加服务健康检查接口，支持运行时监控</li></ul></li><li><p><strong>测试策略</strong>：</p><ul><li>单元测试中使用Mock服务替换真实服务</li><li>使用<code>ServiceLocator.Clear()</code>在测试间清理状态</li><li>测试服务初始化顺序，确保依赖关系正确</li></ul></li></ul><hr><h2 id=74-本章小结>7.4 本章小结</h2><p>本章介绍了三种核心设计模式：</p><ol><li><p><strong>对象池模式</strong>：通过预创建和复用对象减少内存分配和垃圾回收开销，特别适用于频繁创建销毁的对象如子弹、粒子效果等。实施时需要注意正确的状态重置和池大小调优。</p></li><li><p><strong>工厂模式</strong>：将对象创建逻辑封装，支持从预制体创建节点，便于管理和扩展。结合工厂注册表可以实现集中化的对象创建管理。</p></li><li><p><strong>服务定位器模式</strong>：提供全局服务访问机制，支持延迟加载和依赖管理，保持代码松耦合。配合服务管理器可以自动化服务的生命周期管理。</p></li></ol><p>这些模式可以组合使用，例如使用工厂创建池化对象，使用服务定位器管理工厂实例，构建灵活高效的资源管理体系。</p><div class=post-tags><a href=/tags/godot class=post-tag>#Godot</a>
+<a href=/tags/%E5%BC%80%E5%8F%91 class=post-tag>#开发</a>
+<a href=/tags/c class=post-tag>#C#</a>
+<a href=/tags/%E6%9E%B6%E6%9E%84 class=post-tag>#架构</a>
+<a href=/tags/csharp class=post-tag>#CSharp</a></div><nav class=post-nav><a href=/posts/%E7%AC%AC6%E7%AB%A0-%E5%85%B3%E9%94%AE%E5%8C%96%E5%AD%A6%E5%8F%8D%E5%BA%94%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/ class=prev-post><span class=nav-label>← 上一篇</span>
+<span class=nav-title>第6章 关键化学反应深度解析</span>
+</a><a href=/posts/%E7%AC%AC8%E7%AB%A0-%E8%A1%8C%E4%B8%BA%E6%A8%A1%E5%BC%8F/ class=next-post><span class=nav-label>下一篇 →</span>
+<span class=nav-title>第8章 行为模式</span></a></nav><script src=https://giscus.app/client.js data-repo=heheboy/heheboy.github.io data-repo-id=R_kgDORzG4BQ data-category=Announcements data-category-id=DIC_kwDORzG4Bc4C54kN data-mapping=pathname data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=light data-lang=zh-CN crossorigin=anonymous async></script></article></div><aside class=sidebar><div class="sidebar-widget author-widget"><img class=author-avatar src=/img/avatar.jpg alt=熟童><h3 class=author-name>熟童</h3><p class=author-bio>熟童，一个在代码、咖啡与虚拟世界之间反复横跳的人。写程序、做游戏、研究AI，也会认真对待一杯咖啡的参数曲线。这里记录的不只是技术，还有那些被实现出来的想法。相信技术不只是工具，它也可以有温度。</p><div class=author-social><a href=https://github.com/heheboy target=_blank rel=noopener aria-label=GitHub><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 0C5.37.0.0 5.37.0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57.0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925.0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18.0.0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225.0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22.0 1.605-.015 2.895-.015 3.3.0.315.225.69.825.57A12.02 12.02.0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+</a><a href=https://space.bilibili.com/8756982 target=_blank rel=noopener aria-label=Bilibili><svg viewBox="0 0 24 24"><path fill="currentColor" d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858.0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234.0 11.704-1.778L8.46 4.45V4.267a1.227 1.227.0 112.453.0V5.32l2.823-2.695a1.234 1.234.0 011.704 1.778l-1.687 1.12zm-3.28 9.653c-.56.0-1.013.453-1.013 1.013s.453 1.013 1.013 1.013 1.013-.453 1.013-1.013-.453-1.013-1.013-1.013zm-6 0c-.56.0-1.013.453-1.013 1.013s.453 1.013 1.013 1.013 1.013-.453 1.013-1.013-.453-1.013-1.013-1.013z"/></svg>
+</a><a href=https://www.facebook.com/dio.zeng.2025 target=_blank rel=noopener aria-label=Facebook><svg viewBox="0 0 24 24"><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312.0 2.686.235 2.686.235v2.953H15.83c-1.491.0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><div class=social-wechat-wrapper><a href=# class=social-wechat-trigger aria-label=WeChat><svg viewBox="0 0 24 24"><path fill="currentColor" d="M8.691 2.188C3.891 2.188.0 5.476.0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59.0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213.0.163.13.295.29.295a.326.326.0 00.167-.054l1.903-1.114a.864.864.0 01.717-.098 10.16 10.16.0 002.837.403c.276.0.543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642.0 1.162.529 1.162 1.18A1.17 1.17.0 015.785 8.349 1.17 1.17.0 014.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813.0c.642.0 1.162.529 1.162 1.18a1.17 1.17.0 01-1.162 1.178 1.17 1.17.0 01-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826.0 1.622-.12 2.361-.336a.722.722.0 01.598.082l1.584.926a.272.272.0 00.14.047c.134.0.24-.111.24-.247.0-.06-.023-.12-.038-.177l-.327-1.233a.582.582.0 01-.023-.156.49.49.0 01.201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088V8.89c-.135-.01-.27-.027-.407-.03zm-2.53 3.274c.535.0.969.44.969.982a.976.976.0 01-.969.983.976.976.0 01-.969-.983c0-.542.434-.982.97-.982zm4.844.0c.535.0.969.44.969.982a.976.976.0 01-.969.983.976.976.0 01-.969-.983c0-.542.434-.982.969-.982z"/></svg></a><div class=wechat-qr-popup><img src=/img/wechat-qr.png alt="WeChat QR Code">
+<span>扫码加我</span></div></div><a href=https://www.instagram.com/bengbeng9548/ target=_blank rel=noopener aria-label=Instagram><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.163c3.204.0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849.0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204.0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849.0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741.0 8.333.014 7.053.072c-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.668.072 4.948c.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403.0-6.162 2.759-6.162 6.162S8.597 18.163 12 18.163s6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zM12 16c-2.209.0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796.0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795.0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a><div class=social-email-wrapper><a href=mailto:bengbeng9548@qq.com class=social-email aria-label=Email><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 4H4c-1.1.0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1.0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+<span>bengbeng9548@qq.com</span></a></div></div></div><div class="sidebar-widget categories-widget"><h4>分类</h4><div class=category-cloud><a href=/categories/%E5%92%96%E5%95%A1%E7%9B%B8%E5%85%B3/ class=category-link>咖啡相关
+<span class=category-count>(12)</span>
+</a><a href=/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/ class=category-link>游戏开发
+<span class=category-count>(12)</span>
+</a><a href=/categories/ai%E7%9B%B8%E5%85%B3/ class=category-link>AI相关
+<span class=category-count>(2)</span>
+</a><a href=/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/ class=category-link>生活随记
+<span class=category-count>(1)</span></a></div></div><div class="sidebar-widget tags-widget"><h4>标签</h4><div class=tag-cloud><a href=/tags/c%23/ class=tag-link style=font-size:1.5em>C#
+</a><a href=/tags/csharp/ class=tag-link style=font-size:1.5em>CSharp
+</a><a href=/tags/godot/ class=tag-link style=font-size:1.5em>Godot
+</a><a href=/tags/%E5%92%96%E5%95%A1/ class=tag-link style=font-size:1.5em>咖啡
+</a><a href=/tags/%E5%92%96%E5%95%A1%E8%B1%86/ class=tag-link style=font-size:1.5em>咖啡豆
+</a><a href=/tags/%E5%BC%80%E5%8F%91/ class=tag-link style=font-size:1.5em>开发
+</a><a href=/tags/%E5%92%96%E5%95%A1%E7%83%98%E7%84%99/ class=tag-link style=font-size:1.5em>咖啡烘焙
+</a><a href=/tags/%E6%9E%B6%E6%9E%84/ class=tag-link style=font-size:1.5em>架构
+</a><a href=/tags/agent/ class=tag-link style=font-size:1em>Agent
+</a><a href=/tags/ai/ class=tag-link style=font-size:1em>AI
+</a><a href=/tags/claudecode/ class=tag-link style=font-size:1em>ClaudeCode
+</a><a href=/tags/%E5%92%96%E5%95%A1%E7%94%9F%E8%B1%86/ class=tag-link style=font-size:1em>咖啡生豆
+</a><a href=/tags/%E6%99%BA%E8%83%BD%E4%BD%93/ class=tag-link style=font-size:1em>智能体
+</a><a href=/tags/%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF/ class=tag-link style=font-size:1em>烘焙曲线
+</a><a href=/tags/anthropic/ class=tag-link style=font-size:.9em>Anthropic
+</a><a href=/tags/cc/ class=tag-link style=font-size:.9em>Cc
+</a><a href=/tags/mcp/ class=tag-link style=font-size:.9em>Mcp
+</a><a href=/tags/openclaw/ class=tag-link style=font-size:.9em>OpenClaw
+</a><a href=/tags/skill/ class=tag-link style=font-size:.9em>Skill
+</a><a href=/tags/ui/ class=tag-link style=font-size:.9em>UI</a></div></div><div class="sidebar-widget links-widget"><h4>友情链接</h4><div class=links-list><a href=https://gohugo.io target=_blank rel=noopener class=link-item title="Hugo 静态网站生成器官方文档"><span class=link-name>Hugo 官方</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+</a><a href=https://github.com/heheboy/hugo-cms target=_blank rel=noopener class=link-item title=hugo-cms的项目连接><span class=link-name>Hugo-cms</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+</a><a href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener class=link-item title=主题的项目连接><span class=link-name>hugo-cms-theme</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></a></div></div></aside></div></main><footer class=site-footer><div class=footer-content><p class=copyright>&copy; 2026 熟童.
+All rights reserved.</p><div class=footer-info><span class=footer-info-item><a href=https://github.com/heheboy/hugo-cms target=_blank rel=noopener>本网站由Hugo驱动,使用Hugo-cms制作
+</a></span><span class=footer-info-item><a href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener>主题采用 hugo-cms-theme
+</a><a class=github-star-link href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener title="GitHub Stars"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 0c4.42.0 8 3.58 8 8a8.013 8.013.0 01-5.45 7.59c-.4.08-.55-.17-.55-.38.0-.27.01-1.13.01-2.2.0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95.0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12.0.0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27s-1.36.09-2 .27c-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15.0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94.0.67.01 1.3.01 1.49.0.21-.15.45-.55.38A7.995 7.995.0 010 8c0-4.42 3.58-8 8-8z"/></svg>
+<span>Star</span></a></span></div><div class=footer-links><a href=/index.xml class=footer-link target=_blank rel=noopener aria-label=RSS订阅><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6.503 20.752C6.503 22.546 5.047 24 3.252 24c-1.796.0-3.252-1.454-3.252-3.248s1.456-3.248 3.252-3.248c1.795.001 3.251 1.454 3.251 3.248zM0 8.18v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817C15.777 15.29 8.721 8.242.0 8.18zm0-3.368C10.58 4.858 19.152 13.406 19.183 24H24c-.03-13.231-10.736-23.954-24-24v4.812z"/></svg>
+<span>RSS 订阅</span>
+</a><span class=footer-link-separator>|</span>
+<a href=/sitemap.xml class=footer-link target=_blank rel=noopener aria-label=网站地图><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 3l-6 1.5L8.501 3l-6 1.5v15l6-1.5 5.999 1.5 6-1.5V3zM15 16.656l-5.999-1.5V3.844L15 5.344v11.312zm1-11.312 4 .999v11.312l-4-.999V5.344zm-7 .499-4-.999v11.312l4 .999V5.843z"/></svg>
+<span>网站地图</span></a></div></div></footer><script>(function(){const t=document.querySelector(".theme-toggle");if(!t)return;const e=document.documentElement,n=localStorage.getItem("theme");n&&e.setAttribute("data-theme",n),t.addEventListener("click",()=>{const n=e.getAttribute("data-theme"),t=n==="dark"?"light":"dark";e.setAttribute("data-theme",t),localStorage.setItem("theme",t)})})()</script><script>(function(){const e=document.querySelector(".nav-toggle"),t=document.querySelector(".nav-menu");e&&e.addEventListener("click",()=>{t.classList.toggle("active"),e.classList.toggle("active")})})()</script></body></html>

@@ -1,0 +1,429 @@
+<!doctype html><html lang=zh-CN data-theme=light><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="4.1 热力学基础概念
+4.1.1 温度与热量
+温度（Temperature）
+
+定义：物质微观粒子热运动剧烈程度的量度
+单位：摄氏度（°C）、华氏度（°F）、开尔文（K）
+转换公式：
+
+°F = °C × 9/5 + 32
+K = °C + 273.15
+
+
+
+热量（Heat）
+
+定义：能量的一种形式，由温度差驱动的能量传递
+单位：焦耳（J）、卡路里（cal）
+转换：1 cal = 4.184 J
+热量计算公式：
+
+Q = m × c × ΔT
+
+其中：
+Q = 热量（J）
+m = 质量（kg）
+c = 比热容（J/kg·K）
+ΔT = 温度变化（K或°C）
+4.1.2 比热容（Specific Heat Capacity）
+定义：单位质量的物质温度升高1°C所需的热量"><meta name=author content="熟童"><meta name=generator content="Hugo 0.159.0"><title>第4章 热力学基础与传热机制 | 熟童·实验室</title><link rel=canonical href=https://heheboy.github.io/posts/%E7%AC%AC4%E7%AB%A0-%E7%83%AD%E5%8A%9B%E5%AD%A6%E5%9F%BA%E7%A1%80%E4%B8%8E%E4%BC%A0%E7%83%AD%E6%9C%BA%E5%88%B6/><link rel=stylesheet href=/css/main.min.52a33c1c75f1018fce5fd552f8174ace585d07d2689bbdd7854b698275ee0477.css integrity="sha256-UqM8HHXxAY/OX9VS+BdKzlhdB9Jom73XhUtpgnXuBHc="><link rel=icon type=image/x-icon href=/favicon.ico><meta property="og:title" content="第4章 热力学基础与传热机制"><meta property="og:description" content="4.1 热力学基础概念
+4.1.1 温度与热量
+温度（Temperature）
+
+定义：物质微观粒子热运动剧烈程度的量度
+单位：摄氏度（°C）、华氏度（°F）、开尔文（K）
+转换公式：
+
+°F = °C × 9/5 + 32
+K = °C + 273.15
+
+
+
+热量（Heat）
+
+定义：能量的一种形式，由温度差驱动的能量传递
+单位：焦耳（J）、卡路里（cal）
+转换：1 cal = 4.184 J
+热量计算公式：
+
+Q = m × c × ΔT
+
+其中：
+Q = 热量（J）
+m = 质量（kg）
+c = 比热容（J/kg·K）
+ΔT = 温度变化（K或°C）
+4.1.2 比热容（Specific Heat Capacity）
+定义：单位质量的物质温度升高1°C所需的热量"><meta property="og:url" content="https://heheboy.github.io/posts/%E7%AC%AC4%E7%AB%A0-%E7%83%AD%E5%8A%9B%E5%AD%A6%E5%9F%BA%E7%A1%80%E4%B8%8E%E4%BC%A0%E7%83%AD%E6%9C%BA%E5%88%B6/"><meta property="og:site_name" content="熟童·实验室"><meta property="og:type" content="article"><meta name=twitter:card content="summary_large_image"><meta name=twitter:title content="第4章 热力学基础与传热机制"><meta name=twitter:description content="4.1 热力学基础概念
+4.1.1 温度与热量
+温度（Temperature）
+
+定义：物质微观粒子热运动剧烈程度的量度
+单位：摄氏度（°C）、华氏度（°F）、开尔文（K）
+转换公式：
+
+°F = °C × 9/5 + 32
+K = °C + 273.15
+
+
+
+热量（Heat）
+
+定义：能量的一种形式，由温度差驱动的能量传递
+单位：焦耳（J）、卡路里（cal）
+转换：1 cal = 4.184 J
+热量计算公式：
+
+Q = m × c × ΔT
+
+其中：
+Q = 热量（J）
+m = 质量（kg）
+c = 比热容（J/kg·K）
+ΔT = 温度变化（K或°C）
+4.1.2 比热容（Specific Heat Capacity）
+定义：单位质量的物质温度升高1°C所需的热量"><meta property="article:published_time" content="2026-04-07T00:00:00+00:00"><meta property="article:modified_time" content="2026-04-07T00:00:00+00:00"><meta property="article:tag" content="咖啡"><meta property="article:tag" content="咖啡豆"><meta property="article:tag" content="咖啡烘焙"><meta property="article:tag" content="热力学"><meta property="article:tag" content="传热机制"></head><body><nav class=main-nav><div class=nav-container><a class=nav-brand href=/>熟童·实验室</a>
+<button class=nav-toggle aria-label="Toggle navigation">
+<span></span>
+<span></span>
+<span></span></button><div class=nav-menu><a class=nav-link href=/>首页</a>
+<a class=nav-link href=/posts/>内容文章</a>
+<a class=nav-link href=/categories/>文章分类</a>
+<a class=nav-link href=/archive/>归档册</a>
+<a class=nav-link href=/tags/>标签</a>
+<a class=nav-link href=/about/>关于本站</a>
+<a class="nav-link nav-search-link" href=/search/ aria-label=搜索><svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61.0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></a></div></div></nav><header class=site-header style=background-image:url(/img/post-bg.jpg)><div class=header-content><h1 class=site-title>第4章 热力学基础与传热机制</h1><p class=site-slogan>让技术长出温度，在精确的逻辑与冷静的结构之中，依然保留人与世界的感知。不只是实现功能，也是在构建表达；不只是解决问题，也是在回应内心。</p></div></header><main class=main-container><div class=content-wrapper><div class=main-content><article class=page-content><header class=page-article-header><h1 class=page-article-title>第4章 热力学基础与传热机制</h1><div class=page-article-meta><time datetime=2026-04-07>2026年4月7日
+</time><span class=meta-separator>·</span>
+<a href=/categories/%E5%92%96%E5%95%A1%E7%9B%B8%E5%85%B3>咖啡相关</a></div></header><h2 id=41-热力学基础概念>4.1 热力学基础概念</h2><h3 id=411-温度与热量>4.1.1 温度与热量</h3><p><strong>温度（Temperature）</strong></p><ul><li>定义：物质微观粒子热运动剧烈程度的量度</li><li>单位：摄氏度（°C）、华氏度（°F）、开尔文（K）</li><li>转换公式：<ul><li>°F = °C × 9/5 + 32</li><li>K = °C + 273.15</li></ul></li></ul><p><strong>热量（Heat）</strong></p><ul><li>定义：能量的一种形式，由温度差驱动的能量传递</li><li>单位：焦耳（J）、卡路里（cal）</li><li>转换：1 cal = 4.184 J</li><li>热量计算公式：</li></ul><pre tabindex=0><code>Q = m × c × ΔT
+
+其中：
+Q = 热量（J）
+m = 质量（kg）
+c = 比热容（J/kg·K）
+ΔT = 温度变化（K或°C）
+</code></pre><h3 id=412-比热容specific-heat-capacity>4.1.2 比热容（Specific Heat Capacity）</h3><p><strong>定义</strong>：单位质量的物质温度升高1°C所需的热量</p><p><strong>咖啡生豆的比热容</strong></p><pre tabindex=0><code>生豆比热容（cp）≈ 1.5 - 2.0 kJ/kg·K
+
+影响因素：
+├── 水分含量（水分越高，cp越高）
+│   干燥生豆（10%水分）：cp ≈ 1.5 kJ/kg·K
+│   高水分生豆（12%）：cp ≈ 1.7 kJ/kg·K
+│
+├── 温度（随温度变化）
+│   室温-100°C：cp ≈ 1.5 kJ/kg·K
+│   100-200°C：cp ≈ 2.0 kJ/kg·K（水分蒸发后）
+│
+└── 密度（密度越高，cp略高）
+    高密度豆：cp ≈ 1.8 kJ/kg·K
+    低密度豆：cp ≈ 1.5 kJ/kg·K
+</code></pre><p><strong>烘焙过程中的热量计算示例</strong></p><pre tabindex=0><code>场景：将1kg生豆从20°C加热至200°C
+
+阶段一：干燥期（20°C → 100°C）
+所需热量 Q₁ = 1 kg × 1.5 kJ/kg·K × 80 K = 120 kJ
+
+阶段二：水分蒸发（100°C）
+水分：100g（10%），汽化潜热 2260 kJ/kg
+所需热量 Q₂ = 0.1 kg × 2260 kJ/kg = 226 kJ
+
+阶段三：加热期（100°C → 200°C）
+干燥豆比热容：0.9 kg × 2.0 kJ/kg·K × 100 K = 180 kJ
+
+总热量：Q = 120 + 226 + 180 = 526 kJ ≈ 126 kcal
+
+烘焙机效率约30-50%，实际燃气消耗约300-400 kcal
+</code></pre><h3 id=413-相变与潜热>4.1.3 相变与潜热</h3><p><strong>汽化潜热（Latent Heat of Vaporization）</strong></p><pre tabindex=0><code>水的汽化潜热：2260 kJ/kg（100°C时）
+
+烘焙中的水分蒸发：
+├── 100g水分 × 2260 kJ/kg = 226 kJ
+├── 占总热量消耗的40-45%
+└── 解释为何干燥期需要大量热量输入但温度上升缓慢
+</code></pre><p><strong>烘焙过程中的相变</strong></p><pre tabindex=0><code>阶段        相变类型              能量变化
+─────────────────────────────────────────────
+20-100°C    液态水升温            显热
+100°C       液态→气态（蒸发）     潜热（大）
+100-150°C   蒸汽升温              显热
+150-200°C   固态组织变化          化学能
+200°C+      焦糖化/碳化           放热反应
+</code></pre><h3 id=414-热平衡与能量守恒>4.1.4 热平衡与能量守恒</h3><p><strong>烘焙系统能量平衡</strong></p><pre tabindex=0><code>输入能量 = 输出能量 + 储存能量
+
+燃气燃烧热量 = 生豆吸收热量 + 水分蒸发热量 +
+              排烟损失 + 表面散热 + 滚筒储存热量
+
+典型分配（以燃气烘焙机为例）：
+├── 生豆吸收：30-40%
+├── 水分蒸发：20-25%
+├── 排烟带走：15-20%
+├── 表面散热：10-15%
+├── 滚筒储存：5-10%
+└── 其他损失：5-10%
+</code></pre><p><strong>热惯性（Thermal Inertia）</strong></p><pre tabindex=0><code>定义：系统抵抗温度变化的特性
+
+影响因素：
+├── 滚筒质量（质量越大，热惯性越大）
+├── 滚筒材料（钢 vs 铸铁，热容量不同）
+├── 投豆量（豆子质量增加系统热容量）
+└── 烘焙机预热状态
+
+烘焙中的体现：
+├── 大容量烘焙机（&gt;10kg）：ROR易波动，需提前调节火力
+├── 连续烘焙：余热累积，后续批次需降低火力
+└── 预热不足：初始ROR低于预期，需补偿火力
+</code></pre><hr><h2 id=42-传热机制详解>4.2 传热机制详解</h2><h3 id=421-传导传热conduction>4.2.1 传导传热（Conduction）</h3><p><strong>定义</strong>：热量通过物质内部或直接接触的物质间传递，无需宏观物质流动</p><p><strong>傅里叶定律</strong></p><pre tabindex=0><code>q = -k × A × (dT/dx)
+
+其中：
+q = 热流率（W）
+k = 热导率（W/m·K）
+A = 传热面积（m²）
+dT/dx = 温度梯度（K/m）
+</code></pre><p><strong>烘焙中的传导</strong></p><pre tabindex=0><code>滚筒→豆表传导：
+├── 接触时间：约占滚筒旋转周期的30-50%
+├── 传热系数：h ≈ 100-300 W/m²·K（视转速而定）
+├── 影响因素：
+│   ├── 滚筒转速（转速↑，接触频率↑，单次接触时间↓）
+│   ├── 投豆量（豆子层厚度↑，传导效率↓）
+│   └── 豆子与滚筒温差（ΔT↑，传热速率↑）
+└── 占比：总热量传递的25-35%
+
+豆表→豆心传导：
+├── 咖啡豆热导率：k ≈ 0.1-0.2 W/m·K（很低）
+├── 热量从表面传导至中心需要较长时间
+├── 6mm直径生豆，中心达到表面温度需2-3分钟
+└── 解释：为何豆表与豆心存在温差
+</code></pre><p><strong>减少豆心温差的策略</strong></p><pre tabindex=0><code>1. 降低ROR（升温速率）
+   └── 给内部传导留出时间
+
+2. 提高滚筒转速
+   └── 增加豆子翻滚频率，均匀化表面受热
+
+3. 适当延长烘焙时间
+   └── 热量有更多时间传导至豆心
+
+4. 避免过高入豆温
+   └── 防止表面瞬间过热
+</code></pre><h3 id=422-对流传热convection>4.2.2 对流传热（Convection）</h3><p><strong>定义</strong>：热量通过流体（气体或液体）的宏观流动传递</p><p><strong>牛顿冷却定律</strong></p><pre tabindex=0><code>q = h × A × (T_s - T_∞)
+
+其中：
+q = 对流热流率（W）
+h = 对流换热系数（W/m²·K）
+A = 传热面积（m²）
+T_s = 表面温度（K）
+T_∞ = 流体温度（K）
+</code></pre><p><strong>烘焙中的对流</strong></p><pre tabindex=0><code>热风流场：
+├── 强制对流：burner产生的热风
+├── 自然对流：热空气上升形成的循环
+├── 滚筒内对流：豆子间隙的空气流动
+└── 占比：总热量传递的50-60%
+
+对流换热系数范围：
+├── 静止空气：h ≈ 5-25 W/m²·K
+├── 强制对流（热风）：h ≈ 50-200 W/m²·K
+└── 视风速而定：风速↑，h↑
+
+风门控制的作用：
+├── 调节热风流量 → 改变对流换热量
+├── 排出水分和银皮
+├── 影响滚筒内温度分布
+└── 调节烟气浓度（影响辐射传热）
+</code></pre><p><strong>对流与传导的对比</strong></p><table><thead><tr><th>特性</th><th>传导</th><th>对流</th></tr></thead><tbody><tr><td>传热介质</td><td>直接接触</td><td>流体流动</td></tr><tr><td>传热速度</td><td>较慢（依赖材料导热性）</td><td>较快（流体携带热量）</td></tr><tr><td>温度均匀性</td><td>不均匀（存在梯度）</td><td>较均匀</td></tr><tr><td>可控性</td><td>难调节</td><td>易调节（风门/风速）</td></tr><tr><td>烘焙中作用</td><td>提供热量基础</td><td>提供热量主要来源</td></tr></tbody></table><h3 id=423-辐射传热radiation>4.2.3 辐射传热（Radiation）</h3><p><strong>定义</strong>：热量以电磁波形式传递，无需介质</p><p><strong>斯特藩-玻尔兹曼定律</strong></p><pre tabindex=0><code>q = ε × σ × A × (T₁⁴ - T₂⁴)
+
+其中：
+q = 辐射热流率（W）
+ε = 发射率（0-1，黑体为1）
+σ = 斯特藩-玻尔兹曼常数 5.67×10⁻⁸ W/m²·K⁴
+A = 辐射面积（m²）
+T = 绝对温度（K）
+</code></pre><p><strong>烘焙中的辐射</strong></p><pre tabindex=0><code>主要来源：
+├── Burner火焰辐射（红外为主）
+├── 高温滚筒壁辐射
+└── 烘焙机内高温表面辐射
+
+辐射特性：
+├── 与温度四次方成正比（高温时显著）
+├── 滚筒温度&gt;300°C时辐射作用增强
+├── 占比较小：5-10%（直火机可达15%）
+└── 主要影响豆表，对豆心影响有限
+
+发射率参考：
+├── 氧化金属表面：ε ≈ 0.6-0.8
+├── 抛光金属：ε ≈ 0.1-0.3
+├── 咖啡生豆：ε ≈ 0.9（接近黑体）
+└── 银皮：ε ≈ 0.8-0.9
+</code></pre><h3 id=424-三种传热方式的综合作用>4.2.4 三种传热方式的综合作用</h3><p><strong>滚筒烘焙机的传热分布</strong></p><pre tabindex=0><code>典型半直火式烘焙机：
+
+热量来源分解（投豆量6kg）：
+├── 燃气燃烧总热量：约60-80 kW
+├── 传导（滚筒接触）：25-35%
+│   └── 约15-25 kW
+├── 对流（热风）：50-60%
+│   └── 约30-45 kW
+├── 辐射（火焰/热表面）：5-10%
+│   └── 约3-8 kW
+└── 其他损失：5-10%
+
+不同烘焙阶段的传热主导：
+├── 入豆期：对流主导（快速建立热风环境）
+├── 干燥期：对流+传导（蒸发需大量热量）
+├── 梅纳期：传导主导（豆子与滚筒接触更充分）
+├── 一爆期：对流主导（需快速带走水蒸气和CO₂）
+└── 发展期：辐射+对流（温度高，辐射作用增强）
+</code></pre><p><strong>烘焙机类型的传热差异</strong></p><table><thead><tr><th>类型</th><th>传导</th><th>对流</th><th>辐射</th><th>特点</th></tr></thead><tbody><tr><td><strong>直火式</strong></td><td>40-50%</td><td>30-40%</td><td>10-15%</td><td>热传导强，易过热</td></tr><tr><td><strong>半直火/半热风</strong></td><td>25-35%</td><td>50-60%</td><td>5-10%</td><td>平衡型，控制灵活</td></tr><tr><td><strong>全热风（流化床）</strong></td><td>&lt;10%</td><td>85-95%</td><td>5%</td><td>对流极强，升温快</td></tr></tbody></table><hr><h2 id=43-传热系数与热阻>4.3 传热系数与热阻</h2><h3 id=431-总传热系数u值>4.3.1 总传热系数（U值）</h3><p><strong>定义</strong>：综合所有传热方式的有效传热能力</p><pre tabindex=0><code>1/U = 1/h₁ + δ/k + 1/h₂ + R_contact
+
+其中：
+U = 总传热系数（W/m²·K）
+h₁ = 热侧对流系数
+h₂ = 冷侧对流系数
+δ = 壁厚（m）
+k = 壁材料导热系数
+R_contact = 接触热阻
+</code></pre><p><strong>烘焙中的U值估算</strong></p><pre tabindex=0><code>滚筒-豆子系统：
+├── 对流换热系数 h_air ≈ 100 W/m²·K
+├── 滚筒钢壁导热 k_steel ≈ 50 W/m·K
+├── 壁厚 δ ≈ 5mm = 0.005m
+├── 接触热阻 R_contact ≈ 0.01 m²·K/W
+└── 估算U值：U ≈ 50-80 W/m²·K
+
+实际意义：
+├── U值↑ → 传热效率↑ → 烘焙时间可缩短
+├── U值↓ → 传热效率↓ → 需延长烘焙或提高温差
+└── 滚筒积垢会降低U值（需定期清洁）
+</code></pre><h3 id=432-热阻分析>4.3.2 热阻分析</h3><p><strong>串联热阻</strong></p><pre tabindex=0><code>热量从燃气到豆心的传递路径：
+
+燃气火焰 → 燃烧室壁 → 滚筒外壁 → 滚筒内壁 → 豆表 → 豆心
+
+各环节热阻：
+├── 燃气侧对流热阻：R₁ = 1/h_gas ≈ 0.01 m²·K/W
+├── 滚筒壁导热热阻：R₂ = δ/k ≈ 0.0001 m²·K/W（可忽略）
+├── 豆表接触热阻：R₃ = 0.01-0.02 m²·K/W（主要瓶颈）
+├── 豆内传导热阻：R₄ = r/(2k) ≈ 0.02-0.03 m²·K/W（豆心温差来源）
+└── 总热阻：R_total ≈ 0.04-0.06 m²·K/W
+</code></pre><p><strong>瓶颈识别</strong></p><ul><li>最大热阻：豆内传导（R₄）</li><li>次大热阻：豆表接触（R₃）</li><li>结论：豆心升温慢是物理限制，只能通过降低ROR来缓解</li></ul><hr><h2 id=44-热力学在烘焙控制中的应用>4.4 热力学在烘焙控制中的应用</h2><h3 id=441-升温速率ror的热力学基础>4.4.1 升温速率（ROR）的热力学基础</h3><p><strong>ROR的物理意义</strong></p><pre tabindex=0><code>ROR = dT/dt = (q_in - q_out) / (m × cp)
+
+其中：
+q_in = 输入热流率（火力决定）
+q_out = 热损失（排烟、散热）
+m = 豆子质量
+cp = 比热容
+</code></pre><p><strong>ROR控制方程</strong></p><pre tabindex=0><code>目标ROR = 8°C/min（示例）
+所需热量输入：
+q_in = ROR × m × cp + q_out
+     = 8/60 × 6 × 1500 + 5000
+     ≈ 6200 W ≈ 6.2 kW
+
+对应燃气流量（热值10kWh/m³）：
+V_gas = 6.2 / 10 ≈ 0.62 m³/h
+</code></pre><h3 id=442-热量输入的动态调节>4.4.2 热量输入的动态调节</h3><p><strong>不同阶段的火力需求</strong></p><pre tabindex=0><code>干燥期（0-5分钟，20-150°C）：
+├── 主要消耗：水分蒸发潜热
+├── 所需热量：最大
+├── 火力设置：70-80%
+└── ROR目标：10-15°C/min
+
+梅纳期（5-8分钟，150-180°C）：
+├── 主要消耗：豆体升温+化学反应吸热
+├── 所需热量：中等
+├── 火力设置：60-70%
+└── ROR目标：6-10°C/min
+
+焦糖化期（8-10分钟，180-200°C）：
+├── 主要消耗：豆体升温+焦糖化反应
+├── 所需热量：中等偏高
+├── 火力设置：60-75%
+└── ROR目标：5-8°C/min
+
+发展期（10-12分钟，200°C+）：
+├── 主要消耗：豆体升温+放热反应补偿
+├── 所需热量：较低（部分反应放热）
+├── 火力设置：40-60%
+└── ROR目标：2-5°C/min
+</code></pre><h3 id=443-环境温度补偿>4.4.3 环境温度补偿</h3><p><strong>高海拔烘焙的热力学调整</strong></p><pre tabindex=0><code>高海拔特点：
+├── 气压降低 → 沸点降低
+├── 空气密度降低 → 对流换热系数下降
+├── 氧气含量降低 → 燃烧效率下降
+
+调整策略：
+├── 入豆温：降低5-10°C（沸点降低，水分蒸发快）
+├── 火力：增加10-15%（补偿对流效率下降）
+├── 风门：适当减小（保持足够热量）
+└── 烘焙时间：可能需延长30-60秒
+
+数据示例（海拔2000m vs 海平面）：
+├── 沸点：93.7°C vs 100°C
+├── 空气密度：约0.8 kg/m³ vs 1.2 kg/m³
+├── 对流系数下降约25%
+└── 燃烧效率下降约10-15%
+</code></pre><p><strong>冬季/夏季环境调整</strong></p><pre tabindex=0><code>冬季（环境温度&lt;15°C）：
+├── 预热时间延长
+├── 入豆温可提高5°C
+├── 初始火力增加10%
+└── 注意冷却速度过快
+
+夏季（环境温度&gt;28°C）：
+├── 冷却系统效率下降
+├── 初始火力可减少5%
+├── 注意生豆储存水分
+└── 加强通风
+</code></pre><hr><h2 id=45-热力学公式速查表>4.5 热力学公式速查表</h2><h3 id=451-常用公式>4.5.1 常用公式</h3><table><thead><tr><th>公式</th><th>变量说明</th><th>应用场景</th></tr></thead><tbody><tr><td>Q = m × cp × ΔT</td><td>Q热量，m质量，cp比热容，ΔT温差</td><td>计算升温所需热量</td></tr><tr><td>q = h × A × ΔT</td><td>q热流率，h换热系数，A面积</td><td>对流换热计算</td></tr><tr><td>q = k × A × ΔT/δ</td><td>k导热系数，δ厚度</td><td>传导传热计算</td></tr><tr><td>q = εσA(T₁⁴-T₂⁴)</td><td>ε发射率，σ斯特藩常数</td><td>辐射传热计算</td></tr><tr><td>ROR = dT/dt</td><td>温度变化率</td><td>烘焙曲线分析</td></tr><tr><td>U = 1/(ΣR)</td><td>U总传热系数，R热阻</td><td>系统传热能力评估</td></tr></tbody></table><h3 id=452-材料热物性参数>4.5.2 材料热物性参数</h3><table><thead><tr><th>材料</th><th>密度(kg/m³)</th><th>比热容(kJ/kg·K)</th><th>导热系数(W/m·K)</th><th>发射率</th></tr></thead><tbody><tr><td>咖啡生豆</td><td>600-700</td><td>1.5-2.0</td><td>0.1-0.2</td><td>0.9</td></tr><tr><td>水</td><td>1000</td><td>4.18</td><td>0.6</td><td>-</td></tr><tr><td>水蒸气</td><td>0.6</td><td>2.0</td><td>0.025</td><td>-</td></tr><tr><td>碳钢</td><td>7850</td><td>0.5</td><td>50</td><td>0.8</td></tr><tr><td>不锈钢</td><td>8000</td><td>0.5</td><td>16</td><td>0.4</td></tr><tr><td>铸铁</td><td>7200</td><td>0.5</td><td>80</td><td>0.7</td></tr><tr><td>空气</td><td>1.2</td><td>1.0</td><td>0.026</td><td>-</td></tr></tbody></table><h3 id=453-单位换算>4.5.3 单位换算</h3><pre tabindex=0><code>温度：
+• °F = °C × 9/5 + 32
+• K = °C + 273.15
+
+热量：
+• 1 cal = 4.184 J
+• 1 kcal = 4184 J
+• 1 kWh = 3600 kJ
+
+功率：
+• 1 kW = 1000 W
+• 1 HP = 746 W
+
+燃气热值：
+• 天然气：约10 kWh/m³
+• 液化气：约25 kWh/kg
+</code></pre><hr><p><strong>本章关键要点：</strong></p><ol><li>比热容决定升温所需热量，水分蒸发是热量消耗大户（占40-45%）</li><li>传导是烘焙中温度均匀性的瓶颈，需通过控制ROR来缓解豆心温差</li><li>对流是主要热量来源（50-60%），风门控制是调节对流传热的关键</li><li>辐射在高温阶段作用增强，主要影响豆表</li><li>热力学原理为烘焙参数调整提供量化依据</li><li>高海拔和极端环境温度需要根据热力学原理进行补偿调整</li></ol><div class=post-tags><a href=/tags/%E5%92%96%E5%95%A1 class=post-tag>#咖啡</a>
+<a href=/tags/%E5%92%96%E5%95%A1%E8%B1%86 class=post-tag>#咖啡豆</a>
+<a href=/tags/%E5%92%96%E5%95%A1%E7%83%98%E7%84%99 class=post-tag>#咖啡烘焙</a>
+<a href=/tags/%E7%83%AD%E5%8A%9B%E5%AD%A6 class=post-tag>#热力学</a>
+<a href=/tags/%E4%BC%A0%E7%83%AD%E6%9C%BA%E5%88%B6 class=post-tag>#传热机制</a></div><nav class=post-nav><a href=/posts/%E7%AC%AC6%E7%AB%A0-%E7%BB%84%E4%BB%B6%E4%B8%8E%E7%BB%84%E5%90%88/ class=prev-post><span class=nav-label>← 上一篇</span>
+<span class=nav-title>第6章 组件与组合</span>
+</a><a href=/posts/%E7%AC%AC5%E7%AB%A0-%E7%83%98%E7%84%99%E9%98%B6%E6%AE%B5%E7%9A%84%E7%89%A9%E7%90%86%E5%8C%96%E5%AD%A6%E5%8F%98%E5%8C%96/ class=next-post><span class=nav-label>下一篇 →</span>
+<span class=nav-title>第5章 烘焙阶段的物理化学变化</span></a></nav><script src=https://giscus.app/client.js data-repo=heheboy/heheboy.github.io data-repo-id=R_kgDORzG4BQ data-category=Announcements data-category-id=DIC_kwDORzG4Bc4C54kN data-mapping=pathname data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=light data-lang=zh-CN crossorigin=anonymous async></script></article></div><aside class=sidebar><div class="sidebar-widget author-widget"><img class=author-avatar src=/img/avatar.jpg alt=熟童><h3 class=author-name>熟童</h3><p class=author-bio>熟童，一个在代码、咖啡与虚拟世界之间反复横跳的人。写程序、做游戏、研究AI，也会认真对待一杯咖啡的参数曲线。这里记录的不只是技术，还有那些被实现出来的想法。相信技术不只是工具，它也可以有温度。</p><div class=author-social><a href=https://github.com/heheboy target=_blank rel=noopener aria-label=GitHub><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 0C5.37.0.0 5.37.0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57.0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925.0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18.0.0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225.0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22.0 1.605-.015 2.895-.015 3.3.0.315.225.69.825.57A12.02 12.02.0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+</a><a href=https://space.bilibili.com/8756982 target=_blank rel=noopener aria-label=Bilibili><svg viewBox="0 0 24 24"><path fill="currentColor" d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858.0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234.0 11.704-1.778L8.46 4.45V4.267a1.227 1.227.0 112.453.0V5.32l2.823-2.695a1.234 1.234.0 011.704 1.778l-1.687 1.12zm-3.28 9.653c-.56.0-1.013.453-1.013 1.013s.453 1.013 1.013 1.013 1.013-.453 1.013-1.013-.453-1.013-1.013-1.013zm-6 0c-.56.0-1.013.453-1.013 1.013s.453 1.013 1.013 1.013 1.013-.453 1.013-1.013-.453-1.013-1.013-1.013z"/></svg>
+</a><a href=https://www.facebook.com/dio.zeng.2025 target=_blank rel=noopener aria-label=Facebook><svg viewBox="0 0 24 24"><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312.0 2.686.235 2.686.235v2.953H15.83c-1.491.0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><div class=social-wechat-wrapper><a href=# class=social-wechat-trigger aria-label=WeChat><svg viewBox="0 0 24 24"><path fill="currentColor" d="M8.691 2.188C3.891 2.188.0 5.476.0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59.0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213.0.163.13.295.29.295a.326.326.0 00.167-.054l1.903-1.114a.864.864.0 01.717-.098 10.16 10.16.0 002.837.403c.276.0.543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642.0 1.162.529 1.162 1.18A1.17 1.17.0 015.785 8.349 1.17 1.17.0 014.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813.0c.642.0 1.162.529 1.162 1.18a1.17 1.17.0 01-1.162 1.178 1.17 1.17.0 01-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826.0 1.622-.12 2.361-.336a.722.722.0 01.598.082l1.584.926a.272.272.0 00.14.047c.134.0.24-.111.24-.247.0-.06-.023-.12-.038-.177l-.327-1.233a.582.582.0 01-.023-.156.49.49.0 01.201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088V8.89c-.135-.01-.27-.027-.407-.03zm-2.53 3.274c.535.0.969.44.969.982a.976.976.0 01-.969.983.976.976.0 01-.969-.983c0-.542.434-.982.97-.982zm4.844.0c.535.0.969.44.969.982a.976.976.0 01-.969.983.976.976.0 01-.969-.983c0-.542.434-.982.969-.982z"/></svg></a><div class=wechat-qr-popup><img src=/img/wechat-qr.png alt="WeChat QR Code">
+<span>扫码加我</span></div></div><a href=https://www.instagram.com/bengbeng9548/ target=_blank rel=noopener aria-label=Instagram><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.163c3.204.0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849.0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204.0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849.0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741.0 8.333.014 7.053.072c-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.668.072 4.948c.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403.0-6.162 2.759-6.162 6.162S8.597 18.163 12 18.163s6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zM12 16c-2.209.0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796.0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795.0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a><div class=social-email-wrapper><a href=mailto:bengbeng9548@qq.com class=social-email aria-label=Email><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 4H4c-1.1.0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1.0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+<span>bengbeng9548@qq.com</span></a></div></div></div><div class="sidebar-widget categories-widget"><h4>分类</h4><div class=category-cloud><a href=/categories/%E5%92%96%E5%95%A1%E7%9B%B8%E5%85%B3/ class=category-link>咖啡相关
+<span class=category-count>(12)</span>
+</a><a href=/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/ class=category-link>游戏开发
+<span class=category-count>(12)</span>
+</a><a href=/categories/ai%E7%9B%B8%E5%85%B3/ class=category-link>AI相关
+<span class=category-count>(2)</span>
+</a><a href=/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/ class=category-link>生活随记
+<span class=category-count>(1)</span></a></div></div><div class="sidebar-widget tags-widget"><h4>标签</h4><div class=tag-cloud><a href=/tags/c%23/ class=tag-link style=font-size:1.5em>C#
+</a><a href=/tags/csharp/ class=tag-link style=font-size:1.5em>CSharp
+</a><a href=/tags/godot/ class=tag-link style=font-size:1.5em>Godot
+</a><a href=/tags/%E5%92%96%E5%95%A1/ class=tag-link style=font-size:1.5em>咖啡
+</a><a href=/tags/%E5%92%96%E5%95%A1%E8%B1%86/ class=tag-link style=font-size:1.5em>咖啡豆
+</a><a href=/tags/%E5%BC%80%E5%8F%91/ class=tag-link style=font-size:1.5em>开发
+</a><a href=/tags/%E5%92%96%E5%95%A1%E7%83%98%E7%84%99/ class=tag-link style=font-size:1.5em>咖啡烘焙
+</a><a href=/tags/%E6%9E%B6%E6%9E%84/ class=tag-link style=font-size:1.5em>架构
+</a><a href=/tags/agent/ class=tag-link style=font-size:1em>Agent
+</a><a href=/tags/ai/ class=tag-link style=font-size:1em>AI
+</a><a href=/tags/claudecode/ class=tag-link style=font-size:1em>ClaudeCode
+</a><a href=/tags/%E5%92%96%E5%95%A1%E7%94%9F%E8%B1%86/ class=tag-link style=font-size:1em>咖啡生豆
+</a><a href=/tags/%E6%99%BA%E8%83%BD%E4%BD%93/ class=tag-link style=font-size:1em>智能体
+</a><a href=/tags/%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF/ class=tag-link style=font-size:1em>烘焙曲线
+</a><a href=/tags/anthropic/ class=tag-link style=font-size:.9em>Anthropic
+</a><a href=/tags/cc/ class=tag-link style=font-size:.9em>Cc
+</a><a href=/tags/mcp/ class=tag-link style=font-size:.9em>Mcp
+</a><a href=/tags/openclaw/ class=tag-link style=font-size:.9em>OpenClaw
+</a><a href=/tags/skill/ class=tag-link style=font-size:.9em>Skill
+</a><a href=/tags/ui/ class=tag-link style=font-size:.9em>UI</a></div></div><div class="sidebar-widget links-widget"><h4>友情链接</h4><div class=links-list><a href=https://gohugo.io target=_blank rel=noopener class=link-item title="Hugo 静态网站生成器官方文档"><span class=link-name>Hugo 官方</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+</a><a href=https://github.com/heheboy/hugo-cms target=_blank rel=noopener class=link-item title=hugo-cms的项目连接><span class=link-name>Hugo-cms</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+</a><a href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener class=link-item title=主题的项目连接><span class=link-name>hugo-cms-theme</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></a></div></div></aside></div></main><footer class=site-footer><div class=footer-content><p class=copyright>&copy; 2026 熟童.
+All rights reserved.</p><div class=footer-info><span class=footer-info-item><a href=https://github.com/heheboy/hugo-cms target=_blank rel=noopener>本网站由Hugo驱动,使用Hugo-cms制作
+</a></span><span class=footer-info-item><a href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener>主题采用 hugo-cms-theme
+</a><a class=github-star-link href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener title="GitHub Stars"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 0c4.42.0 8 3.58 8 8a8.013 8.013.0 01-5.45 7.59c-.4.08-.55-.17-.55-.38.0-.27.01-1.13.01-2.2.0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95.0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12.0.0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27s-1.36.09-2 .27c-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15.0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94.0.67.01 1.3.01 1.49.0.21-.15.45-.55.38A7.995 7.995.0 010 8c0-4.42 3.58-8 8-8z"/></svg>
+<span>Star</span></a></span></div><div class=footer-links><a href=/index.xml class=footer-link target=_blank rel=noopener aria-label=RSS订阅><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6.503 20.752C6.503 22.546 5.047 24 3.252 24c-1.796.0-3.252-1.454-3.252-3.248s1.456-3.248 3.252-3.248c1.795.001 3.251 1.454 3.251 3.248zM0 8.18v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817C15.777 15.29 8.721 8.242.0 8.18zm0-3.368C10.58 4.858 19.152 13.406 19.183 24H24c-.03-13.231-10.736-23.954-24-24v4.812z"/></svg>
+<span>RSS 订阅</span>
+</a><span class=footer-link-separator>|</span>
+<a href=/sitemap.xml class=footer-link target=_blank rel=noopener aria-label=网站地图><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 3l-6 1.5L8.501 3l-6 1.5v15l6-1.5 5.999 1.5 6-1.5V3zM15 16.656l-5.999-1.5V3.844L15 5.344v11.312zm1-11.312 4 .999v11.312l-4-.999V5.344zm-7 .499-4-.999v11.312l4 .999V5.843z"/></svg>
+<span>网站地图</span></a></div></div></footer><script>(function(){const t=document.querySelector(".theme-toggle");if(!t)return;const e=document.documentElement,n=localStorage.getItem("theme");n&&e.setAttribute("data-theme",n),t.addEventListener("click",()=>{const n=e.getAttribute("data-theme"),t=n==="dark"?"light":"dark";e.setAttribute("data-theme",t),localStorage.setItem("theme",t)})})()</script><script>(function(){const e=document.querySelector(".nav-toggle"),t=document.querySelector(".nav-menu");e&&e.addEventListener("click",()=>{t.classList.toggle("active"),e.classList.toggle("active")})})()</script></body></html>

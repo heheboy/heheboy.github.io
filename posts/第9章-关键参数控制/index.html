@@ -1,0 +1,557 @@
+<!doctype html><html lang=zh-CN data-theme=light><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="9.1 升温速率（ROR）的精密控制
+9.1.1 ROR的数学模型
+ROR的物理定义
+ROR (Rate of Rise) = dT/dt
+
+精确计算（离散点）：
+RORₙ = (Tₙ - Tₙ₋₁) / (tₙ - tₙ₋₁)
+
+其中：
+Tₙ = 当前温度读数
+Tₙ₋₁ = 上一时刻温度读数
+tₙ - tₙ₋₁ = 时间间隔（通常15-30秒）
+
+平滑ROR（移动平均）：
+ROR_smooth = (RORₙ + RORₙ₋₁ + RORₙ₋₂) / 3
+
+目的：消除探针读数噪声
+ROR与火力、风门的关系"><meta name=author content="熟童"><meta name=generator content="Hugo 0.159.0"><title>第9章 关键参数控制 | 熟童·实验室</title><link rel=canonical href=https://heheboy.github.io/posts/%E7%AC%AC9%E7%AB%A0-%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0%E6%8E%A7%E5%88%B6/><link rel=stylesheet href=/css/main.min.52a33c1c75f1018fce5fd552f8174ace585d07d2689bbdd7854b698275ee0477.css integrity="sha256-UqM8HHXxAY/OX9VS+BdKzlhdB9Jom73XhUtpgnXuBHc="><link rel=icon type=image/x-icon href=/favicon.ico><meta property="og:title" content="第9章 关键参数控制"><meta property="og:description" content="9.1 升温速率（ROR）的精密控制
+9.1.1 ROR的数学模型
+ROR的物理定义
+ROR (Rate of Rise) = dT/dt
+
+精确计算（离散点）：
+RORₙ = (Tₙ - Tₙ₋₁) / (tₙ - tₙ₋₁)
+
+其中：
+Tₙ = 当前温度读数
+Tₙ₋₁ = 上一时刻温度读数
+tₙ - tₙ₋₁ = 时间间隔（通常15-30秒）
+
+平滑ROR（移动平均）：
+ROR_smooth = (RORₙ + RORₙ₋₁ + RORₙ₋₂) / 3
+
+目的：消除探针读数噪声
+ROR与火力、风门的关系"><meta property="og:url" content="https://heheboy.github.io/posts/%E7%AC%AC9%E7%AB%A0-%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0%E6%8E%A7%E5%88%B6/"><meta property="og:site_name" content="熟童·实验室"><meta property="og:type" content="article"><meta name=twitter:card content="summary_large_image"><meta name=twitter:title content="第9章 关键参数控制"><meta name=twitter:description content="9.1 升温速率（ROR）的精密控制
+9.1.1 ROR的数学模型
+ROR的物理定义
+ROR (Rate of Rise) = dT/dt
+
+精确计算（离散点）：
+RORₙ = (Tₙ - Tₙ₋₁) / (tₙ - tₙ₋₁)
+
+其中：
+Tₙ = 当前温度读数
+Tₙ₋₁ = 上一时刻温度读数
+tₙ - tₙ₋₁ = 时间间隔（通常15-30秒）
+
+平滑ROR（移动平均）：
+ROR_smooth = (RORₙ + RORₙ₋₁ + RORₙ₋₂) / 3
+
+目的：消除探针读数噪声
+ROR与火力、风门的关系"><meta property="article:published_time" content="2026-04-09T00:00:00+00:00"><meta property="article:modified_time" content="2026-04-09T00:00:00+00:00"><meta property="article:tag" content="咖啡"><meta property="article:tag" content="咖啡豆"><meta property="article:tag" content="咖啡烘焙"><meta property="article:tag" content="参数控制"></head><body><nav class=main-nav><div class=nav-container><a class=nav-brand href=/>熟童·实验室</a>
+<button class=nav-toggle aria-label="Toggle navigation">
+<span></span>
+<span></span>
+<span></span></button><div class=nav-menu><a class=nav-link href=/>首页</a>
+<a class=nav-link href=/posts/>内容文章</a>
+<a class=nav-link href=/categories/>文章分类</a>
+<a class=nav-link href=/archive/>归档册</a>
+<a class=nav-link href=/tags/>标签</a>
+<a class=nav-link href=/about/>关于本站</a>
+<a class="nav-link nav-search-link" href=/search/ aria-label=搜索><svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61.0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></a></div></div></nav><header class=site-header style=background-image:url(/img/post-bg.jpg)><div class=header-content><h1 class=site-title>第9章 关键参数控制</h1><p class=site-slogan>让技术长出温度，在精确的逻辑与冷静的结构之中，依然保留人与世界的感知。不只是实现功能，也是在构建表达；不只是解决问题，也是在回应内心。</p></div></header><main class=main-container><div class=content-wrapper><div class=main-content><article class=page-content><header class=page-article-header><h1 class=page-article-title>第9章 关键参数控制</h1><div class=page-article-meta><time datetime=2026-04-09>2026年4月9日
+</time><span class=meta-separator>·</span>
+<a href=/categories/%E5%92%96%E5%95%A1%E7%9B%B8%E5%85%B3>咖啡相关</a></div></header><h2 id=91-升温速率ror的精密控制>9.1 升温速率（ROR）的精密控制</h2><h3 id=911-ror的数学模型>9.1.1 ROR的数学模型</h3><p><strong>ROR的物理定义</strong></p><pre tabindex=0><code>ROR (Rate of Rise) = dT/dt
+
+精确计算（离散点）：
+RORₙ = (Tₙ - Tₙ₋₁) / (tₙ - tₙ₋₁)
+
+其中：
+Tₙ = 当前温度读数
+Tₙ₋₁ = 上一时刻温度读数
+tₙ - tₙ₋₁ = 时间间隔（通常15-30秒）
+
+平滑ROR（移动平均）：
+ROR_smooth = (RORₙ + RORₙ₋₁ + RORₙ₋₂) / 3
+
+目的：消除探针读数噪声
+</code></pre><p><strong>ROR与火力、风门的关系</strong></p><pre tabindex=0><code>ROR = f(火力, 风门, 投豆量, 生豆特性, 环境温度)
+
+简化模型：
+ROR ≈ k₁ × 火力 - k₂ × 风门开度 - k₃ × 投豆量
+
+其中：
+k₁ = 火力效率系数（烘焙机特性）
+k₂ = 风门散热系数
+k₃ = 豆子热容系数
+
+调节关系：
+├── 火力↑ → ROR↑（主要控制手段）
+├── 风门↑ → ROR↓（次要调节）
+├── 投豆量↑ → ROR↓（固定参数）
+└── 豆子密度↑ → ROR↓（固定参数）
+</code></pre><h3 id=912-各阶段ror目标值>9.1.2 各阶段ROR目标值</h3><p><strong>标准ROR配置表</strong></p><table><thead><tr><th>阶段</th><th>时间范围</th><th>ROR目标</th><th>允许范围</th><th>火力参考</th><th>风门参考</th></tr></thead><tbody><tr><td><strong>入豆期</strong></td><td>0-1分钟</td><td>15-20</td><td>12-25</td><td>75-85%</td><td>10-20%</td></tr><tr><td><strong>干燥初期</strong></td><td>1-3分钟</td><td>12-15</td><td>10-18</td><td>70-80%</td><td>20-30%</td></tr><tr><td><strong>干燥后期</strong></td><td>3-5分钟</td><td>8-12</td><td>6-15</td><td>65-75%</td><td>30-50%</td></tr><tr><td><strong>梅纳期</strong></td><td>5-8分钟</td><td>6-10</td><td>5-12</td><td>60-70%</td><td>40-60%</td></tr><tr><td><strong>焦糖化期</strong></td><td>8-10分钟</td><td>5-8</td><td>4-10</td><td>55-70%</td><td>50-70%</td></tr><tr><td><strong>一爆期</strong></td><td>8.5-9.5分钟</td><td>3-6</td><td>2-8</td><td>50-60%</td><td>60-80%</td></tr><tr><td><strong>发展期</strong></td><td>一爆后</td><td>2-5</td><td>1-6</td><td>40-55%</td><td>60-80%</td></tr></tbody></table><h3 id=913-ror异常诊断与纠正>9.1.3 ROR异常诊断与纠正</h3><p><strong>ROR过低（&lt;5°C/min）</strong></p><pre tabindex=0><code>症状：温度上升缓慢或停滞
+
+可能原因与纠正：
+
+1. 火力不足
+   ├── 检查：燃气压力、气阀开度
+   ├── 纠正：增加火力10-15%
+   └── 预防：预热时确认火力输出
+
+2. 风门过大
+   ├── 检查：风门开度、排烟温度
+   ├── 纠正：减小风门10-20%
+   └── 预防：分阶段调整风门
+
+3. 投豆量过大
+   ├── 检查：投豆量 vs 滚筒容量
+   ├── 纠正：减少投豆量或延长烘焙
+   └── 预防：按容量推荐投豆
+
+4. 入豆温过低
+   ├── 检查：预热温度
+   ├── 纠正：无法补救，记录教训
+   └── 预防：充分预热
+
+5. 环境温度过低
+   ├── 检查：车间温度
+   ├── 纠正：提高初始火力
+   └── 预防：车间保温
+
+6. 探针故障
+   ├── 检查：探针读数是否异常
+   ├── 纠正：校准或更换探针
+   └── 预防：定期校准
+</code></pre><p><strong>ROR过高（>15°C/min）</strong></p><pre tabindex=0><code>症状：温度快速上升，可能灼伤
+
+可能原因与纠正：
+
+1. 火力过大
+   ├── 检查：火力设置
+   ├── 纠正：立即降低火力15-20%
+   └── 预防：渐进式调节火力
+
+2. 入豆温过高
+   ├── 检查：入豆温度
+   ├── 纠正：无法补救，监控豆色
+   └── 预防：控制入豆温
+
+3. 风门过小
+   ├── 检查：风门开度、热量积聚
+   ├── 纠正：适当开大风门
+   └── 预防：平衡热量输入与排出
+
+4. 投豆量过小
+   ├── 检查：投豆量
+   ├── 纠正：增加投豆量
+   └── 预防：按标准投豆
+
+5. 豆子密度过低
+   ├── 检查：生豆密度
+   ├── 纠正：降低入豆温、降低ROR
+   └── 预防：根据密度调整参数
+</code></pre><p><strong>ROR波动</strong></p><pre tabindex=0><code>症状：ROR不稳定，忽高忽低
+
+可能原因：
+
+1. 火力不稳定
+   ├── 燃气压力波动
+   ├── 燃烧器故障
+   └── 纠正：检修燃气系统
+
+2. 风门调节过频
+   ├── 频繁大幅度调节
+   └── 纠正：渐进调节，给系统响应时间
+
+3. 探针接触不良
+   ├── 探针松动
+   ├── 读数跳跃
+   └── 纠正：紧固探针
+
+4. 豆子翻滚不均
+   ├── 转速异常
+   ├── 投豆散落不均
+   └── 纠正：检查转速和投豆方式
+</code></pre><hr><h2 id=92-发展时间比率dtr的控制>9.2 发展时间比率（DTR）的控制</h2><h3 id=921-dtr的计算与意义>9.2.1 DTR的计算与意义</h3><p><strong>计算公式</strong></p><pre tabindex=0><code>DTR = (Development Time / Total Roast Time) × 100%
+
+其中：
+Development Time = 一爆开始至下豆的时间
+Total Roast Time = 入豆至下豆的总时间
+
+示例计算：
+├── 入豆：0:00
+├── 一爆开始：8:30
+├── 下豆：11:00
+├── 发展时间：2分30秒 = 150秒
+├── 总时间：11分00秒 = 660秒
+└── DTR = (150/660) × 100% = 22.7%
+
+DTR的实质意义：
+├── 反应集中度：DTR高 = 反应集中在一爆后
+├── 风味发展深度：DTR高 = 深度发展，甜感苦感
+├── 酸质保留：DTR低 = 酸质保留，明亮
+└── 烘焙风格指标：DTR反映烘焙师的偏好
+</code></pre><h3 id=922-dtr与风味的关系>9.2.2 DTR与风味的关系</h3><p><strong>定量关系</strong></p><pre tabindex=0><code>DTR(%)    酸质(1-10)    甜感(1-10)    苦味(1-10)    复杂度(1-10)
+─────────────────────────────────────────────────────────────
+15        9            5            2            8（花果）
+20        8            6            3            9
+25        6            8            5            8
+30        4            8            6            7
+35        3            7            7            6
+40        2            6            8            4（单一）
+
+趋势：
+├── DTR↑ → 酸质↓（指数下降）
+├── DTR↑ → 甜感↑后↓（抛物线，峰值25-30%）
+├── DTR↑ → 苦味↑（线性上升）
+└── DTR↑ → 复杂度↓（产地特征减弱）
+
+最佳DTR窗口（一般规律）：
+├── 浅烘：15-20%
+├── 中烘：20-25%
+├── 中深烘：25-30%
+└── 深烘：30-35%
+</code></pre><h3 id=923-dtr的控制策略>9.2.3 DTR的控制策略</h3><p><strong>调整DTR的方法</strong></p><pre tabindex=0><code>方法一：固定总时间，调整一爆时间
+（适用于调整风味而不改变烘焙节奏）
+
+要增加DTR：
+├── 提前一爆（降低入豆温、提高ROR）
+├── 发展时间自动增加
+└── 总时间不变
+
+要减少DTR：
+├── 推迟一爆（提高入豆温、降低ROR）
+├── 发展时间自动减少
+└── 总时间不变
+
+方法二：固定一爆时间，调整下豆时间
+（适用于精确控制发展程度）
+
+要增加DTR：
+├── 延长发展期（推迟下豆）
+├── 总时间增加
+└── 一爆时间不变
+
+要减少DTR：
+├── 缩短发展期（提前下豆）
+├── 总时间减少
+└── 一爆时间不变
+
+方法三：综合调整
+（最常用的实际操作方法）
+
+示例：当前DTR 20%，目标DTR 25%
+调整：
+├── 提前一爆30秒（通过提高ROR）
+├── 延长发展期30秒（推迟下豆）
+├── 原：一爆@8:30，下豆@11:00，DTR=22.7%
+└── 新：一爆@8:00，下豆@11:00，DTR=27.3%
+
+（总时间从11:00延长至11:30可精确到25%）
+</code></pre><p><strong>DTR的实时监控</strong></p><pre tabindex=0><code>烘焙中的DTR估算：
+
+当前时间：t_now
+一爆时间：t_fc（如已发生）
+目标下豆时间：t_drop
+
+当前DTR（进行中）= [(t_now - t_fc) / t_now] × 100%
+
+示例：
+当前9:00，一爆8:30
+当前DTR = [(9:00-8:30)/9:00] × 100%
+        = (0.5/9) × 100%
+        = 5.6%
+
+预估最终DTR（如下豆@11:00）：
+预估DTR = [(11:00-8:30)/11:00] × 100%
+        = (2.5/11) × 100%
+        = 22.7%
+
+实时决策：
+├── 当前DTR偏低 → 可考虑推迟下豆
+├── 当前DTR偏高 → 可考虑提前下豆
+└── 结合杯测经验判断
+</code></pre><hr><h2 id=93-失重率weight-loss的控制>9.3 失重率（Weight Loss）的控制</h2><h3 id=931-失重率的物理化学基础>9.3.1 失重率的物理化学基础</h3><p><strong>失重来源</strong></p><pre tabindex=0><code>烘焙失重 = 水分蒸发 + 干物质损失
+
+水分蒸发（主要）：
+├── 生豆水分：10-12%
+├── 熟豆水分：1-3%
+├── 蒸发损失：8-10%
+
+干物质损失（次要）：
+├── CO₂释放：约1-2%
+├── 挥发性物质：0.5-1%
+├── 银皮脱落：0.5-1%
+└── 总干物质损失：2-4%
+
+总失重率：
+├── 浅烘：11-13%
+├── 中烘：14-16%
+├── 中深烘：16-18%
+└── 深烘：18-22%
+</code></pre><p><strong>失重率与烘焙度的关系</strong></p><pre tabindex=0><code>烘焙度        失重率      Agtron     主要失重阶段
+─────────────────────────────────────────────────
+浅烘（肉桂）   11-13%      75-85      干燥期为主
+浅中烘        13-15%      65-75      干燥+梅纳
+中烘         15-17%      55-65      全面发展
+中深烘        17-19%      45-55      发展期显著
+深烘         19-22%      35-45      二爆后失重剧增
+
+非线性关系：
+├── 浅烘阶段：失重率↑ ≈ 烘焙度↑（线性）
+├── 深烘阶段：失重率↑ &gt; 烘焙度↑（加速）
+└── 原因：二爆后纤维分解，干物质损失加速
+</code></pre><h3 id=932-失重率的测量与计算>9.3.2 失重率的测量与计算</h3><p><strong>测量方法</strong></p><pre tabindex=0><code>标准测量流程：
+
+1. 投豆前称重
+   ├── 使用校准过的秤
+   ├── 精确到10g（或更精确）
+   ├── 记录：生豆重量 W_green
+
+2. 下豆后称重
+   ├── 冷却后2分钟内（避免继续失水）
+   ├── 除去银皮（可选，依标准）
+   ├── 记录：熟豆重量 W_roasted
+
+3. 计算失重率
+   失重率 = [(W_green - W_roasted) / W_green] × 100%
+
+示例：
+├── 生豆：6.00 kg
+├── 熟豆：5.10 kg
+└── 失重率 = [(6.00-5.10)/6.00] × 100% = 15.0%
+
+精度控制：
+├── 使用电子秤（精度±1g或更好）
+├── 多次测量取平均
+├── 建立失重率-烘焙度对应关系
+└── 定期校准秤
+</code></pre><p><strong>快速估算方法</strong></p><pre tabindex=0><code>现场快速估算（无需精确称重）：
+
+方法一：体积法
+├── 熟豆体积 ≈ 生豆体积 × 1.5-2.0
+├── 体积膨胀率可粗略估算烘焙度
+└── 膨胀率↑ → 失重率↑ → 烘焙度↑
+
+方法二：观察法
+├── 颜色深度
+├── 油脂渗出
+├── 银皮脱落量
+└── 综合判断
+
+方法三：密度法
+├── 熟豆密度 = 生豆密度 × (1 - 失重率) / 膨胀率
+├── 粗略关系：失重率↑ → 熟豆密度↓
+└── 测量熟豆容重可反推
+
+精确测量建议：
+├── 每批次测量（建立数据）
+├── 定期与Agtron值对比校准
+└── 建立烘焙机特定的失重率标准
+</code></pre><h3 id=933-失重率异常诊断>9.3.3 失重率异常诊断</h3><p><strong>失重率过高（>20% for 中烘）</strong></p><pre tabindex=0><code>可能原因：
+
+1. 过度深烘
+   ├── 进入二爆后长时间烘焙
+   ├── 下豆温度过高
+   └── 纠正：提前下豆
+
+2. 生豆水分过高
+   ├── 生豆水分&gt;13%
+   ├── 蒸发更多水分
+   └── 纠正：调整生豆储存
+
+3. 烘焙时间过长
+   ├── 总时间&gt;14分钟
+   ├── 持续失水
+   └── 纠正：优化时间
+
+4. 冷却前暴露
+   ├── 下豆后未及时冷却
+   ├── 热量继续作用
+   └── 纠正：立即冷却
+</code></pre><p><strong>失重率过低（&lt;12% for 中烘）</strong></p><pre tabindex=0><code>可能原因：
+
+1. 烘焙不足
+   ├── 下豆过早
+   ├── 发展不充分
+   └── 纠正：延长烘焙
+
+2. 生豆水分过低
+   ├── 生豆水分&lt;9%
+   ├── 本身失重少
+   └── 纠正：调整储存
+
+3. 银皮未除
+   ├── 称重时含银皮
+   ├── 银皮占重量
+   └── 纠正：统一标准（是否除银皮）
+
+4. 秤误差
+   ├── 秤未校准
+   ├── 读数错误
+   └── 纠正：校准设备
+</code></pre><hr><h2 id=94-风门控制策略>9.4 风门控制策略</h2><h3 id=941-风门的功能与原理>9.4.1 风门的功能与原理</h3><p><strong>风门的作用</strong></p><pre tabindex=0><code>功能一：热量调节
+├── 热风排出 → 降低滚筒温度
+├── 热风保留 → 提高滚筒温度
+└── 调节对流换热量
+
+功能二：气流组织
+├── 带走水蒸气
+├── 排出银皮
+├── 控制烟气浓度
+└── 影响豆体翻滚
+
+功能三：压力平衡
+├── 维持滚筒内微负压
+├── 防止烟气外溢
+└── 确保燃烧充分
+
+风门开度与效果：
+关（0%）：热量保留，排烟最少
+微开（20%）：轻度排湿
+半开（50%）：平衡状态
+大开（80-100%）：强力排烟排湿
+</code></pre><h3 id=942-分阶段风门策略>9.4.2 分阶段风门策略</h3><p><strong>标准风门曲线</strong></p><pre tabindex=0><code>阶段        风门开度    目的
+────────────────────────────────────────
+入豆期      10-20%      保留热量，快速升温
+干燥初期    20-30%      轻度排湿
+干燥后期    40-50%      排出蒸汽，防止冷凝
+梅纳期      50-60%      维持气流，排出挥发物
+焦糖化期    60-70%      加强排烟
+一爆期      70-80%      强力排CO₂和水蒸气
+发展期      70-80%      维持，准备排烟
+
+特殊调整：
+├── 日晒豆：风门+10%（更多银皮）
+├── 连续烘焙：考虑余热，风门+5%
+├── 高湿度天：风门+10%
+└── 冬季：风门-5%（保留热量）
+</code></pre><p><strong>风门与ROR的配合</strong></p><pre tabindex=0><code>风门作为ROR微调手段：
+
+ROR过高 → 需要降温：
+├── 增大风门10-20%
+├── 效果：降低对流换热，降低ROR 1-2°C/min
+└── 滞后时间：约30-60秒
+
+ROR过低 → 需要保温：
+├── 减小风门10-20%
+├── 效果：保留热量，提高ROR 1-2°C/min
+└── 滞后时间：约30-60秒
+
+注意事项：
+├── 风门调节滞后于火力调节
+├── 风门影响不如火力直接
+├── 不要频繁大幅调节风门
+└── 风门过小可能导致烟熏
+</code></pre><h3 id=943-风门异常诊断>9.4.3 风门异常诊断</h3><p><strong>烟气问题</strong></p><pre tabindex=0><code>症状：车间烟雾大、气味重
+
+可能原因：
+1. 风门过小
+   ├── 烟气无法排出
+   └── 纠正：增大风门
+
+2. 排烟管道堵塞
+   ├── 积灰、银皮堆积
+   └── 纠正：清洁管道
+
+3. 引风机故障
+   ├── 风机功率不足
+   └── 纠正：维修风机
+
+4. 烘焙度过深
+   ├── 产生过多烟
+   └── 纠正：控制烘焙度
+
+预防：
+├── 定期清洁排烟系统
+├── 监控车间烟雾浓度
+└── 安装排烟报警
+</code></pre><p><strong>银皮问题</strong></p><pre tabindex=0><code>症状：银皮排出不畅、豆子表面银皮多
+
+可能原因：
+1. 风门过小
+   ├── 银皮无法吹出
+   └── 纠正：增大风门（尤其干燥期后）
+
+2. 滚筒设计问题
+   ├── 排银皮结构不佳
+   └── 纠正：定期手动清理
+
+3. 日晒豆银皮多
+   ├── 生豆特性
+   └── 纠正：增大风门，多次清理
+
+银皮过多的危害：
+├── 燃烧产生烟熏味
+├── 影响外观
+└── 可能引发火灾
+</code></pre><hr><h2 id=95-综合参数调整决策矩阵>9.5 综合参数调整决策矩阵</h2><h3 id=951-参数相互关系>9.5.1 参数相互关系</h3><pre tabindex=0><code>参数交互影响：
+
+火力 ──┬──→ ROR
+      ├──→ 总时间
+      └──→ 豆表温度
+
+风门 ──┬──→ ROR（反向）
+      ├──→ 排烟
+      └──→ 银皮排出
+
+投豆量 → 热容量 → ROR（反向）
+
+入豆温 → 初始热量 → ROR
+
+调节优先级：
+1. 火力（主要调节手段，直接影响ROR）
+2. 入豆温（预设参数，决定初始条件）
+3. 风门（微调手段，次要调节）
+4. 投豆量（固定参数，不轻易改变）
+</code></pre><h3 id=952-常见问题参数调整表>9.5.2 常见问题参数调整表</h3><table><thead><tr><th>问题</th><th>首选调整</th><th>次选调整</th><th>注意事项</th></tr></thead><tbody><tr><td>ROR过高</td><td>降低火力10%</td><td>增大风门10%</td><td>避免骤降</td></tr><tr><td>ROR过低</td><td>增加火力10%</td><td>减小风门10%</td><td>检查燃气</td></tr><tr><td>一爆过早</td><td>降低入豆温</td><td>降低ROR</td><td>提前预判</td></tr><tr><td>一爆过晚</td><td>提高入豆温</td><td>提高ROR</td><td>避免过热</td></tr><tr><td>发展不足</td><td>延长发展时间</td><td>降低ROR</td><td>杯测验证</td></tr><tr><td>发展过度</td><td>缩短发展时间</td><td>降低发展期火力</td><td>监控温度</td></tr><tr><td>烟熏味</td><td>增大风门</td><td>降低烘焙度</td><td>清洁管道</td></tr><tr><td>烘焙不均</td><td>调整转速</td><td>减少投豆量</td><td>检查设备</td></tr></tbody></table><hr><p><strong>本章关键要点：</strong></p><ol><li>ROR是烘焙控制的核心，理想形态为持续下降的正曲线</li><li>DTR决定风味走向，最佳窗口：浅烘15-20%，中烘20-25%，深烘30-35%</li><li>失重率反映烘焙程度，中烘典型值14-16%，异常时诊断烘焙状态</li><li>风门用于热量微调、排烟和排银皮，分阶段策略至关重要</li><li>火力是ROR的主要控制手段，风门是次要微调手段</li><li>参数调整需考虑滞后性（30-60秒），提前预判</li></ol><div class=post-tags><a href=/tags/%E5%92%96%E5%95%A1 class=post-tag>#咖啡</a>
+<a href=/tags/%E5%92%96%E5%95%A1%E8%B1%86 class=post-tag>#咖啡豆</a>
+<a href=/tags/%E5%92%96%E5%95%A1%E7%83%98%E7%84%99 class=post-tag>#咖啡烘焙</a>
+<a href=/tags/%E5%8F%82%E6%95%B0%E6%8E%A7%E5%88%B6 class=post-tag>#参数控制</a></div><nav class=post-nav><a href=/posts/%E7%AC%AC8%E7%AB%A0-%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86/ class=prev-post><span class=nav-label>← 上一篇</span>
+<span class=nav-title>第8章 烘焙曲线设计原理</span>
+</a><a href=/posts/%E7%AC%AC10%E7%AB%A0-ui%E6%9E%B6%E6%9E%84/ class=next-post><span class=nav-label>下一篇 →</span>
+<span class=nav-title>第10章 Ui架构</span></a></nav><script src=https://giscus.app/client.js data-repo=heheboy/heheboy.github.io data-repo-id=R_kgDORzG4BQ data-category=Announcements data-category-id=DIC_kwDORzG4Bc4C54kN data-mapping=pathname data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=light data-lang=zh-CN crossorigin=anonymous async></script></article></div><aside class=sidebar><div class="sidebar-widget author-widget"><img class=author-avatar src=/img/avatar.jpg alt=熟童><h3 class=author-name>熟童</h3><p class=author-bio>熟童，一个在代码、咖啡与虚拟世界之间反复横跳的人。写程序、做游戏、研究AI，也会认真对待一杯咖啡的参数曲线。这里记录的不只是技术，还有那些被实现出来的想法。相信技术不只是工具，它也可以有温度。</p><div class=author-social><a href=https://github.com/heheboy target=_blank rel=noopener aria-label=GitHub><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 0C5.37.0.0 5.37.0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57.0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925.0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18.0.0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225.0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22.0 1.605-.015 2.895-.015 3.3.0.315.225.69.825.57A12.02 12.02.0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+</a><a href=https://space.bilibili.com/8756982 target=_blank rel=noopener aria-label=Bilibili><svg viewBox="0 0 24 24"><path fill="currentColor" d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858.0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234.0 11.704-1.778L8.46 4.45V4.267a1.227 1.227.0 112.453.0V5.32l2.823-2.695a1.234 1.234.0 011.704 1.778l-1.687 1.12zm-3.28 9.653c-.56.0-1.013.453-1.013 1.013s.453 1.013 1.013 1.013 1.013-.453 1.013-1.013-.453-1.013-1.013-1.013zm-6 0c-.56.0-1.013.453-1.013 1.013s.453 1.013 1.013 1.013 1.013-.453 1.013-1.013-.453-1.013-1.013-1.013z"/></svg>
+</a><a href=https://www.facebook.com/dio.zeng.2025 target=_blank rel=noopener aria-label=Facebook><svg viewBox="0 0 24 24"><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312.0 2.686.235 2.686.235v2.953H15.83c-1.491.0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><div class=social-wechat-wrapper><a href=# class=social-wechat-trigger aria-label=WeChat><svg viewBox="0 0 24 24"><path fill="currentColor" d="M8.691 2.188C3.891 2.188.0 5.476.0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59.0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213.0.163.13.295.29.295a.326.326.0 00.167-.054l1.903-1.114a.864.864.0 01.717-.098 10.16 10.16.0 002.837.403c.276.0.543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642.0 1.162.529 1.162 1.18A1.17 1.17.0 015.785 8.349 1.17 1.17.0 014.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813.0c.642.0 1.162.529 1.162 1.18a1.17 1.17.0 01-1.162 1.178 1.17 1.17.0 01-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826.0 1.622-.12 2.361-.336a.722.722.0 01.598.082l1.584.926a.272.272.0 00.14.047c.134.0.24-.111.24-.247.0-.06-.023-.12-.038-.177l-.327-1.233a.582.582.0 01-.023-.156.49.49.0 01.201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088V8.89c-.135-.01-.27-.027-.407-.03zm-2.53 3.274c.535.0.969.44.969.982a.976.976.0 01-.969.983.976.976.0 01-.969-.983c0-.542.434-.982.97-.982zm4.844.0c.535.0.969.44.969.982a.976.976.0 01-.969.983.976.976.0 01-.969-.983c0-.542.434-.982.969-.982z"/></svg></a><div class=wechat-qr-popup><img src=/img/wechat-qr.png alt="WeChat QR Code">
+<span>扫码加我</span></div></div><a href=https://www.instagram.com/bengbeng9548/ target=_blank rel=noopener aria-label=Instagram><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.163c3.204.0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849.0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204.0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849.0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741.0 8.333.014 7.053.072c-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.668.072 4.948c.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403.0-6.162 2.759-6.162 6.162S8.597 18.163 12 18.163s6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zM12 16c-2.209.0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796.0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795.0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a><div class=social-email-wrapper><a href=mailto:bengbeng9548@qq.com class=social-email aria-label=Email><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 4H4c-1.1.0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1.0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+<span>bengbeng9548@qq.com</span></a></div></div></div><div class="sidebar-widget categories-widget"><h4>分类</h4><div class=category-cloud><a href=/categories/%E5%92%96%E5%95%A1%E7%9B%B8%E5%85%B3/ class=category-link>咖啡相关
+<span class=category-count>(12)</span>
+</a><a href=/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/ class=category-link>游戏开发
+<span class=category-count>(12)</span>
+</a><a href=/categories/ai%E7%9B%B8%E5%85%B3/ class=category-link>AI相关
+<span class=category-count>(2)</span>
+</a><a href=/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/ class=category-link>生活随记
+<span class=category-count>(1)</span></a></div></div><div class="sidebar-widget tags-widget"><h4>标签</h4><div class=tag-cloud><a href=/tags/c%23/ class=tag-link style=font-size:1.5em>C#
+</a><a href=/tags/csharp/ class=tag-link style=font-size:1.5em>CSharp
+</a><a href=/tags/godot/ class=tag-link style=font-size:1.5em>Godot
+</a><a href=/tags/%E5%92%96%E5%95%A1/ class=tag-link style=font-size:1.5em>咖啡
+</a><a href=/tags/%E5%92%96%E5%95%A1%E8%B1%86/ class=tag-link style=font-size:1.5em>咖啡豆
+</a><a href=/tags/%E5%BC%80%E5%8F%91/ class=tag-link style=font-size:1.5em>开发
+</a><a href=/tags/%E5%92%96%E5%95%A1%E7%83%98%E7%84%99/ class=tag-link style=font-size:1.5em>咖啡烘焙
+</a><a href=/tags/%E6%9E%B6%E6%9E%84/ class=tag-link style=font-size:1.5em>架构
+</a><a href=/tags/agent/ class=tag-link style=font-size:1em>Agent
+</a><a href=/tags/ai/ class=tag-link style=font-size:1em>AI
+</a><a href=/tags/claudecode/ class=tag-link style=font-size:1em>ClaudeCode
+</a><a href=/tags/%E5%92%96%E5%95%A1%E7%94%9F%E8%B1%86/ class=tag-link style=font-size:1em>咖啡生豆
+</a><a href=/tags/%E6%99%BA%E8%83%BD%E4%BD%93/ class=tag-link style=font-size:1em>智能体
+</a><a href=/tags/%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF/ class=tag-link style=font-size:1em>烘焙曲线
+</a><a href=/tags/anthropic/ class=tag-link style=font-size:.9em>Anthropic
+</a><a href=/tags/cc/ class=tag-link style=font-size:.9em>Cc
+</a><a href=/tags/mcp/ class=tag-link style=font-size:.9em>Mcp
+</a><a href=/tags/openclaw/ class=tag-link style=font-size:.9em>OpenClaw
+</a><a href=/tags/skill/ class=tag-link style=font-size:.9em>Skill
+</a><a href=/tags/ui/ class=tag-link style=font-size:.9em>UI</a></div></div><div class="sidebar-widget links-widget"><h4>友情链接</h4><div class=links-list><a href=https://gohugo.io target=_blank rel=noopener class=link-item title="Hugo 静态网站生成器官方文档"><span class=link-name>Hugo 官方</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+</a><a href=https://github.com/heheboy/hugo-cms target=_blank rel=noopener class=link-item title=hugo-cms的项目连接><span class=link-name>Hugo-cms</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+</a><a href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener class=link-item title=主题的项目连接><span class=link-name>hugo-cms-theme</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></a></div></div></aside></div></main><footer class=site-footer><div class=footer-content><p class=copyright>&copy; 2026 熟童.
+All rights reserved.</p><div class=footer-info><span class=footer-info-item><a href=https://github.com/heheboy/hugo-cms target=_blank rel=noopener>本网站由Hugo驱动,使用Hugo-cms制作
+</a></span><span class=footer-info-item><a href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener>主题采用 hugo-cms-theme
+</a><a class=github-star-link href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener title="GitHub Stars"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 0c4.42.0 8 3.58 8 8a8.013 8.013.0 01-5.45 7.59c-.4.08-.55-.17-.55-.38.0-.27.01-1.13.01-2.2.0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95.0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12.0.0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27s-1.36.09-2 .27c-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15.0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94.0.67.01 1.3.01 1.49.0.21-.15.45-.55.38A7.995 7.995.0 010 8c0-4.42 3.58-8 8-8z"/></svg>
+<span>Star</span></a></span></div><div class=footer-links><a href=/index.xml class=footer-link target=_blank rel=noopener aria-label=RSS订阅><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6.503 20.752C6.503 22.546 5.047 24 3.252 24c-1.796.0-3.252-1.454-3.252-3.248s1.456-3.248 3.252-3.248c1.795.001 3.251 1.454 3.251 3.248zM0 8.18v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817C15.777 15.29 8.721 8.242.0 8.18zm0-3.368C10.58 4.858 19.152 13.406 19.183 24H24c-.03-13.231-10.736-23.954-24-24v4.812z"/></svg>
+<span>RSS 订阅</span>
+</a><span class=footer-link-separator>|</span>
+<a href=/sitemap.xml class=footer-link target=_blank rel=noopener aria-label=网站地图><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 3l-6 1.5L8.501 3l-6 1.5v15l6-1.5 5.999 1.5 6-1.5V3zM15 16.656l-5.999-1.5V3.844L15 5.344v11.312zm1-11.312 4 .999v11.312l-4-.999V5.344zm-7 .499-4-.999v11.312l4 .999V5.843z"/></svg>
+<span>网站地图</span></a></div></div></footer><script>(function(){const t=document.querySelector(".theme-toggle");if(!t)return;const e=document.documentElement,n=localStorage.getItem("theme");n&&e.setAttribute("data-theme",n),t.addEventListener("click",()=>{const n=e.getAttribute("data-theme"),t=n==="dark"?"light":"dark";e.setAttribute("data-theme",t),localStorage.setItem("theme",t)})})()</script><script>(function(){const e=document.querySelector(".nav-toggle"),t=document.querySelector(".nav-menu");e&&e.addEventListener("click",()=>{t.classList.toggle("active"),e.classList.toggle("active")})})()</script></body></html>

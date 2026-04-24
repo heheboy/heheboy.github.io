@@ -1,0 +1,596 @@
+<!doctype html><html lang=zh-CN data-theme=light><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="1.1 概述
+Godot 引擎从 3.x 版本开始引入 C# 支持，在 4.x 版本中 C# 集成更加成熟和稳定。本章将深入介绍 Godot C# 的核心架构概念，帮助开发者理解如何在这个独特的节点系统中高效使用 C# 进行游戏开发。
+1.2 为什么选择 Godot + C#
+在游戏开发领域，开发者面临着众多技术选择。Unity、Unreal Engine、Godot 各有优势，而编程语言的选择同样重要。本节将分析为什么 Godot + C# 是一个值得考虑的技术组合。"><meta name=author content="熟童"><meta name=generator content="Hugo 0.159.0"><title>第1章 Godot C# 核心架构 | 熟童·实验室</title><link rel=canonical href=https://heheboy.github.io/posts/%E7%AC%AC1%E7%AB%A0-godot-c%23-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84/><link rel=stylesheet href=/css/main.min.52a33c1c75f1018fce5fd552f8174ace585d07d2689bbdd7854b698275ee0477.css integrity="sha256-UqM8HHXxAY/OX9VS+BdKzlhdB9Jom73XhUtpgnXuBHc="><link rel=icon type=image/x-icon href=/favicon.ico><meta property="og:title" content="第1章 Godot C# 核心架构"><meta property="og:description" content="1.1 概述
+Godot 引擎从 3.x 版本开始引入 C# 支持，在 4.x 版本中 C# 集成更加成熟和稳定。本章将深入介绍 Godot C# 的核心架构概念，帮助开发者理解如何在这个独特的节点系统中高效使用 C# 进行游戏开发。
+1.2 为什么选择 Godot + C#
+在游戏开发领域，开发者面临着众多技术选择。Unity、Unreal Engine、Godot 各有优势，而编程语言的选择同样重要。本节将分析为什么 Godot + C# 是一个值得考虑的技术组合。"><meta property="og:url" content="https://heheboy.github.io/posts/%E7%AC%AC1%E7%AB%A0-godot-c%23-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84/"><meta property="og:site_name" content="熟童·实验室"><meta property="og:type" content="article"><meta name=twitter:card content="summary_large_image"><meta name=twitter:title content="第1章 Godot C# 核心架构"><meta name=twitter:description content="1.1 概述
+Godot 引擎从 3.x 版本开始引入 C# 支持，在 4.x 版本中 C# 集成更加成熟和稳定。本章将深入介绍 Godot C# 的核心架构概念，帮助开发者理解如何在这个独特的节点系统中高效使用 C# 进行游戏开发。
+1.2 为什么选择 Godot + C#
+在游戏开发领域，开发者面临着众多技术选择。Unity、Unreal Engine、Godot 各有优势，而编程语言的选择同样重要。本节将分析为什么 Godot + C# 是一个值得考虑的技术组合。"><meta property="article:published_time" content="2026-04-01T00:00:00+00:00"><meta property="article:modified_time" content="2026-04-01T00:00:00+00:00"><meta property="article:tag" content="Godot"><meta property="article:tag" content="开发"><meta property="article:tag" content="C#"><meta property="article:tag" content="架构"><meta property="article:tag" content="CSharp"></head><body><nav class=main-nav><div class=nav-container><a class=nav-brand href=/>熟童·实验室</a>
+<button class=nav-toggle aria-label="Toggle navigation">
+<span></span>
+<span></span>
+<span></span></button><div class=nav-menu><a class=nav-link href=/>首页</a>
+<a class=nav-link href=/posts/>内容文章</a>
+<a class=nav-link href=/categories/>文章分类</a>
+<a class=nav-link href=/archive/>归档册</a>
+<a class=nav-link href=/tags/>标签</a>
+<a class=nav-link href=/about/>关于本站</a>
+<a class="nav-link nav-search-link" href=/search/ aria-label=搜索><svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61.0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></a></div></div></nav><header class=site-header style=background-image:url(/img/post-bg.jpg)><div class=header-content><h1 class=site-title>第1章 Godot C# 核心架构</h1><p class=site-slogan>让技术长出温度，在精确的逻辑与冷静的结构之中，依然保留人与世界的感知。不只是实现功能，也是在构建表达；不只是解决问题，也是在回应内心。</p></div></header><main class=main-container><div class=content-wrapper><div class=main-content><article class=page-content><header class=page-article-header><h1 class=page-article-title>第1章 Godot C# 核心架构</h1><div class=page-article-meta><time datetime=2026-04-01>2026年4月1日
+</time><span class=meta-separator>·</span>
+<a href=/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91>游戏开发</a></div></header><h2 id=11-概述>1.1 概述</h2><p>Godot 引擎从 3.x 版本开始引入 C# 支持，在 4.x 版本中 C# 集成更加成熟和稳定。本章将深入介绍 Godot C# 的核心架构概念，帮助开发者理解如何在这个独特的节点系统中高效使用 C# 进行游戏开发。</p><h2 id=12-为什么选择-godot--c>1.2 为什么选择 Godot + C#</h2><p>在游戏开发领域，开发者面临着众多技术选择。Unity、Unreal Engine、Godot 各有优势，而编程语言的选择同样重要。本节将分析为什么 Godot + C# 是一个值得考虑的技术组合。</p><h3 id=121-godot-的开源优势>1.2.1 Godot 的开源优势</h3><p>Godot 采用 MIT 许可证完全开源，这意味着：</p><ul><li><strong>零授权费用</strong>：无论游戏收入多少，都不需要支付引擎授权费或运行时费用</li><li><strong>源代码可访问</strong>：可以深入理解引擎工作原理，必要时修改引擎源码</li><li><strong>社区驱动</strong>：活跃的社区持续贡献代码、文档和教程</li><li><strong>长期可持续</strong>：即使官方开发放缓，社区可以接管维护</li></ul><p>相比之下，Unity 在 2023 年宣布的运行时费用政策引发了开发者对商业引擎的担忧，而 Unreal Engine 虽然免费但收入超过阈值后需要支付 5% 版税。</p><h3 id=122-godot--c-vs-godot--gdscript>1.2.2 Godot + C# vs Godot + GDScript</h3><p>Godot 原生支持 GDScript，但选择 C# 有以下优势：</p><p><strong>类型安全</strong>：C# 是强类型语言，编译时即可捕获类型错误，减少运行时 Bug。大型项目中，类型系统提供了更好的代码可维护性和 IDE 支持。</p><p><strong>性能优势</strong>：C# 编译为 IL 后由 JIT 编译器优化，计算密集型任务性能明显优于 GDScript。对于需要复杂物理计算、AI 寻路或大规模数据处理的框架代码，C# 是更好的选择。</p><p><strong>团队协作</strong>：C# 的静态类型和完整 IntelliSense 支持使团队协作更加顺畅。新成员可以更快地理解代码结构，IDE 提供了更好的重构和导航支持。</p><p><strong>.NET 生态</strong>：可以直接使用 NuGet 生态系统的数千个库，从 JSON 序列化到 HTTP 客户端，从日志框架到测试工具，无需重复造轮子。</p><h3 id=123-适合-godot--c-的项目类型>1.2.3 适合 Godot + C# 的项目类型</h3><p>虽然 Godot + C# 适用于大多数游戏类型，但特别适合：</p><ul><li><strong>中大型团队项目</strong>：需要强类型和良好架构支持</li><li><strong>复杂系统游戏</strong>：RPG、策略游戏等需要大量数据驱动逻辑</li><li><strong>性能敏感应用</strong>：需要充分利用 CPU 性能的计算密集型游戏</li><li><strong>已有 C# 技术栈的团队</strong>：可以复用现有的代码库和开发经验</li></ul><h2 id=13-本章学习路径>1.3 本章学习路径</h2><p>本章是全书的开篇，为后续章节奠定基础。建议按照以下路径学习：</p><h3 id=131-前置知识要求>1.3.1 前置知识要求</h3><p>在阅读本章前，建议具备以下基础：</p><ul><li><strong>C# 基础语法</strong>：类、接口、继承、泛型、LINQ 等基本概念</li><li><strong>Godot 基础</strong>：节点概念、场景系统、信号机制</li><li><strong>游戏开发基础</strong>：游戏循环、帧率、物理更新等概念</li></ul><p>如果缺少某项基础，建议先通过官方文档或教程补充。</p><h3 id=132-阅读建议>1.3.2 阅读建议</h3><p><strong>第一次阅读</strong>：快速浏览全章，了解 Godot C# 的整体架构和生命周期概念，不必深入每个代码细节。</p><p><strong>第二次阅读</strong>：重点关注生命周期部分（1.4节），这是 Godot C# 开发的核心。尝试在自己的项目中应用这些概念。</p><p><strong>结合实践</strong>：阅读过程中，建议在 Godot 编辑器中创建测试项目，跟随代码示例实际操作。实践是理解框架设计的最佳方式。</p><h3 id=133-与后续章节的关联>1.3.3 与后续章节的关联</h3><p>本章内容是后续所有章节的基础：</p><ul><li>第2章的 SOLID 原则需要在本章的架构基础上应用</li><li>第3章的全局系统依赖于对生命周期和节点树的理解</li><li>第4-10章的设计模式需要在本章的代码组织结构上实现</li></ul><p>确保扎实掌握本章内容后再继续后续章节。</p><h2 id=14-godot-节点树设计理念>1.4 Godot 节点树设计理念</h2><p>Godot 的核心架构基于<strong>场景树（Scene Tree）</strong>，所有游戏对象都是 <code>Node</code> 类的派生实例，通过父子关系组织成树形结构。理解节点生命周期是编写稳定游戏框架的基础。</p><h3 id=141-为什么是树形结构>1.4.1 为什么是树形结构</h3><p>树形结构是游戏引擎中最自然的选择，原因如下：</p><p><strong>层次化组织</strong>：游戏中的对象天然具有层次关系——玩家有装备，装备有属性，属性有数值。树形结构完美映射这种关系。</p><p><strong>变换继承</strong>：子节点自动继承父节点的变换（位置、旋转、缩放）。这在实现如"玩家手持武器"这样的功能时非常自然——武器作为子节点，会跟随玩家移动。</p><p><strong>生命周期管理</strong>：父节点负责子节点的生命周期。当父节点销毁时，子节点自动清理，避免内存泄漏。</p><p><strong>作用域隔离</strong>：节点的信号、变量在其子树内有效，形成自然的封装边界。</p><h3 id=142-与其他引擎的对比>1.4.2 与其他引擎的对比</h3><p><strong>Unity 的 GameObject</strong>：Unity 使用组件模式，GameObject 是容器，功能通过挂载 Component 实现。Godot 的节点既是容器也是功能实现者，更加统一。</p><p><strong>Unreal 的 Actor</strong>：Unreal 的 Actor 类似 Godot 的 Node，但 Godot 的场景系统更加轻量，嵌套场景（Scene in Scene）的设计更加灵活。</p><p><strong>自研引擎的实体系统</strong>：许多自研引擎使用扁平化的实体列表，缺乏层次关系。Godot 的树形结构提供了更好的组织性和可维护性。</p><h3 id=143-节点树在游戏开发中的意义>1.4.3 节点树在游戏开发中的意义</h3><p>理解节点树不仅是技术需求，更是设计思维：</p><p><strong>场景即对象</strong>：在 Godot 中，场景（.tscn 文件）也是节点，可以被实例化为其他场景的子节点。这种"组合优于继承"的设计理念贯穿全书。</p><p><strong>信号冒泡</strong>：事件和信号可以在节点树中传播，子节点可以通知父节点，形成自然的通信机制。</p><p><strong>资源管理</strong>：节点的加载和卸载对应资源的加载和释放，树形结构使得资源依赖关系清晰可控。</p><h2 id=15-c-在-godot-中的独特优势>1.5 C# 在 Godot 中的独特优势</h2><p>Godot 4.x 对 C# 的支持达到了生产级别，.NET 6/8 的集成带来了独特优势。</p><h3 id=151-现代-c-特性支持>1.5.1 现代 C# 特性支持</h3><p>Godot 4.x 支持 C# 10/11 的特性：</p><p><strong>可空引用类型</strong>：在项目中启用 <code>&lt;Nullable>enable&lt;/Nullable></code>，编译器可以帮助捕获空引用错误，提高代码健壮性。</p><p><strong>记录类型（Record）</strong>：适合定义不可变的数据结构，如配置数据、事件数据等。</p><p><strong>模式匹配</strong>：简化复杂的条件判断，使代码更加清晰。</p><p><strong>异步编程</strong>：完整的 async/await 支持，配合 Godot 的 <code>ToSignal</code> 方法，可以编写清晰的异步代码。</p><h3 id=152-调试体验>1.5.2 调试体验</h3><p>C# 在 Godot 中提供一流的调试体验：</p><p><strong>Visual Studio / VS Code 集成</strong>：断点、单步执行、变量查看、调用堆栈等完整功能。</p><p><strong>热重载（Hot Reload）</strong>：在调试模式下修改代码，可以立即看到效果，无需重新启动游戏。</p><p><strong>异常处理</strong>：完整的异常堆栈信息，便于定位问题。</p><h3 id=153-net-生态系统>1.5.3 .NET 生态系统</h3><p>使用 C# 意味着可以使用整个 .NET 生态系统：</p><p><strong>System.Text.Json</strong>：高性能的 JSON 序列化，适合存档和网络通信。</p><p><strong>Microsoft.Extensions.DependencyInjection</strong>：成熟的依赖注入框架，适合大型项目的架构设计。</p><p><strong>开源库生态</strong>：从数据库 ORM 到机器学习，从网络库到数学计算，NuGet 提供了丰富的选择。</p><h3 id=154-与-gdscript-的协作>1.5.4 与 GDScript 的协作</h3><p>在同一个项目中，C# 和 GDScript 可以无缝协作：</p><ul><li>C# 可以调用 GDScript 的函数</li><li>GDScript 可以调用 C# 的方法</li><li>信号系统跨语言工作</li><li>共享相同的节点树和资源系统</li></ul><p>这使得团队可以根据需求选择语言——框架核心用 C# 编写，快速原型或脚本用 GDScript 编写。</p><h2 id=16-节点树生命周期>1.6 节点树生命周期</h2><p>理解了为什么选择 Godot + C#，现在深入探讨节点树的核心机制——生命周期。这是编写稳定游戏框架的基石。</p><h3 id=121-生命周期方法调用顺序>1.2.1 生命周期方法调用顺序</h3><pre tabindex=0><code>_Enumerate                  # 节点被识别并准备加入树
+_EnterTree()               # 节点进入场景树（此时可在树中定位）
+_Ready()                   # 节点及其子节点都准备完毕
+_Process(delta)            # 每帧调用（渲染帧）
+_PhysicsProcess(delta)     # 每物理帧调用（固定时间步长）
+_ExitTree()                # 节点离开场景树
+</code></pre><h3 id=122-各生命周期方法详解>1.2.2 各生命周期方法详解</h3><h4 id=_entertree>_EnterTree()</h4><p>当节点被添加到场景树时调用，此时：</p><ul><li>节点可以通过 <code>GetTree()</code> 访问场景树</li><li>可以通过 <code>GetParent()</code> 访问父节点</li><li><strong>子节点尚未完全初始化</strong></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#75715e>// 文件路径: Scripts/Player/PlayerController.cs</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 功能说明: 玩家控制器，展示 _EnterTree 使用时机</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Player
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>PlayerController</span> : CharacterBody3D
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 在 _EnterTree 中注册到全局系统</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 注意：此时还不能访问子节点</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _EnterTree()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤1: 向全局事件系统注册自己</span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 这样其他系统可以在玩家创建时立即响应</span>
+</span></span><span style=display:flex><span>            GameManager.Instance?.RegisterPlayer(<span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 注意：此时 _Ready 尚未调用，不要访问子节点</span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 错误示例：GetNode&lt;AnimatedSprite3D&gt;(&#34;Sprite&#34;) 可能返回 null</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h4 id=_ready>_Ready()</h4><p>当节点及其所有子节点都完成 <code>_EnterTree()</code> 后调用。这是进行初始化的最佳时机：</p><ul><li>所有子节点都已可访问</li><li>节点的导出属性已从编辑器或场景文件加载</li><li>是获取子节点引用和设置初始状态的理想位置</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#75715e>// 文件路径: Scripts/Enemy/EnemyController.cs</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 功能说明: 敌人控制器，展示 _Ready 中的初始化</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Enemy
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>EnemyController</span> : CharacterBody3D
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 导出属性，可在编辑器中配置</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> MoveSpeed { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>5.0f</span>;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> MaxHealth { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>100</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 子节点引用</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> AnimatedSprite3D _sprite;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> Area3D _attackRange;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> HealthComponent _health;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 初始化方法</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 执行顺序：</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 1. 获取子节点引用</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 2. 连接信号</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 3. 设置初始状态</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 4. 注册到管理器</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _Ready()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤1: 获取子节点引用</span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 使用 @&#34;NodePath&#34; 语法避免转义问题</span>
+</span></span><span style=display:flex><span>            _sprite = GetNode&lt;AnimatedSprite3D&gt;(<span style=color:#e6db74>&#34;Sprite&#34;</span>);
+</span></span><span style=display:flex><span>            _attackRange = GetNode&lt;Area3D&gt;(<span style=color:#e6db74>&#34;AttackRange&#34;</span>);
+</span></span><span style=display:flex><span>            _health = GetNode&lt;HealthComponent&gt;(<span style=color:#e6db74>&#34;HealthComponent&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤2: 连接信号</span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 当玩家进入攻击范围时触发</span>
+</span></span><span style=display:flex><span>            _attackRange.BodyEntered += OnPlayerEnteredRange;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤3: 设置初始状态</span>
+</span></span><span style=display:flex><span>            _health.CurrentHealth = MaxHealth;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤4: 注册到敌人管理器</span>
+</span></span><span style=display:flex><span>            EnemyManager.Instance.RegisterEnemy(<span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> OnPlayerEnteredRange(Node3D body)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 处理玩家进入攻击范围</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h4 id=_processdelta>_Process(delta)</h4><p>每渲染帧调用一次，时间间隔不固定（取决于帧率）。适用于：</p><ul><li>UI 更新</li><li>视觉效果</li><li>输入检测（非物理相关）</li><li>动画控制</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#75715e>// 文件路径: Scripts/UI/FloatingDamageText.cs</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 功能说明: 浮动伤害数字，展示 _Process 使用</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.UI
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>FloatingDamageText</span> : Label
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> FloatSpeed { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>50.0f</span>;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> FadeSpeed { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>1.0f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>float</span> _lifetime = <span style=color:#ae81ff>2.0f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 每帧更新位置和透明度</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 使用 delta 确保动画速度不受帧率影响</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _Process(<span style=color:#66d9ef>double</span> delta)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤1: 向上浮动</span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// delta 是上一帧到当前帧的时间（秒）</span>
+</span></span><span style=display:flex><span>            Position += <span style=color:#66d9ef>new</span> Vector2(<span style=color:#ae81ff>0</span>, -FloatSpeed * (<span style=color:#66d9ef>float</span>)delta);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤2: 逐渐淡出</span>
+</span></span><span style=display:flex><span>            Modulate = <span style=color:#66d9ef>new</span> Color(Modulate.R, Modulate.G, Modulate.B,
+</span></span><span style=display:flex><span>                Modulate.A - FadeSpeed * (<span style=color:#66d9ef>float</span>)delta);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤3: 生命周期检查</span>
+</span></span><span style=display:flex><span>            _lifetime -= (<span style=color:#66d9ef>float</span>)delta;
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_lifetime &lt;= <span style=color:#ae81ff>0</span> || Modulate.A &lt;= <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 从场景中移除</span>
+</span></span><span style=display:flex><span>                QueueFree();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h4 id=_physicsprocessdelta>_PhysicsProcess(delta)</h4><p>每物理帧调用，使用固定时间步长（默认 60fps）。适用于：</p><ul><li>物理移动和碰撞</li><li>角色控制器</li><li>需要稳定时间步长的逻辑</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#75715e>// 文件路径: Scripts/Player/PhysicsBasedMovement.cs</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 功能说明: 基于物理的角色移动</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Player
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>PhysicsBasedMovement</span> : CharacterBody3D
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> Speed { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>10.0f</span>;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> JumpVelocity { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>15.0f</span>;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> Gravity { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>50.0f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 物理更新</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 重要：所有物理相关计算都应在此进行，确保一致性</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _PhysicsProcess(<span style=color:#66d9ef>double</span> delta)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            Vector3 velocity = Velocity;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤1: 处理重力</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (!IsOnFloor())
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 注意：即使使用 _PhysicsProcess，仍应使用 delta</span>
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 以防物理帧率被修改</span>
+</span></span><span style=display:flex><span>                velocity.Y -= Gravity * (<span style=color:#66d9ef>float</span>)delta;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤2: 处理跳跃</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (Input.IsActionJustPressed(<span style=color:#e6db74>&#34;jump&#34;</span>) &amp;&amp; IsOnFloor())
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                velocity.Y = JumpVelocity;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤3: 处理水平移动</span>
+</span></span><span style=display:flex><span>            Vector2 inputDir = Input.GetVector(<span style=color:#e6db74>&#34;move_left&#34;</span>, <span style=color:#e6db74>&#34;move_right&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#e6db74>&#34;move_forward&#34;</span>, <span style=color:#e6db74>&#34;move_back&#34;</span>);
+</span></span><span style=display:flex><span>            Vector3 direction = <span style=color:#66d9ef>new</span> Vector3(inputDir.X, <span style=color:#ae81ff>0</span>, inputDir.Y).Normalized();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (direction != Vector3.Zero)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                velocity.X = direction.X * Speed;
+</span></span><span style=display:flex><span>                velocity.Z = direction.Z * Speed;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 减速到停止</span>
+</span></span><span style=display:flex><span>                velocity.X = Mathf.MoveToward(velocity.X, <span style=color:#ae81ff>0</span>, Speed);
+</span></span><span style=display:flex><span>                velocity.Z = Mathf.MoveToward(velocity.Z, <span style=color:#ae81ff>0</span>, Speed);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤4: 应用速度并移动</span>
+</span></span><span style=display:flex><span>            Velocity = velocity;
+</span></span><span style=display:flex><span>            MoveAndSlide();  <span style=color:#75715e>// Godot 4.x 的滑动碰撞处理</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h4 id=_exittree>_ExitTree()</h4><p>当节点从场景树中移除时调用，用于清理工作：</p><ul><li>取消信号连接</li><li>注销全局注册</li><li>释放资源</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#75715e>// 文件路径: Scripts/Systems/AudioManager.cs</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 功能说明: 音频管理器，展示 _ExitTree 清理</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Systems
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>AudioManager</span> : Node
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 正在播放的音频池</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> List&lt;AudioStreamPlayer&gt; _activePlayers = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> PlaySound(AudioStream sound, <span style=color:#66d9ef>float</span> volume = <span style=color:#ae81ff>1.0f</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> player = <span style=color:#66d9ef>new</span> AudioStreamPlayer();
+</span></span><span style=display:flex><span>            AddChild(player);
+</span></span><span style=display:flex><span>            player.Stream = sound;
+</span></span><span style=display:flex><span>            player.VolumeDb = Mathf.LinearToDb(volume);
+</span></span><span style=display:flex><span>            player.Play();
+</span></span><span style=display:flex><span>            _activePlayers.Add(player);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 播放完成后自动清理</span>
+</span></span><span style=display:flex><span>            player.Finished += () =&gt; OnSoundFinished(player);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> OnSoundFinished(AudioStreamPlayer player)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _activePlayers.Remove(player);
+</span></span><span style=display:flex><span>            player.QueueFree();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 清理工作</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 重要：必须手动清理，否则可能造成内存泄漏</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _ExitTree()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤1: 停止所有正在播放的音频</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> player <span style=color:#66d9ef>in</span> _activePlayers)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (IsInstanceValid(player))
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    player.Stop();
+</span></span><span style=display:flex><span>                    player.QueueFree();
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            _activePlayers.Clear();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤2: 注销全局引用</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (GameManager.Instance != <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GameManager.Instance.AudioManager = <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            GD.Print(<span style=color:#e6db74>&#34;[音频管理器] 已清理并退出&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=17-c-与-gdscript-核心差异>1.7 C# 与 GDScript 核心差异</h2><p>理解 C# 和 GDScript 的差异有助于在 Godot 中做出正确的技术选择。</p><h3 id=131-语法与类型系统对比>1.3.1 语法与类型系统对比</h3><table><thead><tr><th>特性</th><th>C#</th><th>GDScript</th></tr></thead><tbody><tr><td>类型系统</td><td>强类型，编译时检查</td><td>动态类型，运行时检查</td></tr><tr><td>性能</td><td>编译型，执行更快</td><td>解释型，执行较慢</td></tr><tr><td>空安全</td><td>可空引用类型（C# 8.0+）</td><td>无原生空安全</td></tr><tr><td>异步编程</td><td>async/await，Task</td><td>await，Coroutine</td></tr><tr><td>信号连接</td><td>C# 事件 或 Godot 信号</td><td>Godot 信号</td></tr><tr><td>热重载</td><td>有限支持</td><td>完全支持</td></tr></tbody></table><h3 id=132-api-使用差异>1.3.2 API 使用差异</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#75715e>// ==================== C# 版本 ====================</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 文件路径: Scripts/Examples/CSharpExample.cs</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Linq;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Examples
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>CSharpExample</span> : Node
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 导出属性使用 C# 属性语法</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> MaxCount { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>10</span>;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> MoveSpeed { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>5.5f</span>;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> PlayerName { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#e6db74>&#34;Player&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 导出枚举</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>enum</span> GameDifficulty { Easy, Normal, Hard }
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> GameDifficulty Difficulty { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = GameDifficulty.Normal;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 导出资源</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> PackedScene EnemyPrefab { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span> <span style=color:#66d9ef>public</span> Texture2D IconTexture { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _Ready()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 获取节点 - C# 使用泛型方法</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> player = GetNode&lt;CharacterBody3D&gt;(<span style=color:#e6db74>&#34;Player&#34;</span>);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> ui = GetNode&lt;CanvasLayer&gt;(<span style=color:#e6db74>&#34;UI&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 获取子节点组</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> enemies = GetTree().GetNodesInGroup(<span style=color:#e6db74>&#34;enemy&#34;</span>)
+</span></span><span style=display:flex><span>                .Cast&lt;EnemyController&gt;()  <span style=color:#75715e>// 类型转换</span>
+</span></span><span style=display:flex><span>                .ToList();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 信号连接 - C# 使用 += 语法</span>
+</span></span><span style=display:flex><span>            player.TreeExiting += () =&gt; GD.Print(<span style=color:#e6db74>&#34;玩家离开场景&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 延迟调用 - 使用 async/await</span>
+</span></span><span style=display:flex><span>            _ = DelayedAction();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>async</span> System.Threading.Tasks.Task DelayedAction()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>await</span> ToSignal(GetTree().CreateTimer(<span style=color:#ae81ff>2.0</span>), <span style=color:#e6db74>&#34;timeout&#34;</span>);
+</span></span><span style=display:flex><span>            GD.Print(<span style=color:#e6db74>&#34;2秒后执行&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 信号声明 - C# 使用 [Signal] 特性</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Signal]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>delegate</span> <span style=color:#66d9ef>void</span> HealthChangedEventHandler(<span style=color:#66d9ef>int</span> newHealth, <span style=color:#66d9ef>int</span> maxHealth);
+</span></span><span style=display:flex><span><span style=color:#a6e22e>
+</span></span></span><span style=display:flex><span><span style=color:#a6e22e>        [Signal]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>delegate</span> <span style=color:#66d9ef>void</span> PlayerDiedEventHandler();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> TakeDamage(<span style=color:#66d9ef>int</span> damage)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 发射信号</span>
+</span></span><span style=display:flex><span>            EmitSignal(SignalName.HealthChanged, <span style=color:#ae81ff>80</span>, <span style=color:#ae81ff>100</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#75715e># ==================== GDScript 版本（对比） ====================</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 文件路径: scripts/examples/gdscript_example.gd</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Node</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 导出变量</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@export</span> <span style=color:#66d9ef>var</span> max_count: <span style=color:#66d9ef>int</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>10</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@export</span> <span style=color:#66d9ef>var</span> move_speed: <span style=color:#66d9ef>float</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>5.5</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@export</span> <span style=color:#66d9ef>var</span> player_name: <span style=color:#a6e22e>String</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;Player&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 导出枚举</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>enum</span> GameDifficulty { EASY, NORMAL, HARD }
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@export</span> <span style=color:#66d9ef>var</span> difficulty: GameDifficulty <span style=color:#f92672>=</span> GameDifficulty<span style=color:#f92672>.</span>NORMAL
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 导出资源</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@export</span> <span style=color:#66d9ef>var</span> enemy_prefab: <span style=color:#a6e22e>PackedScene</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@export</span> <span style=color:#66d9ef>var</span> icon_texture: <span style=color:#a6e22e>Texture2D</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>_ready</span>():
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 获取节点</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> player <span style=color:#f92672>=</span> <span style=color:#a6e22e>get_node</span>(<span style=color:#e6db74>&#34;Player&#34;</span>)  <span style=color:#75715e># 无泛型，返回 Node</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> ui <span style=color:#f92672>=</span> <span style=color:#a6e22e>get_node</span>(<span style=color:#e6db74>&#34;UI&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 获取组内节点</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> enemies <span style=color:#f92672>=</span> <span style=color:#a6e22e>get_tree</span>()<span style=color:#f92672>.</span><span style=color:#a6e22e>get_nodes_in_group</span>(<span style=color:#e6db74>&#34;enemy&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 信号连接 - 使用 connect 函数</span>
+</span></span><span style=display:flex><span>    player<span style=color:#f92672>.</span>tree_exiting<span style=color:#f92672>.</span><span style=color:#a6e22e>connect</span>(<span style=color:#a6e22e>func</span>(): print(<span style=color:#e6db74>&#34;玩家离开场景&#34;</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 延迟调用 - 使用 await</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>get_tree</span>()<span style=color:#f92672>.</span><span style=color:#a6e22e>create_timer</span>(<span style=color:#ae81ff>2.0</span>)<span style=color:#f92672>.</span>timeout
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>&#34;2秒后执行&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 信号声明</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>signal</span> <span style=color:#a6e22e>health_changed</span>(new_health: <span style=color:#66d9ef>int</span>, max_health: <span style=color:#66d9ef>int</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>signal</span> <span style=color:#a6e22e>player_died</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>take_damage</span>(damage: <span style=color:#66d9ef>int</span>):
+</span></span><span style=display:flex><span>    health_changed<span style=color:#f92672>.</span><span style=color:#a6e22e>emit</span>(<span style=color:#ae81ff>80</span>, <span style=color:#ae81ff>100</span>)
+</span></span></code></pre></div><h3 id=133-集合类型对比>1.3.3 集合类型对比</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#75715e>// 文件路径: Scripts/Examples/CollectionComparison.cs</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot.Collections;  <span style=color:#75715e>// Godot 集合命名空间</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Examples
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>CollectionComparison</span> : Node
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _Ready()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// ========== 数组 ==========</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// C# 方式：使用 System 数组或 List</span>
+</span></span><span style=display:flex><span>            List&lt;<span style=color:#66d9ef>int</span>&gt; scores = <span style=color:#66d9ef>new</span> List&lt;<span style=color:#66d9ef>int</span>&gt; { <span style=color:#ae81ff>100</span>, <span style=color:#ae81ff>85</span>, <span style=color:#ae81ff>92</span> };
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>int</span>[] fixedScores = <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>int</span>[] { <span style=color:#ae81ff>100</span>, <span style=color:#ae81ff>85</span>, <span style=color:#ae81ff>92</span> };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// Godot 方式：用于与 GDScript 交互</span>
+</span></span><span style=display:flex><span>            Godot.Collections.Array godotArray = <span style=color:#66d9ef>new</span> Godot.Collections.Array();
+</span></span><span style=display:flex><span>            godotArray.Add(<span style=color:#ae81ff>100</span>);
+</span></span><span style=display:flex><span>            godotArray.Add(<span style=color:#ae81ff>85</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// ========== 字典 ==========</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// C# 方式：强类型字典</span>
+</span></span><span style=display:flex><span>            Dictionary&lt;<span style=color:#66d9ef>string</span>, <span style=color:#66d9ef>int</span>&gt; playerScores = <span style=color:#66d9ef>new</span> Dictionary&lt;<span style=color:#66d9ef>string</span>, <span style=color:#66d9ef>int</span>&gt;
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span><span style=color:#a6e22e>                [&#34;Player1&#34;]</span> = <span style=color:#ae81ff>1000</span>,
+</span></span><span style=display:flex><span><span style=color:#a6e22e>                [&#34;Player2&#34;]</span> = <span style=color:#ae81ff>850</span>
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 访问：强类型，编译时检查</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (playerScores.TryGetValue(<span style=color:#e6db74>&#34;Player1&#34;</span>, <span style=color:#66d9ef>out</span> <span style=color:#66d9ef>int</span> score))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.Print(<span style=color:#e6db74>$&#34;Player1 分数: {score}&#34;</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// Godot 方式：用于导出到编辑器或与 GDScript 交互</span>
+</span></span><span style=display:flex><span>            Godot.Collections.Dictionary godotDict = <span style=color:#66d9ef>new</span> Godot.Collections.Dictionary();
+</span></span><span style=display:flex><span>            godotDict[<span style=color:#e6db74>&#34;health&#34;</span>] = <span style=color:#ae81ff>100</span>;
+</span></span><span style=display:flex><span>            godotDict[<span style=color:#e6db74>&#34;mana&#34;</span>] = <span style=color:#ae81ff>50</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// ========== 遍历 ==========</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// C# LINQ - 强大的查询能力</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> highScores = playerScores
+</span></span><span style=display:flex><span>                .Where(kvp =&gt; kvp.Value &gt; <span style=color:#ae81ff>900</span>)
+</span></span><span style=display:flex><span>                .Select(kvp =&gt; kvp.Key)
+</span></span><span style=display:flex><span>                .ToList();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// C# foreach</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> kvp <span style=color:#66d9ef>in</span> playerScores)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.Print(<span style=color:#e6db74>$&#34;{kvp.Key}: {kvp.Value}&#34;</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=18-godot-4x--net-8-项目配置>1.8 Godot 4.x + .NET 8 项目配置</h2><h3 id=141-项目文件结构>1.4.1 项目文件结构</h3><pre tabindex=0><code>MyGame/
+├── MyGame.csproj          # C# 项目文件
+├── MyGame.sln             # 解决方案文件（可选）
+├── project.godot          # Godot 项目配置
+├── .vscode/               # VS Code 配置（如使用）
+│   ├── launch.json
+│   └── tasks.json
+├── assets/                # 游戏资源
+├── src/                   # 源代码
+│   ├── Core/              # 核心框架
+│   ├── Entities/          # 游戏实体
+│   ├── Systems/           # 游戏系统
+│   ├── UI/                # 界面
+│   └── Utils/             # 工具类
+└── scenes/                # 场景文件
+</code></pre><h3 id=142-项目文件配置>1.4.2 项目文件配置</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-xml data-lang=xml><span style=display:flex><span><span style=color:#75715e>&lt;!-- 文件路径: MyGame.csproj --&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>&lt;!-- 功能说明: Godot C# 项目配置示例 --&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>&lt;Project</span> <span style=color:#a6e22e>Sdk=</span><span style=color:#e6db74>&#34;Godot.NET.Sdk/4.2.1&#34;</span><span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&lt;PropertyGroup&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- 目标框架：Godot 4.2+ 支持 .NET 8 --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;TargetFramework&gt;</span>net8.0<span style=color:#f92672>&lt;/TargetFramework&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- 启用可空引用类型检查 --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;Nullable&gt;</span>enable<span style=color:#f92672>&lt;/Nullable&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- 启用隐式 using --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;ImplicitUsings&gt;</span>enable<span style=color:#f92672>&lt;/ImplicitUsings&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- Godot 特定配置 --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;GodotProjectDir&gt;</span>$(MSBuildProjectDirectory)<span style=color:#f92672>&lt;/GodotProjectDir&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- 语言版本 --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;LangVersion&gt;</span>12.0<span style=color:#f92672>&lt;/LangVersion&gt;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&lt;/PropertyGroup&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&lt;ItemGroup&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- Godot 源生成器：优化导出属性等 --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;PackageReference</span> <span style=color:#a6e22e>Include=</span><span style=color:#e6db74>&#34;Godot.SourceGenerators&#34;</span> <span style=color:#a6e22e>Version=</span><span style=color:#e6db74>&#34;4.2.1&#34;</span> <span style=color:#f92672>/&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- 其他常用包 --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;PackageReference</span> <span style=color:#a6e22e>Include=</span><span style=color:#e6db74>&#34;System.Text.Json&#34;</span> <span style=color:#a6e22e>Version=</span><span style=color:#e6db74>&#34;8.0.0&#34;</span> <span style=color:#f92672>/&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;PackageReference</span> <span style=color:#a6e22e>Include=</span><span style=color:#e6db74>&#34;Microsoft.Extensions.DependencyInjection&#34;</span> <span style=color:#a6e22e>Version=</span><span style=color:#e6db74>&#34;8.0.0&#34;</span> <span style=color:#f92672>/&gt;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&lt;/ItemGroup&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&lt;ItemGroup&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;!-- 编译所有 .cs 文件 --&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;Compile</span> <span style=color:#a6e22e>Include=</span><span style=color:#e6db74>&#34;src/**/*.cs&#34;</span> <span style=color:#f92672>/&gt;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&lt;/ItemGroup&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>&lt;/Project&gt;</span>
+</span></span></code></pre></div><h3 id=143-启动类配置>1.4.3 启动类配置</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#75715e>// 文件路径: src/Core/GameBootstrap.cs</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 功能说明: 游戏启动引导类，自动加载执行</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 游戏启动引导器</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 配置为 AutoLoad，在场景加载前执行</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>GameBootstrap</span> : Node
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 最先执行的初始化</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 执行顺序：</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 1. 设置随机种子</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 2. 加载配置</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 3. 初始化全局系统</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _EnterTree()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            GD.Print(<span style=color:#e6db74>&#34;[GameBootstrap] 游戏启动中...&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤1: 设置随机种子</span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 使用当前时间作为种子，或从存档中加载</span>
+</span></span><span style=display:flex><span>            GD.Randomize();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤2: 加载游戏配置</span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 从文件或远程加载配置数据</span>
+</span></span><span style=display:flex><span>            LoadGameConfig();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 步骤3: 设置窗口属性（如需要）</span>
+</span></span><span style=display:flex><span>            ConfigureWindow();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            GD.Print(<span style=color:#e6db74>&#34;[GameBootstrap] 启动完成&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> LoadGameConfig()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 实现配置加载逻辑</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> ConfigureWindow()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 如需要，动态设置窗口属性</span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// DisplayServer.WindowSetMinSize(new Vector2I(1280, 720));</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=144-命名空间与代码组织建议>1.4.4 命名空间与代码组织建议</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#75715e>// 文件路径: 命名空间组织示例</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 核心系统</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Core { }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 游戏实体</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Entities { }
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Entities.Player { }
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Entities.Enemies { }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 游戏系统</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Systems { }
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Systems.Audio { }
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Systems.Input { }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 界面</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.UI { }
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.UI.HUD { }
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.UI.Menus { }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 工具类</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Utils { }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 数据定义</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Data { }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 网络</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Networking { }
+</span></span></code></pre></div><h2 id=19-本章小结>1.9 本章小结</h2><p>本章介绍了 Godot C# 开发的核心基础：</p><ol><li><p><strong>生命周期管理</strong>：理解 <code>_EnterTree</code> → <code>_Ready</code> → <code>_Process</code>/<code>_PhysicsProcess</code> → <code>_ExitTree</code> 的执行顺序，选择合适的时机进行初始化和清理。</p></li><li><p><strong>语言差异</strong>：C# 提供强类型检查和更好的性能，适合大型项目；GDScript 更适合快速原型开发。</p></li><li><p><strong>项目配置</strong>：正确配置 <code>.csproj</code> 文件和项目结构是高效开发的基础。</p></li><li><p><strong>代码组织</strong>：使用命名空间和文件夹结构保持代码清晰可维护。</p></li></ol><p>在下一章中，我们将深入探讨框架设计的 SOLID 原则及其在 Godot 中的具体应用。</p><div class=post-tags><a href=/tags/godot class=post-tag>#Godot</a>
+<a href=/tags/%E5%BC%80%E5%8F%91 class=post-tag>#开发</a>
+<a href=/tags/c class=post-tag>#C#</a>
+<a href=/tags/%E6%9E%B6%E6%9E%84 class=post-tag>#架构</a>
+<a href=/tags/csharp class=post-tag>#CSharp</a></div><nav class=post-nav><a href=/posts/%E7%86%9F%E7%AB%A5%E5%AE%9E%E9%AA%8C%E5%AE%A4%E5%BC%80%E5%BC%A0%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8A%80%E6%9C%AF%E9%9C%80%E8%A6%81%E9%95%BF%E5%87%BA%E6%B8%A9%E5%BA%A6/ class=prev-post><span class=nav-label>← 上一篇</span>
+<span class=nav-title>熟童实验室开张:为什么技术需要长出温度?</span>
+</a><a href=/posts/%E7%AC%AC2%E7%AB%A0-%E6%A1%86%E6%9E%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/ class=next-post><span class=nav-label>下一篇 →</span>
+<span class=nav-title>第2章 框架设计原则</span></a></nav><script src=https://giscus.app/client.js data-repo=heheboy/heheboy.github.io data-repo-id=R_kgDORzG4BQ data-category=Announcements data-category-id=DIC_kwDORzG4Bc4C54kN data-mapping=pathname data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=light data-lang=zh-CN crossorigin=anonymous async></script></article></div><aside class=sidebar><div class="sidebar-widget author-widget"><img class=author-avatar src=/img/avatar.jpg alt=熟童><h3 class=author-name>熟童</h3><p class=author-bio>熟童，一个在代码、咖啡与虚拟世界之间反复横跳的人。写程序、做游戏、研究AI，也会认真对待一杯咖啡的参数曲线。这里记录的不只是技术，还有那些被实现出来的想法。相信技术不只是工具，它也可以有温度。</p><div class=author-social><a href=https://github.com/heheboy target=_blank rel=noopener aria-label=GitHub><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 0C5.37.0.0 5.37.0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57.0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925.0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18.0.0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225.0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22.0 1.605-.015 2.895-.015 3.3.0.315.225.69.825.57A12.02 12.02.0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+</a><a href=https://space.bilibili.com/8756982 target=_blank rel=noopener aria-label=Bilibili><svg viewBox="0 0 24 24"><path fill="currentColor" d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858.0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234.0 11.704-1.778L8.46 4.45V4.267a1.227 1.227.0 112.453.0V5.32l2.823-2.695a1.234 1.234.0 011.704 1.778l-1.687 1.12zm-3.28 9.653c-.56.0-1.013.453-1.013 1.013s.453 1.013 1.013 1.013 1.013-.453 1.013-1.013-.453-1.013-1.013-1.013zm-6 0c-.56.0-1.013.453-1.013 1.013s.453 1.013 1.013 1.013 1.013-.453 1.013-1.013-.453-1.013-1.013-1.013z"/></svg>
+</a><a href=https://www.facebook.com/dio.zeng.2025 target=_blank rel=noopener aria-label=Facebook><svg viewBox="0 0 24 24"><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312.0 2.686.235 2.686.235v2.953H15.83c-1.491.0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><div class=social-wechat-wrapper><a href=# class=social-wechat-trigger aria-label=WeChat><svg viewBox="0 0 24 24"><path fill="currentColor" d="M8.691 2.188C3.891 2.188.0 5.476.0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59.0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213.0.163.13.295.29.295a.326.326.0 00.167-.054l1.903-1.114a.864.864.0 01.717-.098 10.16 10.16.0 002.837.403c.276.0.543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642.0 1.162.529 1.162 1.18A1.17 1.17.0 015.785 8.349 1.17 1.17.0 014.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813.0c.642.0 1.162.529 1.162 1.18a1.17 1.17.0 01-1.162 1.178 1.17 1.17.0 01-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826.0 1.622-.12 2.361-.336a.722.722.0 01.598.082l1.584.926a.272.272.0 00.14.047c.134.0.24-.111.24-.247.0-.06-.023-.12-.038-.177l-.327-1.233a.582.582.0 01-.023-.156.49.49.0 01.201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088V8.89c-.135-.01-.27-.027-.407-.03zm-2.53 3.274c.535.0.969.44.969.982a.976.976.0 01-.969.983.976.976.0 01-.969-.983c0-.542.434-.982.97-.982zm4.844.0c.535.0.969.44.969.982a.976.976.0 01-.969.983.976.976.0 01-.969-.983c0-.542.434-.982.969-.982z"/></svg></a><div class=wechat-qr-popup><img src=/img/wechat-qr.png alt="WeChat QR Code">
+<span>扫码加我</span></div></div><a href=https://www.instagram.com/bengbeng9548/ target=_blank rel=noopener aria-label=Instagram><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.163c3.204.0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849.0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204.0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849.0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741.0 8.333.014 7.053.072c-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.668.072 4.948c.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403.0-6.162 2.759-6.162 6.162S8.597 18.163 12 18.163s6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zM12 16c-2.209.0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796.0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795.0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a><div class=social-email-wrapper><a href=mailto:bengbeng9548@qq.com class=social-email aria-label=Email><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 4H4c-1.1.0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1.0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+<span>bengbeng9548@qq.com</span></a></div></div></div><div class="sidebar-widget categories-widget"><h4>分类</h4><div class=category-cloud><a href=/categories/%E5%92%96%E5%95%A1%E7%9B%B8%E5%85%B3/ class=category-link>咖啡相关
+<span class=category-count>(12)</span>
+</a><a href=/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/ class=category-link>游戏开发
+<span class=category-count>(12)</span>
+</a><a href=/categories/ai%E7%9B%B8%E5%85%B3/ class=category-link>AI相关
+<span class=category-count>(2)</span>
+</a><a href=/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/ class=category-link>生活随记
+<span class=category-count>(1)</span></a></div></div><div class="sidebar-widget tags-widget"><h4>标签</h4><div class=tag-cloud><a href=/tags/c%23/ class=tag-link style=font-size:1.5em>C#
+</a><a href=/tags/csharp/ class=tag-link style=font-size:1.5em>CSharp
+</a><a href=/tags/godot/ class=tag-link style=font-size:1.5em>Godot
+</a><a href=/tags/%E5%92%96%E5%95%A1/ class=tag-link style=font-size:1.5em>咖啡
+</a><a href=/tags/%E5%92%96%E5%95%A1%E8%B1%86/ class=tag-link style=font-size:1.5em>咖啡豆
+</a><a href=/tags/%E5%BC%80%E5%8F%91/ class=tag-link style=font-size:1.5em>开发
+</a><a href=/tags/%E5%92%96%E5%95%A1%E7%83%98%E7%84%99/ class=tag-link style=font-size:1.5em>咖啡烘焙
+</a><a href=/tags/%E6%9E%B6%E6%9E%84/ class=tag-link style=font-size:1.5em>架构
+</a><a href=/tags/agent/ class=tag-link style=font-size:1em>Agent
+</a><a href=/tags/ai/ class=tag-link style=font-size:1em>AI
+</a><a href=/tags/claudecode/ class=tag-link style=font-size:1em>ClaudeCode
+</a><a href=/tags/%E5%92%96%E5%95%A1%E7%94%9F%E8%B1%86/ class=tag-link style=font-size:1em>咖啡生豆
+</a><a href=/tags/%E6%99%BA%E8%83%BD%E4%BD%93/ class=tag-link style=font-size:1em>智能体
+</a><a href=/tags/%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF/ class=tag-link style=font-size:1em>烘焙曲线
+</a><a href=/tags/anthropic/ class=tag-link style=font-size:.9em>Anthropic
+</a><a href=/tags/cc/ class=tag-link style=font-size:.9em>Cc
+</a><a href=/tags/mcp/ class=tag-link style=font-size:.9em>Mcp
+</a><a href=/tags/openclaw/ class=tag-link style=font-size:.9em>OpenClaw
+</a><a href=/tags/skill/ class=tag-link style=font-size:.9em>Skill
+</a><a href=/tags/ui/ class=tag-link style=font-size:.9em>UI</a></div></div><div class="sidebar-widget links-widget"><h4>友情链接</h4><div class=links-list><a href=https://gohugo.io target=_blank rel=noopener class=link-item title="Hugo 静态网站生成器官方文档"><span class=link-name>Hugo 官方</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+</a><a href=https://github.com/heheboy/hugo-cms target=_blank rel=noopener class=link-item title=hugo-cms的项目连接><span class=link-name>Hugo-cms</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+</a><a href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener class=link-item title=主题的项目连接><span class=link-name>hugo-cms-theme</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></a></div></div></aside></div></main><footer class=site-footer><div class=footer-content><p class=copyright>&copy; 2026 熟童.
+All rights reserved.</p><div class=footer-info><span class=footer-info-item><a href=https://github.com/heheboy/hugo-cms target=_blank rel=noopener>本网站由Hugo驱动,使用Hugo-cms制作
+</a></span><span class=footer-info-item><a href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener>主题采用 hugo-cms-theme
+</a><a class=github-star-link href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener title="GitHub Stars"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 0c4.42.0 8 3.58 8 8a8.013 8.013.0 01-5.45 7.59c-.4.08-.55-.17-.55-.38.0-.27.01-1.13.01-2.2.0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95.0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12.0.0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27s-1.36.09-2 .27c-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15.0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94.0.67.01 1.3.01 1.49.0.21-.15.45-.55.38A7.995 7.995.0 010 8c0-4.42 3.58-8 8-8z"/></svg>
+<span>Star</span></a></span></div><div class=footer-links><a href=/index.xml class=footer-link target=_blank rel=noopener aria-label=RSS订阅><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6.503 20.752C6.503 22.546 5.047 24 3.252 24c-1.796.0-3.252-1.454-3.252-3.248s1.456-3.248 3.252-3.248c1.795.001 3.251 1.454 3.251 3.248zM0 8.18v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817C15.777 15.29 8.721 8.242.0 8.18zm0-3.368C10.58 4.858 19.152 13.406 19.183 24H24c-.03-13.231-10.736-23.954-24-24v4.812z"/></svg>
+<span>RSS 订阅</span>
+</a><span class=footer-link-separator>|</span>
+<a href=/sitemap.xml class=footer-link target=_blank rel=noopener aria-label=网站地图><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 3l-6 1.5L8.501 3l-6 1.5v15l6-1.5 5.999 1.5 6-1.5V3zM15 16.656l-5.999-1.5V3.844L15 5.344v11.312zm1-11.312 4 .999v11.312l-4-.999V5.344zm-7 .499-4-.999v11.312l4 .999V5.843z"/></svg>
+<span>网站地图</span></a></div></div></footer><script>(function(){const t=document.querySelector(".theme-toggle");if(!t)return;const e=document.documentElement,n=localStorage.getItem("theme");n&&e.setAttribute("data-theme",n),t.addEventListener("click",()=>{const n=e.getAttribute("data-theme"),t=n==="dark"?"light":"dark";e.setAttribute("data-theme",t),localStorage.setItem("theme",t)})})()</script><script>(function(){const e=document.querySelector(".nav-toggle"),t=document.querySelector(".nav-menu");e&&e.addEventListener("click",()=>{t.classList.toggle("active"),e.classList.toggle("active")})})()</script></body></html>

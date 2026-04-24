@@ -1,0 +1,1710 @@
+<!doctype html><html lang=zh-CN data-theme=light><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="12.1 状态快照同步（Snapshot Interpolation）
+状态快照同步是现代多人游戏中最常用的同步技术，它通过定期发送完整游戏状态快照来保持客户端一致性。
+12.1.1 快照系统架构
+设计思路与原理
+状态快照同步是多人游戏最常用的同步方式，服务器定期广播游戏世界的完整状态，客户端根据快照更新显示。
+核心概念：
+
+快照：某一时刻游戏世界的完整状态
+序列号：用于识别和排序快照
+时间戳：服务器生成快照的时间
+插值延迟：客户端延迟渲染以获得平滑效果
+
+同步流程："><meta name=author content="熟童"><meta name=generator content="Hugo 0.159.0"><title>第12章 状态同步策略 | 熟童·实验室</title><link rel=canonical href=https://heheboy.github.io/posts/%E7%AC%AC12%E7%AB%A0-%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5%E7%AD%96%E7%95%A5/><link rel=stylesheet href=/css/main.min.52a33c1c75f1018fce5fd552f8174ace585d07d2689bbdd7854b698275ee0477.css integrity="sha256-UqM8HHXxAY/OX9VS+BdKzlhdB9Jom73XhUtpgnXuBHc="><link rel=icon type=image/x-icon href=/favicon.ico><meta property="og:title" content="第12章 状态同步策略"><meta property="og:description" content="12.1 状态快照同步（Snapshot Interpolation）
+状态快照同步是现代多人游戏中最常用的同步技术，它通过定期发送完整游戏状态快照来保持客户端一致性。
+12.1.1 快照系统架构
+设计思路与原理
+状态快照同步是多人游戏最常用的同步方式，服务器定期广播游戏世界的完整状态，客户端根据快照更新显示。
+核心概念：
+
+快照：某一时刻游戏世界的完整状态
+序列号：用于识别和排序快照
+时间戳：服务器生成快照的时间
+插值延迟：客户端延迟渲染以获得平滑效果
+
+同步流程："><meta property="og:url" content="https://heheboy.github.io/posts/%E7%AC%AC12%E7%AB%A0-%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5%E7%AD%96%E7%95%A5/"><meta property="og:site_name" content="熟童·实验室"><meta property="og:type" content="article"><meta name=twitter:card content="summary_large_image"><meta name=twitter:title content="第12章 状态同步策略"><meta name=twitter:description content="12.1 状态快照同步（Snapshot Interpolation）
+状态快照同步是现代多人游戏中最常用的同步技术，它通过定期发送完整游戏状态快照来保持客户端一致性。
+12.1.1 快照系统架构
+设计思路与原理
+状态快照同步是多人游戏最常用的同步方式，服务器定期广播游戏世界的完整状态，客户端根据快照更新显示。
+核心概念：
+
+快照：某一时刻游戏世界的完整状态
+序列号：用于识别和排序快照
+时间戳：服务器生成快照的时间
+插值延迟：客户端延迟渲染以获得平滑效果
+
+同步流程："><meta property="article:published_time" content="2026-04-25T00:00:00+00:00"><meta property="article:modified_time" content="2026-04-25T00:00:00+00:00"><meta property="article:tag" content="Godot"><meta property="article:tag" content="开发"><meta property="article:tag" content="C#"><meta property="article:tag" content="架构"><meta property="article:tag" content="CSharp"><meta property="article:tag" content="同步策略"></head><body><nav class=main-nav><div class=nav-container><a class=nav-brand href=/>熟童·实验室</a>
+<button class=nav-toggle aria-label="Toggle navigation">
+<span></span>
+<span></span>
+<span></span></button><div class=nav-menu><a class=nav-link href=/>首页</a>
+<a class=nav-link href=/posts/>内容文章</a>
+<a class=nav-link href=/categories/>文章分类</a>
+<a class=nav-link href=/archive/>归档册</a>
+<a class=nav-link href=/tags/>标签</a>
+<a class=nav-link href=/about/>关于本站</a>
+<a class="nav-link nav-search-link" href=/search/ aria-label=搜索><svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61.0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></a></div></div></nav><header class=site-header style=background-image:url(/img/post-bg.jpg)><div class=header-content><h1 class=site-title>第12章 状态同步策略</h1><p class=site-slogan>让技术长出温度，在精确的逻辑与冷静的结构之中，依然保留人与世界的感知。不只是实现功能，也是在构建表达；不只是解决问题，也是在回应内心。</p></div></header><main class=main-container><div class=content-wrapper><div class=main-content><article class=page-content><header class=page-article-header><h1 class=page-article-title>第12章 状态同步策略</h1><div class=page-article-meta><time datetime=2026-04-25>2026年4月25日
+</time><span class=meta-separator>·</span>
+<a href=/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91>游戏开发</a></div></header><h2 id=121-状态快照同步snapshot-interpolation>12.1 状态快照同步（Snapshot Interpolation）</h2><p>状态快照同步是现代多人游戏中最常用的同步技术，它通过定期发送完整游戏状态快照来保持客户端一致性。</p><h3 id=1211-快照系统架构>12.1.1 快照系统架构</h3><p><strong>设计思路与原理</strong></p><p>状态快照同步是多人游戏最常用的同步方式，服务器定期广播游戏世界的完整状态，客户端根据快照更新显示。</p><p>核心概念：</p><ol><li><strong>快照</strong>：某一时刻游戏世界的完整状态</li><li><strong>序列号</strong>：用于识别和排序快照</li><li><strong>时间戳</strong>：服务器生成快照的时间</li><li><strong>插值延迟</strong>：客户端延迟渲染以获得平滑效果</li></ol><p>同步流程：</p><ol><li>服务器以固定频率（如20Hz）生成快照</li><li>快照包含所有可同步对象的状态</li><li>服务器广播快照给所有客户端</li><li>客户端接收并缓存多个快照</li><li>客户端插值渲染平滑显示</li></ol><p><strong>核心实现要点</strong></p><ol><li><strong>StateSnapshot</strong>：存储单个时刻的所有状态</li><li><strong>SnapshotBuffer</strong>：客户端快照缓存和插值</li><li><strong>EntityState</strong>：单个实体的可同步状态</li><li><strong>序列号管理</strong>：处理丢包和乱序到达</li></ol><p><strong>使用说明与最佳 practices</strong></p><ul><li><strong>适用场景</strong>：大部分多人游戏，特别是FPS、MOBA</li><li><strong>注意事项</strong>：<ol><li>快照频率要平衡带宽和实时性</li><li>只同步变化的数据减少带宽</li><li>客户端要做预测减少延迟感</li></ol></li><li><strong>性能考虑</strong>：使用Delta压缩减少传输量</li><li><strong>扩展建议</strong>：可添加优先级同步、LOD同步等</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Network.Sync
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 状态快照</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 存储某一时刻的完整游戏状态</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>StateSnapshot</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 快照时间戳（服务器时间）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>double</span> Timestamp { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 快照序列号</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>uint</span> SequenceNumber { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 实体状态列表</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Dictionary&lt;<span style=color:#66d9ef>int</span>, EntityState&gt; EntityStates { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 游戏全局状态</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> GameGlobalState GlobalState { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> StateSnapshot()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            EntityStates = <span style=color:#66d9ef>new</span> Dictionary&lt;<span style=color:#66d9ef>int</span>, EntityState&gt;();
+</span></span><span style=display:flex><span>            Timestamp = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>            SequenceNumber = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 获取实体状态</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> EntityState GetEntityState(<span style=color:#66d9ef>int</span> entityId)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (EntityStates.TryGetValue(entityId, <span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> state))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> state;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 添加实体状态</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> AddEntityState(<span style=color:#66d9ef>int</span> entityId, EntityState state)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            EntityStates[entityId] = state;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 实体状态</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 单个游戏实体的状态数据</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [Serializable]</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>EntityState</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 实体唯一ID</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> EntityId { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 实体类型</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> EntityType Type { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 位置</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Vector3 Position { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 旋转（四元数）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Quaternion Rotation { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 缩放</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Vector3 Scale { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 速度</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Vector3 Velocity { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 实体特定数据（JSON序列化）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>string</span> CustomData { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 状态有效标记</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> IsValid { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 插值两个状态</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> EntityState Interpolate(EntityState <span style=color:#66d9ef>from</span>, EntityState to, <span style=color:#66d9ef>float</span> t)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>new</span> EntityState
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                EntityId = <span style=color:#66d9ef>from</span>.EntityId,
+</span></span><span style=display:flex><span>                Type = <span style=color:#66d9ef>from</span>.Type,
+</span></span><span style=display:flex><span>                Position = <span style=color:#66d9ef>from</span>.Position.Lerp(to.Position, t),
+</span></span><span style=display:flex><span>                Rotation = <span style=color:#66d9ef>from</span>.Position.Lerp(to.Rotation, t),
+</span></span><span style=display:flex><span>                Scale = <span style=color:#66d9ef>from</span>.Scale.Lerp(to.Scale, t),
+</span></span><span style=display:flex><span>                Velocity = <span style=color:#66d9ef>from</span>.Velocity.Lerp(to.Velocity, t),
+</span></span><span style=display:flex><span>                IsValid = <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 游戏全局状态</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [Serializable]</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>GameGlobalState</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 游戏时间</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>double</span> GameTime { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 游戏阶段</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> GamePhase Phase { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 分数</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Dictionary&lt;<span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>int</span>&gt; Scores { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 实体类型枚举</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>enum</span> EntityType
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Player,
+</span></span><span style=display:flex><span>        Enemy,
+</span></span><span style=display:flex><span>        Projectile,
+</span></span><span style=display:flex><span>        Item,
+</span></span><span style=display:flex><span>        Obstacle
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 游戏阶段</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>enum</span> GamePhase
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Waiting,
+</span></span><span style=display:flex><span>        Preparing,
+</span></span><span style=display:flex><span>        Playing,
+</span></span><span style=display:flex><span>        Ending
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 快照系统管理器</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 负责快照的生成、存储、同步和插值</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SnapshotSystem</span> : Node
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 服务器端配置</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> ServerTickRate { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>20</span>; <span style=color:#75715e>// 每秒20个快照</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>
+</span></span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> SnapshotBufferSize { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>128</span>; <span style=color:#75715e>// 存储128个历史快照</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 客户端配置</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> InterpolationDelay { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>0.1f</span>; <span style=color:#75715e>// 100ms插值延迟</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>
+</span></span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> MaxInterpolationWindow { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>10</span>; <span style=color:#75715e>// 最大10个快照</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 快照存储（服务器：发送历史，客户端：接收缓冲）</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> Dictionary&lt;<span style=color:#66d9ef>uint</span>, StateSnapshot&gt; _snapshotHistory = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> Queue&lt;StateSnapshot&gt; _receivedSnapshots = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>uint</span> _nextSequenceNumber = <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 插值状态</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> StateSnapshot _lastSnapshot;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> StateSnapshot _targetSnapshot;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>float</span> _interpolationAlpha = <span style=color:#ae81ff>0f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 统计</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> SnapshotsSent { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> SnapshotsReceived { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> AverageSnapshotSize { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _Ready()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (Multiplayer.IsServer())
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 服务器：启动快照生成定时器</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>var</span> timer = <span style=color:#66d9ef>new</span> Timer();
+</span></span><span style=display:flex><span>                timer.WaitTime = <span style=color:#ae81ff>1.0</span> / ServerTickRate;
+</span></span><span style=display:flex><span>                timer.Timeout += OnServerTick;
+</span></span><span style=display:flex><span>                timer.Autostart = <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>                AddChild(timer);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 服务器定时生成快照</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> OnServerTick()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> snapshot = CaptureGameState();
+</span></span><span style=display:flex><span>            StoreSnapshot(snapshot);
+</span></span><span style=display:flex><span>            BroadcastSnapshot(snapshot);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 捕获当前游戏状态</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> StateSnapshot CaptureGameState()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> snapshot = <span style=color:#66d9ef>new</span> StateSnapshot
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                Timestamp = Time.GetTicksMsec() / <span style=color:#ae81ff>1000.0</span>,
+</span></span><span style=display:flex><span>                SequenceNumber = _nextSequenceNumber++
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 收集所有可同步实体的状态</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> syncables = GetTree().GetNodesInGroup(<span style=color:#e6db74>&#34;syncable&#34;</span>);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> node <span style=color:#66d9ef>in</span> syncables)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (node <span style=color:#66d9ef>is</span> ISyncableEntity entity)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>var</span> state = entity.CaptureState();
+</span></span><span style=display:flex><span>                    snapshot.AddEntityState(entity.EntityId, state);
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 捕获全局状态</span>
+</span></span><span style=display:flex><span>            snapshot.GlobalState = CaptureGlobalState();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> snapshot;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 存储快照到历史</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> StoreSnapshot(StateSnapshot snapshot)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _snapshotHistory[snapshot.SequenceNumber] = snapshot;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 清理旧快照</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>while</span> (_snapshotHistory.Count &gt; SnapshotBufferSize)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>uint</span> oldestSequence = <span style=color:#66d9ef>uint</span>.MaxValue;
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> seq <span style=color:#66d9ef>in</span> _snapshotHistory.Keys)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>if</span> (seq &lt; oldestSequence)
+</span></span><span style=display:flex><span>                        oldestSequence = seq;
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>                _snapshotHistory.Remove(oldestSequence);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 广播快照到所有客户端</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> BroadcastSnapshot(StateSnapshot snapshot)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>byte</span>[] data = SerializeSnapshot(snapshot);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 压缩数据</span>
+</span></span><span style=display:flex><span>            data = CompressSnapshot(data);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 发送到所有客户端</span>
+</span></span><span style=display:flex><span>            Rpc(MethodName.ReceiveSnapshot, data, snapshot.SequenceNumber, snapshot.Timestamp);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            SnapshotsSent++;
+</span></span><span style=display:flex><span>            AverageSnapshotSize = (AverageSnapshotSize * (SnapshotsSent - <span style=color:#ae81ff>1</span>) + data.Length) / SnapshotsSent;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 客户端接收快照</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferMode.UnreliableOrdered)]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> ReceiveSnapshot(<span style=color:#66d9ef>byte</span>[] data, <span style=color:#66d9ef>uint</span> sequenceNumber, <span style=color:#66d9ef>double</span> serverTime)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 解压缩</span>
+</span></span><span style=display:flex><span>            data = DecompressSnapshot(data);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 反序列化</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> snapshot = DeserializeSnapshot(data);
+</span></span><span style=display:flex><span>            snapshot.SequenceNumber = sequenceNumber;
+</span></span><span style=display:flex><span>            snapshot.Timestamp = serverTime;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 添加到接收队列</span>
+</span></span><span style=display:flex><span>            _receivedSnapshots.Enqueue(snapshot);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 限制队列大小</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>while</span> (_receivedSnapshots.Count &gt; MaxInterpolationWindow * <span style=color:#ae81ff>2</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _receivedSnapshots.Dequeue();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            SnapshotsReceived++;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _Process(<span style=color:#66d9ef>double</span> delta)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (!Multiplayer.IsServer())
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 客户端：执行插值</span>
+</span></span><span style=display:flex><span>                ProcessInterpolation((<span style=color:#66d9ef>float</span>)delta);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 处理状态插值</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> ProcessInterpolation(<span style=color:#66d9ef>float</span> delta)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 确保有足够的快照进行插值</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_receivedSnapshots.Count &lt; <span style=color:#ae81ff>2</span>)
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 获取插值时间点</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>double</span> renderTime = Time.GetTicksMsec() / <span style=color:#ae81ff>1000.0</span> - InterpolationDelay;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 找到包围renderTime的两个快照</span>
+</span></span><span style=display:flex><span>            StateSnapshot fromSnapshot = <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>            StateSnapshot toSnapshot = <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> snapshotArray = _receivedSnapshots.ToArray();
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i = <span style=color:#ae81ff>0</span>; i &lt; snapshotArray.Length - <span style=color:#ae81ff>1</span>; i++)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (snapshotArray[i].Timestamp &lt;= renderTime &amp;&amp;
+</span></span><span style=display:flex><span>                    snapshotArray[i + <span style=color:#ae81ff>1</span>].Timestamp &gt; renderTime)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    fromSnapshot = snapshotArray[i];
+</span></span><span style=display:flex><span>                    toSnapshot = snapshotArray[i + <span style=color:#ae81ff>1</span>];
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>break</span>;
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (fromSnapshot == <span style=color:#66d9ef>null</span> || toSnapshot == <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 计算插值系数</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>float</span> t = (<span style=color:#66d9ef>float</span>)((renderTime - fromSnapshot.Timestamp) /
+</span></span><span style=display:flex><span>                (toSnapshot.Timestamp - fromSnapshot.Timestamp));
+</span></span><span style=display:flex><span>            t = Mathf.Clamp(t, <span style=color:#ae81ff>0f</span>, <span style=color:#ae81ff>1f</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 插值所有实体状态</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> entityId <span style=color:#66d9ef>in</span> toSnapshot.EntityStates.Keys)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>var</span> fromState = fromSnapshot.GetEntityState(entityId);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>var</span> toState = toSnapshot.GetEntityState(entityId);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (fromState != <span style=color:#66d9ef>null</span> &amp;&amp; toState != <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>var</span> interpolatedState = EntityState.Interpolate(fromState, toState, t);
+</span></span><span style=display:flex><span>                    ApplyEntityState(entityId, interpolatedState);
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 应用实体状态到游戏对象</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> ApplyEntityState(<span style=color:#66d9ef>int</span> entityId, EntityState state)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 查找或创建实体</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> entity = FindEntity(entityId);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (entity != <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                entity.ApplyState(state);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 查找实体</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> ISyncableEntity FindEntity(<span style=color:#66d9ef>int</span> entityId)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> entities = GetTree().GetNodesInGroup(<span style=color:#e6db74>&#34;syncable&#34;</span>);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> node <span style=color:#66d9ef>in</span> entities)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (node <span style=color:#66d9ef>is</span> ISyncableEntity entity &amp;&amp; entity.EntityId == entityId)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> entity;
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 序列化快照</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>byte</span>[] SerializeSnapshot(StateSnapshot snapshot)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 使用JSON序列化（实际项目中可使用Protobuf或MessagePack）</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> json = <span style=color:#66d9ef>new</span> JsonSerializer();
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> System.Text.Encoding.UTF8.GetBytes(json.Serialize(snapshot));
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 反序列化快照</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> StateSnapshot DeserializeSnapshot(<span style=color:#66d9ef>byte</span>[] data)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> json = <span style=color:#66d9ef>new</span> JsonSerializer();
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>string</span> jsonStr = System.Text.Encoding.UTF8.GetString(data);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> (StateSnapshot)json.Deserialize(jsonStr);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 压缩快照数据</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>byte</span>[] CompressSnapshot(<span style=color:#66d9ef>byte</span>[] data)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 简化示例，实际使用压缩算法</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> data;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 解压缩快照数据</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>byte</span>[] DecompressSnapshot(<span style=color:#66d9ef>byte</span>[] data)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> data;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 捕获全局状态</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> GameGlobalState CaptureGlobalState()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>new</span> GameGlobalState
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GameTime = Time.GetTicksMsec() / <span style=color:#ae81ff>1000.0</span>,
+</span></span><span style=display:flex><span>                Phase = GamePhase.Playing,
+</span></span><span style=display:flex><span>                Scores = <span style=color:#66d9ef>new</span> Dictionary&lt;<span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>int</span>&gt;()
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 可同步实体接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ISyncableEntity</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>int</span> EntityId { <span style=color:#66d9ef>get</span>; }
+</span></span><span style=display:flex><span>        EntityState CaptureState();
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> ApplyState(EntityState state);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=1212-快照插值原理>12.1.2 快照插值原理</h3><p><strong>插值流程图：</strong></p><pre tabindex=0><code>客户端时间轴：
+  快照A (t=0)              当前渲染时间              快照B (t=100ms)
+     │                           │                        │
+     └──────────────┬────────────┘                        │
+                    │                                      │
+              插值位置 (t=50ms)
+                    │
+              插值系数 α = 0.5
+                    │
+         状态 = A + (B - A) × α
+</code></pre><p><strong>关键实现细节：</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>/// 状态插值器</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>/// 负责平滑的状态过渡</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>StateInterpolator</span> : Node
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// 插值配置</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>    [Export]</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> InterpolationMode Mode { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = InterpolationMode.Linear;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>
+</span></span></span><span style=display:flex><span><span style=color:#a6e22e>    [Export]</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> SmoothingFactor { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>0.1f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// 缓存的实体状态</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> Dictionary&lt;<span style=color:#66d9ef>int</span>, InterpolationState&gt; _interpolationStates = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 执行状态插值</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> InterpolateState(<span style=color:#66d9ef>int</span> entityId, EntityState newState, <span style=color:#66d9ef>float</span> deltaTime)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (!_interpolationStates.TryGetValue(entityId, <span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> interpState))
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 首次状态</span>
+</span></span><span style=display:flex><span>            _interpolationStates[entityId] = <span style=color:#66d9ef>new</span> InterpolationState
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                CurrentState = newState,
+</span></span><span style=display:flex><span>                TargetState = newState,
+</span></span><span style=display:flex><span>                VelocityEstimate = Vector3.Zero
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 更新目标状态</span>
+</span></span><span style=display:flex><span>        interpState.PreviousTarget = interpState.TargetState;
+</span></span><span style=display:flex><span>        interpState.TargetState = newState;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 估计速度</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (interpState.PreviousTarget != <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            interpState.VelocityEstimate =
+</span></span><span style=display:flex><span>                (newState.Position - interpState.PreviousTarget.Position) / deltaTime;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 根据模式插值</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>switch</span> (Mode)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>case</span> InterpolationMode.Linear:
+</span></span><span style=display:flex><span>                interpState.CurrentState = LinearInterpolate(
+</span></span><span style=display:flex><span>                    interpState.CurrentState, newState, SmoothingFactor);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>break</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>case</span> InterpolationMode.Cubic:
+</span></span><span style=display:flex><span>                interpState.CurrentState = CubicInterpolate(
+</span></span><span style=display:flex><span>                    interpState.CurrentState, newState,
+</span></span><span style=display:flex><span>                    interpState.VelocityEstimate, deltaTime);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>break</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>case</span> InterpolationMode.Exponential:
+</span></span><span style=display:flex><span>                interpState.CurrentState = ExponentialInterpolate(
+</span></span><span style=display:flex><span>                    interpState.CurrentState, newState, SmoothingFactor);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>break</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        _interpolationStates[entityId] = interpState;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 线性插值</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> EntityState LinearInterpolate(EntityState current, EntityState target, <span style=color:#66d9ef>float</span> t)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> EntityState.Interpolate(current, target, t);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 三次样条插值（更平滑）</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> EntityState CubicInterpolate(EntityState current, EntityState target,
+</span></span><span style=display:flex><span>        Vector3 velocityEstimate, <span style=color:#66d9ef>float</span> deltaTime)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 使用Hermite样条插值</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>float</span> t = SmoothingFactor;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>float</span> t2 = t * t;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>float</span> t3 = t2 * t;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Hermite基函数</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>float</span> h0 = <span style=color:#ae81ff>2</span> * t3 - <span style=color:#ae81ff>3</span> * t2 + <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>float</span> h1 = -<span style=color:#ae81ff>2</span> * t3 + <span style=color:#ae81ff>3</span> * t2;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>float</span> h2 = t3 - <span style=color:#ae81ff>2</span> * t2 + t;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>float</span> h3 = t3 - t2;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 插值位置</span>
+</span></span><span style=display:flex><span>        Vector3 position = current.Position * h0 +
+</span></span><span style=display:flex><span>                          target.Position * h1 +
+</span></span><span style=display:flex><span>                          velocityEstimate * h2 * deltaTime +
+</span></span><span style=display:flex><span>                          velocityEstimate * h3 * deltaTime;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>var</span> result = <span style=color:#66d9ef>new</span> EntityState
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            EntityId = current.EntityId,
+</span></span><span style=display:flex><span>            Position = position,
+</span></span><span style=display:flex><span>            Rotation = current.Rotation.Slerp(target.Rotation, t),
+</span></span><span style=display:flex><span>            Velocity = target.Velocity
+</span></span><span style=display:flex><span>        };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> result;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 指数平滑插值</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> EntityState ExponentialInterpolate(EntityState current, EntityState target, <span style=color:#66d9ef>float</span> alpha)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 指数平滑：新值 = 旧值 × (1-α) + 目标 × α</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>float</span> oneMinusAlpha = <span style=color:#ae81ff>1f</span> - alpha;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>new</span> EntityState
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            EntityId = current.EntityId,
+</span></span><span style=display:flex><span>            Position = current.Position * oneMinusAlpha + target.Position * alpha,
+</span></span><span style=display:flex><span>            Rotation = current.Rotation.Slerp(target.Rotation, alpha),
+</span></span><span style=display:flex><span>            Velocity = current.Velocity * oneMinusAlpha + target.Velocity * alpha
+</span></span><span style=display:flex><span>        };
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 插值模式</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>enum</span> InterpolationMode
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Linear,      <span style=color:#75715e>// 线性插值（最快）</span>
+</span></span><span style=display:flex><span>        Cubic,       <span style=color:#75715e>// 三次样条（最平滑）</span>
+</span></span><span style=display:flex><span>        Exponential  <span style=color:#75715e>// 指数平滑（自适应）</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 插值状态数据结构</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>InterpolationState</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> EntityState CurrentState;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> EntityState TargetState;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> EntityState PreviousTarget;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Vector3 VelocityEstimate;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=122-增量更新与-delta-compression>12.2 增量更新与 Delta Compression</h2><h3 id=1221-delta压缩原理>12.2.1 Delta压缩原理</h3><p>Delta压缩通过只发送状态变化部分来大幅减少带宽消耗。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Network.Sync
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// Delta压缩器</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 实现增量更新和数据压缩</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>DeltaCompressor</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 上一个发送的状态（按对等体）</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> Dictionary&lt;<span style=color:#66d9ef>int</span>, StateSnapshot&gt; _lastSentStates = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 压缩配置</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> PositionThreshold { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>0.01f</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> RotationThreshold { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>0.01f</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> VelocityThreshold { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>0.1f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 压缩快照</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 只包含与上次相比有变化的实体</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> DeltaSnapshot Compress(StateSnapshot current, <span style=color:#66d9ef>int</span> peerId)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> delta = <span style=color:#66d9ef>new</span> DeltaSnapshot
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                BaseSequenceNumber = <span style=color:#ae81ff>0</span>,
+</span></span><span style=display:flex><span>                Timestamp = current.Timestamp,
+</span></span><span style=display:flex><span>                ChangedEntities = <span style=color:#66d9ef>new</span> List&lt;<span style=color:#66d9ef>int</span>&gt;(),
+</span></span><span style=display:flex><span>                ChangedStates = <span style=color:#66d9ef>new</span> Dictionary&lt;<span style=color:#66d9ef>int</span>, EntityState&gt;()
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 获取上次发送的状态</span>
+</span></span><span style=display:flex><span>            StateSnapshot lastState = <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>            _lastSentStates.TryGetValue(peerId, <span style=color:#66d9ef>out</span> lastState);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> kvp <span style=color:#66d9ef>in</span> current.EntityStates)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>int</span> entityId = kvp.Key;
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>var</span> currentEntityState = kvp.Value;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>bool</span> needsUpdate = <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (lastState == <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#75715e>// 首次发送，全部包含</span>
+</span></span><span style=display:flex><span>                    needsUpdate = <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#75715e>// 比较与上次的变化</span>
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>var</span> lastEntityState = lastState.GetEntityState(entityId);
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>if</span> (lastEntityState == <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>                    {
+</span></span><span style=display:flex><span>                        <span style=color:#75715e>// 新实体</span>
+</span></span><span style=display:flex><span>                        needsUpdate = <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>                    }
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>                    {
+</span></span><span style=display:flex><span>                        <span style=color:#75715e>// 检查变化是否超过阈值</span>
+</span></span><span style=display:flex><span>                        needsUpdate = HasSignificantChange(lastEntityState, currentEntityState);
+</span></span><span style=display:flex><span>                    }
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (needsUpdate)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    delta.ChangedEntities.Add(entityId);
+</span></span><span style=display:flex><span>                    delta.ChangedStates[entityId] = currentEntityState;
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 更新记录</span>
+</span></span><span style=display:flex><span>            _lastSentStates[peerId] = current;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 记录删除的实体</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (lastState != <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> entityId <span style=color:#66d9ef>in</span> lastState.EntityStates.Keys)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>if</span> (!current.EntityStates.ContainsKey(entityId))
+</span></span><span style=display:flex><span>                    {
+</span></span><span style=display:flex><span>                        delta.RemovedEntities.Add(entityId);
+</span></span><span style=display:flex><span>                    }
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> delta;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 解压缩快照</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> StateSnapshot Decompress(DeltaSnapshot delta, StateSnapshot baseSnapshot)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> result = <span style=color:#66d9ef>new</span> StateSnapshot
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                Timestamp = delta.Timestamp,
+</span></span><span style=display:flex><span>                SequenceNumber = delta.SequenceNumber
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (baseSnapshot != <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 复制基础状态</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> kvp <span style=color:#66d9ef>in</span> baseSnapshot.EntityStates)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>if</span> (!delta.RemovedEntities.Contains(kvp.Key))
+</span></span><span style=display:flex><span>                    {
+</span></span><span style=display:flex><span>                        result.AddEntityState(kvp.Key, kvp.Value);
+</span></span><span style=display:flex><span>                    }
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 应用增量更新</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> entityId <span style=color:#66d9ef>in</span> delta.ChangedEntities)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (delta.ChangedStates.TryGetValue(entityId, <span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> state))
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    result.AddEntityState(entityId, state);
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> result;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 检查是否有显著变化</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>bool</span> HasSignificantChange(EntityState last, EntityState current)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 位置变化</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (last.Position.DistanceSquaredTo(current.Position) &gt; PositionThreshold * PositionThreshold)
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 旋转变化（使用四元数点积）</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>float</span> rotationDot = Math.Abs(last.Rotation.Dot(current.Rotation));
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (rotationDot &lt; <span style=color:#ae81ff>1f</span> - RotationThreshold)
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 速度变化</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (last.Velocity.DistanceSquaredTo(current.Velocity) &gt; VelocityThreshold * VelocityThreshold)
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 清理过期的状态记录</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> Cleanup(TimeSpan maxAge)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 可以在这里清理长时间未更新的对等体记录</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 增量快照结构</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>DeltaSnapshot</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 基础快照序列号（用于重建完整状态）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>uint</span> BaseSequenceNumber { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 当前快照序列号</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>uint</span> SequenceNumber { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 时间戳</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>double</span> Timestamp { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 变化的实体ID列表</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> List&lt;<span style=color:#66d9ef>int</span>&gt; ChangedEntities { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 变化的实体状态</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Dictionary&lt;<span style=color:#66d9ef>int</span>, EntityState&gt; ChangedStates { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 已删除的实体ID</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> List&lt;<span style=color:#66d9ef>int</span>&gt; RemovedEntities { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=1222-位级压缩技术>12.2.2 位级压缩技术</h3><p><strong>设计思路与原理</strong></p><p>位级压缩进一步减少数据传输量，通过精确控制每个比特的使用，相比字节级压缩可节省大量带宽。</p><p>压缩技术：</p><ol><li><strong>布尔压缩</strong>：1比特存储布尔值（而非1字节）</li><li><strong>范围限制整数</strong>：根据值范围选择最小比特数</li><li><strong>浮点数量化</strong>：降低浮点数精度（如用16位代替32位）</li><li><strong>字典编码</strong>：用索引代替重复字符串</li></ol><p>常用优化：</p><ul><li><strong>Position</strong>：浮点坐标量化为16位整数（毫米精度）</li><li><strong>Rotation</strong>：四元数量化为8位或16位</li><li><strong>Health</strong>：根据最大值选择比特数（如100血量只需7位）</li><li><strong>Flag组合</strong>：多个布尔值打包到一个字节</li></ul><p><strong>核心实现要点</strong></p><ol><li><strong>BitWriter</strong>：按位写入数据流</li><li><strong>BitReader</strong>：按位读取数据流</li><li><strong>量化函数</strong>：浮点数与整数之间的转换</li><li><strong>数据对齐</strong>：处理非字节对齐的边界</li></ol><p><strong>使用说明与最佳 practices</strong></p><ul><li><strong>适用场景</strong>：带宽受限的移动网络、大规模多人游戏</li><li><strong>注意事项</strong>：<ol><li>精度损失要在可接受范围内</li><li>复杂压缩要考虑CPU开销</li><li>保留未使用比特位便于扩展</li></ol></li><li><strong>性能考虑</strong>：使用位运算提高速度</li><li><strong>扩展建议</strong>：可添加Huffman编码、字典压缩等</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.IO;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Network.Sync
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 位级数据写入器</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 实现紧凑的二进制序列化</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>BitWriter</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> MemoryStream _stream;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>byte</span> _currentByte;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>int</span> _bitPosition;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> BitWriter()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _stream = <span style=color:#66d9ef>new</span> MemoryStream();
+</span></span><span style=display:flex><span>            _currentByte = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>            _bitPosition = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 写入布尔值（1位）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> WriteBool(<span style=color:#66d9ef>bool</span> <span style=color:#66d9ef>value</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            WriteBits(<span style=color:#66d9ef>value</span> ? <span style=color:#ae81ff>1</span>u : <span style=color:#ae81ff>0</span>u, <span style=color:#ae81ff>1</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 写入无符号整数（指定位数）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> WriteBits(<span style=color:#66d9ef>uint</span> <span style=color:#66d9ef>value</span>, <span style=color:#66d9ef>int</span> bitCount)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i = bitCount - <span style=color:#ae81ff>1</span>; i &gt;= <span style=color:#ae81ff>0</span>; i--)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>bool</span> bit = (<span style=color:#66d9ef>value</span> &amp; (<span style=color:#ae81ff>1</span>u &lt;&lt; i)) != <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>                WriteBit(bit);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 写入压缩的浮点数</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> WriteCompressedFloat(<span style=color:#66d9ef>float</span> <span style=color:#66d9ef>value</span>, <span style=color:#66d9ef>float</span> min, <span style=color:#66d9ef>float</span> max, <span style=color:#66d9ef>int</span> bitCount)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 将float映射到整数范围</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>float</span> normalized = (<span style=color:#66d9ef>value</span> - min) / (max - min);
+</span></span><span style=display:flex><span>            normalized = Mathf.Clamp(normalized, <span style=color:#ae81ff>0f</span>, <span style=color:#ae81ff>1f</span>);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>uint</span> intValue = (<span style=color:#66d9ef>uint</span>)(normalized * ((<span style=color:#ae81ff>1</span>u &lt;&lt; bitCount) - <span style=color:#ae81ff>1</span>));
+</span></span><span style=display:flex><span>            WriteBits(intValue, bitCount);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 写入压缩的Vector3</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> WriteCompressedVector3(Vector3 vector, <span style=color:#66d9ef>float</span> min, <span style=color:#66d9ef>float</span> max, <span style=color:#66d9ef>int</span> bitsPerComponent)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            WriteCompressedFloat(vector.X, min, max, bitsPerComponent);
+</span></span><span style=display:flex><span>            WriteCompressedFloat(vector.Y, min, max, bitsPerComponent);
+</span></span><span style=display:flex><span>            WriteCompressedFloat(vector.Z, min, max, bitsPerComponent);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 写入单个位</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> WriteBit(<span style=color:#66d9ef>bool</span> bit)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (bit)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _currentByte |= (<span style=color:#66d9ef>byte</span>)(<span style=color:#ae81ff>1</span> &lt;&lt; (<span style=color:#ae81ff>7</span> - _bitPosition));
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _bitPosition++;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_bitPosition &gt;= <span style=color:#ae81ff>8</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _stream.WriteByte(_currentByte);
+</span></span><span style=display:flex><span>                _currentByte = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>                _bitPosition = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 完成写入并返回数据</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>byte</span>[] ToArray()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 写入剩余的位</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_bitPosition &gt; <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _stream.WriteByte(_currentByte);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> _stream.ToArray();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 获取已写入的位数</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> BitsWritten =&gt; (<span style=color:#66d9ef>int</span>)(_stream.Length * <span style=color:#ae81ff>8</span> + _bitPosition);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 位级数据读取器</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>BitReader</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>byte</span>[] _data;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>int</span> _bytePosition;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>int</span> _bitPosition;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> BitReader(<span style=color:#66d9ef>byte</span>[] data)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _data = data;
+</span></span><span style=display:flex><span>            _bytePosition = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>            _bitPosition = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 读取布尔值</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> ReadBool()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> ReadBits(<span style=color:#ae81ff>1</span>) != <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 读取无符号整数</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>uint</span> ReadBits(<span style=color:#66d9ef>int</span> bitCount)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>uint</span> result = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i = <span style=color:#ae81ff>0</span>; i &lt; bitCount; i++)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                result = (result &lt;&lt; <span style=color:#ae81ff>1</span>) | (ReadBit() ? <span style=color:#ae81ff>1</span>u : <span style=color:#ae81ff>0</span>u);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> result;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 读取压缩的浮点数</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> ReadCompressedFloat(<span style=color:#66d9ef>float</span> min, <span style=color:#66d9ef>float</span> max, <span style=color:#66d9ef>int</span> bitCount)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>uint</span> intValue = ReadBits(bitCount);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>float</span> normalized = intValue / (<span style=color:#66d9ef>float</span>)((<span style=color:#ae81ff>1</span>u &lt;&lt; bitCount) - <span style=color:#ae81ff>1</span>);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> min + normalized * (max - min);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 读取压缩的Vector3</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Vector3 ReadCompressedVector3(<span style=color:#66d9ef>float</span> min, <span style=color:#66d9ef>float</span> max, <span style=color:#66d9ef>int</span> bitsPerComponent)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>new</span> Vector3(
+</span></span><span style=display:flex><span>                ReadCompressedFloat(min, max, bitsPerComponent),
+</span></span><span style=display:flex><span>                ReadCompressedFloat(min, max, bitsPerComponent),
+</span></span><span style=display:flex><span>                ReadCompressedFloat(min, max, bitsPerComponent)
+</span></span><span style=display:flex><span>            );
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 读取单个位</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>bool</span> ReadBit()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_bytePosition &gt;= _data.Length)
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>bool</span> bit = (_data[_bytePosition] &amp; (<span style=color:#ae81ff>1</span> &lt;&lt; (<span style=color:#ae81ff>7</span> - _bitPosition))) != <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _bitPosition++;
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_bitPosition &gt;= <span style=color:#ae81ff>8</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _bitPosition = <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>                _bytePosition++;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> bit;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=123-带宽优化技巧>12.3 带宽优化技巧</h2><h3 id=1231-优先级和lod同步>12.3.1 优先级和LOD同步</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Network.Sync
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 带宽优化管理器</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 实现基于距离和优先级的同步策略</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>BandwidthOptimizer</span> : Node
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 同步级别配置</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> NearDistance { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>10f</span>;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>
+</span></span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> MediumDistance { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>30f</span>;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>
+</span></span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> FarDistance { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>100f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 带宽预算（字节/秒）</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> BandwidthBudget { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>50000f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 当前带宽使用</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>float</span> _currentBandwidthUsage = <span style=color:#ae81ff>0f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 实体优先级</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> Dictionary&lt;<span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>float</span>&gt; _entityPriorities = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 计算实体的同步优先级</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> CalculatePriority(ISyncableEntity entity, Vector3 observerPosition)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (entity <span style=color:#66d9ef>is</span> Node3D node3d)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>float</span> distance = node3d.GlobalPosition.DistanceTo(observerPosition);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 距离越近优先级越高</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>float</span> distancePriority = <span style=color:#ae81ff>1f</span> - Mathf.Clamp(distance / FarDistance, <span style=color:#ae81ff>0f</span>, <span style=color:#ae81ff>1f</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 实体类型优先级</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>float</span> typePriority = GetTypePriority(entity);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 移动速度优先级（快速移动需要更频繁同步）</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>float</span> movementPriority = entity.GetVelocity().Length() / <span style=color:#ae81ff>10f</span>;
+</span></span><span style=display:flex><span>                movementPriority = Mathf.Min(movementPriority, <span style=color:#ae81ff>1f</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 事件优先级（如果有重要事件发生）</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>float</span> eventPriority = entity.HasImportantEvent() ? <span style=color:#ae81ff>1f</span> : <span style=color:#ae81ff>0f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 综合优先级计算</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>float</span> priority = distancePriority * <span style=color:#ae81ff>0.4f</span> +
+</span></span><span style=display:flex><span>                               typePriority * <span style=color:#ae81ff>0.3f</span> +
+</span></span><span style=display:flex><span>                               movementPriority * <span style=color:#ae81ff>0.2f</span> +
+</span></span><span style=display:flex><span>                               eventPriority * <span style=color:#ae81ff>0.1f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> priority;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0.5f</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 根据优先级获取同步级别</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> SyncLevel GetSyncLevel(<span style=color:#66d9ef>float</span> priority)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (priority &gt;= <span style=color:#ae81ff>0.8f</span>)
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> SyncLevel.Full;      <span style=color:#75715e>// 完整同步：60Hz</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (priority &gt;= <span style=color:#ae81ff>0.6f</span>)
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> SyncLevel.High;      <span style=color:#75715e>// 高频率：30Hz</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (priority &gt;= <span style=color:#ae81ff>0.4f</span>)
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> SyncLevel.Medium;    <span style=color:#75715e>// 中频率：20Hz</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (priority &gt;= <span style=color:#ae81ff>0.2f</span>)
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> SyncLevel.Low;       <span style=color:#75715e>// 低频率：10Hz</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> SyncLevel.Minimal;   <span style=color:#75715e>// 最小化：5Hz或按需</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 获取类型的基础优先级</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>float</span> GetTypePriority(ISyncableEntity entity)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>switch</span> (entity.Type)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> EntityType.Player:
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>1.0f</span>;    <span style=color:#75715e>// 玩家最高优先级</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> EntityType.Projectile:
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0.9f</span>;    <span style=color:#75715e>// 投射物需要精确</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> EntityType.Enemy:
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0.7f</span>;
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> EntityType.Item:
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0.5f</span>;
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> EntityType.Obstacle:
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0.2f</span>;    <span style=color:#75715e>// 静态障碍物最低</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>default</span>:
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0.5f</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 获取同步级别对应的频率</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> GetSyncRate(SyncLevel level)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>switch</span> (level)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> SyncLevel.Full:    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>60f</span>;
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> SyncLevel.High:    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>30f</span>;
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> SyncLevel.Medium:  <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>20f</span>;
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> SyncLevel.Low:     <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>10f</span>;
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> SyncLevel.Minimal: <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>5f</span>;
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>default</span>: <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>20f</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 分配带宽给实体</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Dictionary&lt;<span style=color:#66d9ef>int</span>, SyncAllocation&gt; AllocateBandwidth(
+</span></span><span style=display:flex><span>            List&lt;ISyncableEntity&gt; entities, Vector3 observerPosition)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> allocations = <span style=color:#66d9ef>new</span> Dictionary&lt;<span style=color:#66d9ef>int</span>, SyncAllocation&gt;();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 计算所有实体的优先级</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> priorities = <span style=color:#66d9ef>new</span> List&lt;(ISyncableEntity entity, <span style=color:#66d9ef>float</span> priority)&gt;();
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> entity <span style=color:#66d9ef>in</span> entities)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>float</span> priority = CalculatePriority(entity, observerPosition);
+</span></span><span style=display:flex><span>                priorities.Add((entity, priority));
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 按优先级排序</span>
+</span></span><span style=display:flex><span>            priorities.Sort((a, b) =&gt; b.priority.CompareTo(a.priority));
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 分配带宽</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>float</span> remainingBandwidth = BandwidthBudget;
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> (entity, priority) <span style=color:#66d9ef>in</span> priorities)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>var</span> level = GetSyncLevel(priority);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>float</span> estimatedSize = EstimateEntitySize(entity, level);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>float</span> rate = GetSyncRate(level);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>float</span> bandwidthNeeded = estimatedSize * rate;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (bandwidthNeeded &lt;= remainingBandwidth)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    allocations[entity.EntityId] = <span style=color:#66d9ef>new</span> SyncAllocation
+</span></span><span style=display:flex><span>                    {
+</span></span><span style=display:flex><span>                        Level = level,
+</span></span><span style=display:flex><span>                        Rate = rate,
+</span></span><span style=display:flex><span>                        EstimatedBandwidth = bandwidthNeeded
+</span></span><span style=display:flex><span>                    };
+</span></span><span style=display:flex><span>                    remainingBandwidth -= bandwidthNeeded;
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#75715e>// 降低级别或跳过</span>
+</span></span><span style=display:flex><span>                    allocations[entity.EntityId] = <span style=color:#66d9ef>new</span> SyncAllocation
+</span></span><span style=display:flex><span>                    {
+</span></span><span style=display:flex><span>                        Level = SyncLevel.Minimal,
+</span></span><span style=display:flex><span>                        Rate = <span style=color:#ae81ff>5f</span>,
+</span></span><span style=display:flex><span>                        EstimatedBandwidth = estimatedSize * <span style=color:#ae81ff>5f</span>
+</span></span><span style=display:flex><span>                    };
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> allocations;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 估算实体同步大小</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>float</span> EstimateEntitySize(ISyncableEntity entity, SyncLevel level)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 基础大小</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>float</span> baseSize = <span style=color:#ae81ff>20f</span>; <span style=color:#75715e>// 包头和ID</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>switch</span> (level)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> SyncLevel.Full:
+</span></span><span style=display:flex><span>                    <span style=color:#75715e>// 完整状态：位置、旋转、速度、动画、自定义数据</span>
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> baseSize + <span style=color:#ae81ff>50f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> SyncLevel.High:
+</span></span><span style=display:flex><span>                    <span style=color:#75715e>// 位置、旋转、速度</span>
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> baseSize + <span style=color:#ae81ff>30f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> SyncLevel.Medium:
+</span></span><span style=display:flex><span>                    <span style=color:#75715e>// 位置和旋转</span>
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> baseSize + <span style=color:#ae81ff>20f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> SyncLevel.Low:
+</span></span><span style=display:flex><span>                    <span style=color:#75715e>// 仅位置</span>
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> baseSize + <span style=color:#ae81ff>12f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> SyncLevel.Minimal:
+</span></span><span style=display:flex><span>                    <span style=color:#75715e>// 仅位置，低频，可能只有delta</span>
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> baseSize + <span style=color:#ae81ff>6f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>default</span>:
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> baseSize + <span style=color:#ae81ff>20f</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 同步级别</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>enum</span> SyncLevel
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Full,       <span style=color:#75715e>// 完整同步</span>
+</span></span><span style=display:flex><span>        High,       <span style=color:#75715e>// 高频同步</span>
+</span></span><span style=display:flex><span>        Medium,     <span style=color:#75715e>// 中频同步</span>
+</span></span><span style=display:flex><span>        Low,        <span style=color:#75715e>// 低频同步</span>
+</span></span><span style=display:flex><span>        Minimal     <span style=color:#75715e>// 最小同步</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 同步分配</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>SyncAllocation</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> SyncLevel Level;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> Rate;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> EstimatedBandwidth;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 扩展同步实体接口</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ISyncableEntity</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>int</span> EntityId { <span style=color:#66d9ef>get</span>; }
+</span></span><span style=display:flex><span>        EntityType Type { <span style=color:#66d9ef>get</span>; }
+</span></span><span style=display:flex><span>        EntityState CaptureState();
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>void</span> ApplyState(EntityState state);
+</span></span><span style=display:flex><span>        Vector3 GetVelocity();
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>bool</span> HasImportantEvent();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=1232-预测性生成和销毁>12.3.2 预测性生成和销毁</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System.Collections.Generic;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Network.Sync
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 预测性实体管理器</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 在客户端预测实体的生成和销毁</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>PredictiveEntityManager</span> : Node
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 预测配置</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> PredictionTime { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>0.5f</span>; <span style=color:#75715e>// 预测500ms后的状态</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 客户端预测生成的实体</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> Dictionary&lt;<span style=color:#66d9ef>int</span>, PredictedEntity&gt; _predictedEntities = <span style=color:#66d9ef>new</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 实体工厂</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> EntityFactory _factory;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 预测实体生成</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 在收到服务器确认前就显示实体</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> PredictEntitySpawn(<span style=color:#66d9ef>int</span> entityId, EntityType type, Vector3 predictedPosition)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 创建预测实体</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> entity = _factory.CreateEntity(type);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (entity <span style=color:#66d9ef>is</span> Node3D node3d)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                node3d.GlobalPosition = predictedPosition;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> predicted = <span style=color:#66d9ef>new</span> PredictedEntity
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                EntityId = entityId,
+</span></span><span style=display:flex><span>                Instance = entity,
+</span></span><span style=display:flex><span>                PredictedPosition = predictedPosition,
+</span></span><span style=display:flex><span>                SpawnTime = Time.GetTicksMsec() / <span style=color:#ae81ff>1000.0</span>,
+</span></span><span style=display:flex><span>                IsConfirmed = <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _predictedEntities[entityId] = predicted;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 添加视觉效果区分预测和确认状态</span>
+</span></span><span style=display:flex><span>            SetPredictionVisual(predicted, <span style=color:#66d9ef>true</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 确认预测实体</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> ConfirmEntitySpawn(<span style=color:#66d9ef>int</span> entityId, Vector3 actualPosition)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (!_predictedEntities.TryGetValue(entityId, <span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> predicted))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 服务器生成了我们没有预测的实体</span>
+</span></span><span style=display:flex><span>                GD.Print(<span style=color:#e6db74>$&#34;收到未预测的实体: {entityId}&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            predicted.IsConfirmed = <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 如果预测位置与实际位置偏差较大，进行修正</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>float</span> error = predicted.PredictedPosition.DistanceTo(actualPosition);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (error &gt; <span style=color:#ae81ff>1.0f</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.Print(<span style=color:#e6db74>$&#34;实体 {entityId} 预测误差: {error:F2}m&#34;</span>);
+</span></span><span style=display:flex><span>                SmoothCorrectPosition(predicted, actualPosition);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 移除预测视觉效果</span>
+</span></span><span style=display:flex><span>            SetPredictionVisual(predicted, <span style=color:#66d9ef>false</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _predictedEntities[entityId] = predicted;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 预测实体销毁</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> PredictEntityDestroy(<span style=color:#66d9ef>int</span> entityId)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_predictedEntities.TryGetValue(entityId, <span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> predicted))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 标记为预测销毁</span>
+</span></span><span style=display:flex><span>                predicted.IsPredictedDestroyed = <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>                predicted.PredictedDestroyTime = Time.GetTicksMsec() / <span style=color:#ae81ff>1000.0</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 可以添加淡出效果</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (predicted.Instance <span style=color:#66d9ef>is</span> Node node)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    FadeOutEntity(node);
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                _predictedEntities[entityId] = predicted;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 确认实体销毁</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> ConfirmEntityDestroy(<span style=color:#66d9ef>int</span> entityId)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_predictedEntities.TryGetValue(entityId, <span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> predicted))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 真正销毁实体</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (predicted.Instance <span style=color:#66d9ef>is</span> Node node)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    node.QueueFree();
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                _predictedEntities.Remove(entityId);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 取消预测（如果预测错误）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> RevertPrediction(<span style=color:#66d9ef>int</span> entityId)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (_predictedEntities.TryGetValue(entityId, <span style=color:#66d9ef>out</span> <span style=color:#66d9ef>var</span> predicted))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (!predicted.IsConfirmed)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#75715e>// 删除预测创建的实体</span>
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>if</span> (predicted.Instance <span style=color:#66d9ef>is</span> Node node)
+</span></span><span style=display:flex><span>                    {
+</span></span><span style=display:flex><span>                        node.QueueFree();
+</span></span><span style=display:flex><span>                    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                    _predictedEntities.Remove(entityId);
+</span></span><span style=display:flex><span>                    GD.Print(<span style=color:#e6db74>$&#34;预测失败，已回滚实体: {entityId}&#34;</span>);
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 平滑修正位置</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> SmoothCorrectPosition(PredictedEntity predicted, Vector3 targetPosition)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (predicted.Instance <span style=color:#66d9ef>is</span> Node3D node3d)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 使用Tween平滑过渡</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>var</span> tween = CreateTween();
+</span></span><span style=display:flex><span>                tween.SetEase(Tween.EaseType.Out);
+</span></span><span style=display:flex><span>                tween.SetTrans(Tween.TransitionType.Quad);
+</span></span><span style=display:flex><span>                tween.TweenProperty(node3d, <span style=color:#e6db74>&#34;global_position&#34;</span>, targetPosition, <span style=color:#ae81ff>0.2f</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 设置预测视觉效果</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> SetPredictionVisual(PredictedEntity predicted, <span style=color:#66d9ef>bool</span> isPrediction)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (predicted.Instance <span style=color:#66d9ef>is</span> Node3D node3d)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 可以添加半透明、轮廓等效果</span>
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// 示例：设置透明度</span>
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// ...</span>
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 实体淡出效果</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> FadeOutEntity(Node node)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 实现淡出逻辑</span>
+</span></span><span style=display:flex><span>            GD.Print(<span style=color:#e6db74>$&#34;实体淡出: {node.Name}&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 清理过期预测</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> CleanupOldPredictions(<span style=color:#66d9ef>float</span> maxAge)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>double</span> currentTime = Time.GetTicksMsec() / <span style=color:#ae81ff>1000.0</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>foreach</span> (<span style=color:#66d9ef>var</span> kvp <span style=color:#66d9ef>in</span> _predictedEntities)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>var</span> predicted = kvp.Value;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (!predicted.IsConfirmed &amp;&amp;
+</span></span><span style=display:flex><span>                    currentTime - predicted.SpawnTime &gt; maxAge)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#75715e>// 预测超时未确认，回滚</span>
+</span></span><span style=display:flex><span>                    RevertPrediction(kvp.Key);
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 预测实体数据结构</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>PredictedEntity</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> EntityId;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Node Instance;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Vector3 PredictedPosition;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>double</span> SpawnTime;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> IsConfirmed;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>bool</span> IsPredictedDestroyed;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>double</span> PredictedDestroyTime;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 实体工厂</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>EntityFactory</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> Node CreateEntity(EntityType type)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 根据类型创建实体</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>switch</span> (type)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> EntityType.Player:
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>new</span> CharacterBody3D();
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> EntityType.Projectile:
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>new</span> RigidBody3D();
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>default</span>:
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>new</span> Node3D();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=1233-心跳和连接保活>12.3.3 心跳和连接保活</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#66d9ef>using</span> Godot;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> System;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>namespace</span> GameFramework.Network.Sync
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 网络心跳管理器</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 保持连接活跃并测量延迟</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>partial</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>HeartbeatManager</span> : Node
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 心跳配置</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> HeartbeatInterval { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>1.0f</span>; <span style=color:#75715e>// 每秒一次</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>
+</span></span></span><span style=display:flex><span><span style=color:#a6e22e>        [Export]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> TimeoutThreshold { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>set</span>; } = <span style=color:#ae81ff>5.0f</span>; <span style=color:#75715e>// 5秒超时</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 状态</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>double</span> _lastHeartbeatTime;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>double</span> _lastReceivedTime;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>int</span> _sequenceNumber;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// 延迟统计</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> CurrentLatency { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> AverageLatency { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>float</span> Jitter { <span style=color:#66d9ef>get</span>; <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>set</span>; }
+</span></span><span style=display:flex><span><span style=color:#a6e22e>
+</span></span></span><span style=display:flex><span><span style=color:#a6e22e>        [Signal]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>delegate</span> <span style=color:#66d9ef>void</span> LatencyUpdatedEventHandler(<span style=color:#66d9ef>float</span> latency);
+</span></span><span style=display:flex><span><span style=color:#a6e22e>
+</span></span></span><span style=display:flex><span><span style=color:#a6e22e>        [Signal]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>delegate</span> <span style=color:#66d9ef>void</span> ConnectionTimeoutEventHandler();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _Ready()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _lastReceivedTime = Time.GetTicksMsec() / <span style=color:#ae81ff>1000.0</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>void</span> _Process(<span style=color:#66d9ef>double</span> delta)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>double</span> currentTime = Time.GetTicksMsec() / <span style=color:#ae81ff>1000.0</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 发送心跳</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (currentTime - _lastHeartbeatTime &gt;= HeartbeatInterval)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                SendHeartbeat();
+</span></span><span style=display:flex><span>                _lastHeartbeatTime = currentTime;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 检查超时</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (currentTime - _lastReceivedTime &gt; TimeoutThreshold)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                GD.PushError(<span style=color:#e6db74>&#34;连接超时！&#34;</span>);
+</span></span><span style=display:flex><span>                EmitSignal(SignalName.ConnectionTimeout);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 发送心跳包</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> SendHeartbeat()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> heartbeat = <span style=color:#66d9ef>new</span> HeartbeatMessage
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                SequenceNumber = _sequenceNumber++,
+</span></span><span style=display:flex><span>                ClientSendTime = Time.GetTicksMsec() / <span style=color:#ae81ff>1000.0</span>
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 发送心跳RPC</span>
+</span></span><span style=display:flex><span>            Rpc(MethodName.ReceiveHeartbeat, heartbeat.SequenceNumber, heartbeat.ClientSendTime);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 接收心跳响应</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>        [Rpc(MultiplayerApi.RpcMode.Authority)]</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>void</span> ReceiveHeartbeat(<span style=color:#66d9ef>int</span> sequenceNumber, <span style=color:#66d9ef>double</span> clientSendTime)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>double</span> currentTime = Time.GetTicksMsec() / <span style=color:#ae81ff>1000.0</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 计算RTT</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>float</span> rtt = (<span style=color:#66d9ef>float</span>)(currentTime - clientSendTime);
+</span></span><span style=display:flex><span>            CurrentLatency = rtt * <span style=color:#ae81ff>0.5f</span>; <span style=color:#75715e>// 单向延迟</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 更新平均延迟</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (AverageLatency == <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                AverageLatency = CurrentLatency;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                AverageLatency = AverageLatency * <span style=color:#ae81ff>0.9f</span> + CurrentLatency * <span style=color:#ae81ff>0.1f</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 计算抖动</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>float</span> diff = Math.Abs(CurrentLatency - AverageLatency);
+</span></span><span style=display:flex><span>            Jitter = Jitter * <span style=color:#ae81ff>0.9f</span> + diff * <span style=color:#ae81ff>0.1f</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _lastReceivedTime = currentTime;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            EmitSignal(SignalName.LatencyUpdated, CurrentLatency);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// 接收服务器心跳（服务器端）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> ProcessClientHeartbeat(<span style=color:#66d9ef>int</span> peerId, <span style=color:#66d9ef>int</span> sequenceNumber, <span style=color:#66d9ef>double</span> clientTime)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 服务器立即回复</span>
+</span></span><span style=display:flex><span>            RpcId(peerId, MethodName.ReceiveHeartbeat, sequenceNumber, clientTime);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// 记录客户端活跃时间</span>
+</span></span><span style=display:flex><span>            _lastReceivedTime = Time.GetTicksMsec() / <span style=color:#ae81ff>1000.0</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// 心跳消息结构</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>HeartbeatMessage</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>int</span> SequenceNumber;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>double</span> ClientSendTime;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=124-核心概念深入讲解>12.4 核心概念深入讲解</h2><h3 id=1241-状态同步的本质>12.4.1 状态同步的本质</h3><p>状态同步的本质是在多个独立运行的计算机之间维护一致的游戏世界视图。由于网络延迟和带宽限制，完全一致是不可能的，因此目标是达到"足够一致"——玩家感知不到差异或差异不影响游戏体验。</p><p><strong>一致性模型</strong>：游戏网络通常使用最终一致性（Eventual Consistency），允许短暂的不一致，但保证所有客户端最终会收敛到相同状态。这与银行系统等需要强一致性的应用不同。</p><p><strong>CAP定理在游戏中的应用</strong>：根据CAP定理，分布式系统无法同时保证一致性（Consistency）、可用性（Availability）和分区容错性（Partition Tolerance）。游戏网络通常优先保证可用性和分区容错性，通过牺牲严格一致性来换取流畅体验。</p><h3 id=1242-插值与预测的区别>12.4.2 插值与预测的区别</h3><p>插值（Interpolation）和预测（Prediction）是处理延迟的两种相反策略：</p><p><strong>插值（延迟渲染）</strong>：客户端延迟显示收到的状态，使用过去的状态进行平滑插值。优点是状态确定，不会跳变；缺点是增加了固有延迟（通常是2-3个快照间隔）。</p><p><strong>预测（提前渲染）</strong>：客户端根据当前输入预测未来状态并立即显示。优点是零延迟感知；缺点是预测错误时需要修正，可能导致跳变。</p><p><strong>混合策略</strong>：现代游戏通常同时使用两者。玩家自己的角色使用预测，其他玩家使用插值。这样既有即时的操作反馈，又避免看到其他玩家跳来跳去。</p><h3 id=1243-带宽的物理限制>12.4.3 带宽的物理限制</h3><p>理解带宽限制有助于设计合理的同步策略：</p><p><strong>带宽计算示例</strong>：假设100个玩家，每个玩家发送位置（12字节）+旋转（16字节）+速度（12字节）=40字节，每秒20次更新。</p><ul><li>上行：40字节 × 20Hz = 800字节/秒/玩家</li><li>下行：40字节 × 20Hz × 99其他玩家 = 79.2KB/秒/玩家</li><li>服务器带宽：79.2KB × 100玩家 = 7.92MB/秒</li></ul><p><strong>优化后的实际带宽</strong>：使用Delta压缩和位压缩后，通常可以减少60-80%的带宽消耗。这就是为什么现代游戏能在家庭宽带上支持大量玩家。</p><h2 id=125-实现细节深度分析>12.5 实现细节深度分析</h2><h3 id=1251-快照压缩算法>12.5.1 快照压缩算法</h3><p>高效的快照压缩是状态同步的核心技术：</p><p><strong>Delta压缩的数学原理</strong>：</p><pre tabindex=0><code>发送数据 = 当前状态 XOR 基准状态
+接收端重建：当前状态 = 基准状态 XOR 接收数据
+</code></pre><p>这种异或操作利用了游戏状态的时间局部性——相邻帧之间变化很小，异或结果中大部分位为0，可以被高效压缩。</p><p><strong>四元数压缩</strong>：旋转通常用四元数表示（4个float，16字节）。可以只发送3个分量，第4个通过单位四元数约束计算得出。进一步可以将每个分量量化为16位整数，将旋转数据压缩到6字节。</p><p><strong>位置压缩策略</strong>：</p><ul><li>绝对位置：首次同步或大幅移动时使用</li><li>相对位置（Delta）：小幅度移动时使用更小的位数</li><li>变长编码：根据移动幅度动态选择位数</li></ul><h3 id=1252-插值算法的数学基础>12.5.2 插值算法的数学基础</h3><p><strong>线性插值（Lerp）</strong>：</p><pre tabindex=0><code>result = a + (b - a) × t
+</code></pre><p>最简单但可能产生不平滑的速度变化，适合快速移动的物体。</p><p><strong>球面线性插值（Slerp）</strong>：
+用于旋转插值，保证角速度恒定。计算成本较高但视觉效果更自然。Godot的Quaternion.Slerp实现了这一算法。</p><p><strong>Hermite样条插值</strong>：
+使用位置和速度信息构造三次多项式，产生平滑的加速度和减速度效果。适合载具和角色的移动插值。</p><p><strong>Catmull-Rom样条</strong>：
+使用四个控制点构造曲线，保证经过所有关键点。适合回放系统，可以生成完全平滑的回放轨迹。</p><h3 id=1253-带宽分配算法>12.5.3 带宽分配算法</h3><p>智能的带宽分配可以显著提升体验：</p><p><strong>优先级计算公式</strong>：</p><pre tabindex=0><code>优先级 = 距离因子 × 0.4 + 类型权重 × 0.3 + 移动速度 × 0.2 + 事件权重 × 0.1
+</code></pre><p><strong>自适应频率调整</strong>：</p><ul><li>当带宽充足时，提高关键对象的同步频率</li><li>当检测到拥塞（丢包增加）时，降低非关键对象的频率</li><li>使用TCP友好的速率控制算法（如LEDBAT）</li></ul><p><strong>LOD（Level of Detail）同步</strong>：</p><ul><li>近距离（0-10米）：完整状态，60Hz</li><li>中距离（10-30米）：位置和旋转，20Hz</li><li>远距离（30-100米）：仅位置，10Hz</li><li>超远距离（100米+）：低频位置或完全不同步</li></ul><h2 id=126-最佳实践指南>12.6 最佳实践指南</h2><h3 id=1261-不同游戏类型的同步策略>12.6.1 不同游戏类型的同步策略</h3><p><strong>竞技FPS（如CS:GO）</strong>：</p><ul><li>服务器Tick Rate：64Hz或128Hz</li><li>客户端预测：必须</li><li>插值延迟：低至50-100ms</li><li>回滚机制：用于射击判定</li></ul><p><strong>大逃杀游戏（如PUBG）</strong>：</p><ul><li>服务器Tick Rate：20-30Hz</li><li>兴趣管理：只同步附近玩家</li><li>区域服务器：分区物理模拟</li><li>载具特殊处理：高优先级同步</li></ul><p><strong>MOBA游戏（如Dota 2）</strong>：</p><ul><li>服务器Tick Rate：30Hz</li><li>确定性模拟：客户端可以预测技能效果</li><li>技能同步：关键事件可靠传输</li><li>小地图：低频更新，允许延迟</li></ul><p><strong>MMORPG（如WoW）</strong>：</p><ul><li>服务器Tick Rate：10-20Hz</li><li>实例化：副本内高频，野外低频</li><li>优先级队列：战斗中对象优先</li><li>批量更新：合并多个小更新</li></ul><h3 id=1262-常见问题与解决方案>12.6.2 常见问题与解决方案</h3><p><strong>问题1：玩家看到其他玩家"瞬移"</strong></p><ul><li>原因：丢包导致缺少中间状态</li><li>解决：增加冗余，使用外推预测短暂丢失的数据</li></ul><p><strong>问题2：带宽突然飙升</strong></p><ul><li>原因：大量对象同时变化（如爆炸场景）</li><li>解决：实施带宽上限，优先发送关键数据，延迟发送非关键数据</li></ul><p><strong>问题3：高延迟玩家体验差</strong></p><ul><li>原因：插值延迟叠加网络延迟</li><li>解决：为不同延迟玩家提供补偿，或匹配到延迟相近的服务器</li></ul><p><strong>问题4：作弊者伪造状态</strong></p><ul><li>原因：客户端发送虚假位置数据</li><li>解决：服务器权威验证，速度检测，异常行为标记</li></ul><h3 id=1263-性能调优检查清单>12.6.3 性能调优检查清单</h3><p><strong>同步配置检查</strong>：</p><ul><li><input disabled type=checkbox> 同步频率是否根据距离动态调整</li><li><input disabled type=checkbox> 是否只同步可见/相关对象</li><li><input disabled type=checkbox> Delta压缩是否正确实现</li><li><input disabled type=checkbox> 插值延迟是否适合游戏类型</li></ul><p><strong>带宽使用检查</strong>：</p><ul><li><input disabled type=checkbox> 监控每帧发送字节数</li><li><input disabled type=checkbox> 识别带宽峰值的原因</li><li><input disabled type=checkbox> 优化最大玩家的带宽占用</li><li><input disabled type=checkbox> 测试网络拥塞时的表现</li></ul><p><strong>质量检查</strong>：</p><ul><li><input disabled type=checkbox> 高延迟（200ms+）下的游戏体验</li><li><input disabled type=checkbox> 丢包（5%、10%）下的表现</li><li><input disabled type=checkbox> 大量玩家同屏时的帧率</li><li><input disabled type=checkbox> 移动设备上的电池消耗</li></ul><hr><p><strong>本章小结：</strong></p><ol><li><strong>快照同步</strong>：通过定期发送完整状态快照保持客户端一致，使用插值平滑过渡</li><li><strong>Delta压缩</strong>：只发送状态变化部分，大幅减少带宽使用</li><li><strong>位级压缩</strong>：使用紧凑的二进制表示进一步减少数据量</li><li><strong>带宽优化</strong>：基于距离和优先级动态调整同步频率</li><li><strong>预测机制</strong>：客户端预测实体生成和销毁，减少感知延迟</li></ol><p><strong>性能对比：</strong></p><table><thead><tr><th>技术</th><th>带宽节省</th><th>CPU开销</th><th>延迟影响</th></tr></thead><tbody><tr><td>快照同步</td><td>基准</td><td>低</td><td>+100ms（插值延迟）</td></tr><tr><td>Delta压缩</td><td>60-80%</td><td>中</td><td>无</td></tr><tr><td>位压缩</td><td>50-70%</td><td>低</td><td>无</td></tr><tr><td>优先级LOD</td><td>40-60%</td><td>低</td><td>无</td></tr><tr><td>预测生成</td><td>-10%</td><td>高</td><td>-200ms</td></tr></tbody></table><div class=post-tags><a href=/tags/godot class=post-tag>#Godot</a>
+<a href=/tags/%E5%BC%80%E5%8F%91 class=post-tag>#开发</a>
+<a href=/tags/c class=post-tag>#C#</a>
+<a href=/tags/%E6%9E%B6%E6%9E%84 class=post-tag>#架构</a>
+<a href=/tags/csharp class=post-tag>#CSharp</a>
+<a href=/tags/%E5%90%8C%E6%AD%A5%E7%AD%96%E7%95%A5 class=post-tag>#同步策略</a></div><nav class=post-nav><a href=/posts/%E7%AC%AC11%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84/ class=prev-post><span class=nav-label>← 上一篇</span>
+<span class=nav-title>第11章 网络基础架构</span>
+</a><a href=/posts/%E7%AC%AC10%E7%AB%A0-%E4%B8%8D%E5%90%8C%E8%B1%86%E7%A7%8D%E7%9A%84%E7%83%98%E7%84%99%E7%AD%96%E7%95%A5/ class=next-post><span class=nav-label>下一篇 →</span>
+<span class=nav-title>第10章 不同豆种的烘焙策略</span></a></nav><script src=https://giscus.app/client.js data-repo=heheboy/heheboy.github.io data-repo-id=R_kgDORzG4BQ data-category=Announcements data-category-id=DIC_kwDORzG4Bc4C54kN data-mapping=pathname data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=light data-lang=zh-CN crossorigin=anonymous async></script></article></div><aside class=sidebar><div class="sidebar-widget author-widget"><img class=author-avatar src=/img/avatar.jpg alt=熟童><h3 class=author-name>熟童</h3><p class=author-bio>熟童，一个在代码、咖啡与虚拟世界之间反复横跳的人。写程序、做游戏、研究AI，也会认真对待一杯咖啡的参数曲线。这里记录的不只是技术，还有那些被实现出来的想法。相信技术不只是工具，它也可以有温度。</p><div class=author-social><a href=https://github.com/heheboy target=_blank rel=noopener aria-label=GitHub><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 0C5.37.0.0 5.37.0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57.0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925.0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18.0.0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225.0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22.0 1.605-.015 2.895-.015 3.3.0.315.225.69.825.57A12.02 12.02.0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+</a><a href=https://space.bilibili.com/8756982 target=_blank rel=noopener aria-label=Bilibili><svg viewBox="0 0 24 24"><path fill="currentColor" d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858.0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234.0 11.704-1.778L8.46 4.45V4.267a1.227 1.227.0 112.453.0V5.32l2.823-2.695a1.234 1.234.0 011.704 1.778l-1.687 1.12zm-3.28 9.653c-.56.0-1.013.453-1.013 1.013s.453 1.013 1.013 1.013 1.013-.453 1.013-1.013-.453-1.013-1.013-1.013zm-6 0c-.56.0-1.013.453-1.013 1.013s.453 1.013 1.013 1.013 1.013-.453 1.013-1.013-.453-1.013-1.013-1.013z"/></svg>
+</a><a href=https://www.facebook.com/dio.zeng.2025 target=_blank rel=noopener aria-label=Facebook><svg viewBox="0 0 24 24"><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312.0 2.686.235 2.686.235v2.953H15.83c-1.491.0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><div class=social-wechat-wrapper><a href=# class=social-wechat-trigger aria-label=WeChat><svg viewBox="0 0 24 24"><path fill="currentColor" d="M8.691 2.188C3.891 2.188.0 5.476.0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59.0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213.0.163.13.295.29.295a.326.326.0 00.167-.054l1.903-1.114a.864.864.0 01.717-.098 10.16 10.16.0 002.837.403c.276.0.543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642.0 1.162.529 1.162 1.18A1.17 1.17.0 015.785 8.349 1.17 1.17.0 014.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813.0c.642.0 1.162.529 1.162 1.18a1.17 1.17.0 01-1.162 1.178 1.17 1.17.0 01-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826.0 1.622-.12 2.361-.336a.722.722.0 01.598.082l1.584.926a.272.272.0 00.14.047c.134.0.24-.111.24-.247.0-.06-.023-.12-.038-.177l-.327-1.233a.582.582.0 01-.023-.156.49.49.0 01.201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088V8.89c-.135-.01-.27-.027-.407-.03zm-2.53 3.274c.535.0.969.44.969.982a.976.976.0 01-.969.983.976.976.0 01-.969-.983c0-.542.434-.982.97-.982zm4.844.0c.535.0.969.44.969.982a.976.976.0 01-.969.983.976.976.0 01-.969-.983c0-.542.434-.982.969-.982z"/></svg></a><div class=wechat-qr-popup><img src=/img/wechat-qr.png alt="WeChat QR Code">
+<span>扫码加我</span></div></div><a href=https://www.instagram.com/bengbeng9548/ target=_blank rel=noopener aria-label=Instagram><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.163c3.204.0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849.0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204.0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849.0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741.0 8.333.014 7.053.072c-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.668.072 4.948c.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403.0-6.162 2.759-6.162 6.162S8.597 18.163 12 18.163s6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zM12 16c-2.209.0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796.0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795.0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a><div class=social-email-wrapper><a href=mailto:bengbeng9548@qq.com class=social-email aria-label=Email><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 4H4c-1.1.0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1.0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+<span>bengbeng9548@qq.com</span></a></div></div></div><div class="sidebar-widget categories-widget"><h4>分类</h4><div class=category-cloud><a href=/categories/%E5%92%96%E5%95%A1%E7%9B%B8%E5%85%B3/ class=category-link>咖啡相关
+<span class=category-count>(12)</span>
+</a><a href=/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/ class=category-link>游戏开发
+<span class=category-count>(12)</span>
+</a><a href=/categories/ai%E7%9B%B8%E5%85%B3/ class=category-link>AI相关
+<span class=category-count>(2)</span>
+</a><a href=/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/ class=category-link>生活随记
+<span class=category-count>(1)</span></a></div></div><div class="sidebar-widget tags-widget"><h4>标签</h4><div class=tag-cloud><a href=/tags/c%23/ class=tag-link style=font-size:1.5em>C#
+</a><a href=/tags/csharp/ class=tag-link style=font-size:1.5em>CSharp
+</a><a href=/tags/godot/ class=tag-link style=font-size:1.5em>Godot
+</a><a href=/tags/%E5%92%96%E5%95%A1/ class=tag-link style=font-size:1.5em>咖啡
+</a><a href=/tags/%E5%92%96%E5%95%A1%E8%B1%86/ class=tag-link style=font-size:1.5em>咖啡豆
+</a><a href=/tags/%E5%BC%80%E5%8F%91/ class=tag-link style=font-size:1.5em>开发
+</a><a href=/tags/%E5%92%96%E5%95%A1%E7%83%98%E7%84%99/ class=tag-link style=font-size:1.5em>咖啡烘焙
+</a><a href=/tags/%E6%9E%B6%E6%9E%84/ class=tag-link style=font-size:1.5em>架构
+</a><a href=/tags/agent/ class=tag-link style=font-size:1em>Agent
+</a><a href=/tags/ai/ class=tag-link style=font-size:1em>AI
+</a><a href=/tags/claudecode/ class=tag-link style=font-size:1em>ClaudeCode
+</a><a href=/tags/%E5%92%96%E5%95%A1%E7%94%9F%E8%B1%86/ class=tag-link style=font-size:1em>咖啡生豆
+</a><a href=/tags/%E6%99%BA%E8%83%BD%E4%BD%93/ class=tag-link style=font-size:1em>智能体
+</a><a href=/tags/%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF/ class=tag-link style=font-size:1em>烘焙曲线
+</a><a href=/tags/anthropic/ class=tag-link style=font-size:.9em>Anthropic
+</a><a href=/tags/cc/ class=tag-link style=font-size:.9em>Cc
+</a><a href=/tags/mcp/ class=tag-link style=font-size:.9em>Mcp
+</a><a href=/tags/openclaw/ class=tag-link style=font-size:.9em>OpenClaw
+</a><a href=/tags/skill/ class=tag-link style=font-size:.9em>Skill
+</a><a href=/tags/ui/ class=tag-link style=font-size:.9em>UI</a></div></div><div class="sidebar-widget links-widget"><h4>友情链接</h4><div class=links-list><a href=https://gohugo.io target=_blank rel=noopener class=link-item title="Hugo 静态网站生成器官方文档"><span class=link-name>Hugo 官方</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+</a><a href=https://github.com/heheboy/hugo-cms target=_blank rel=noopener class=link-item title=hugo-cms的项目连接><span class=link-name>Hugo-cms</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+</a><a href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener class=link-item title=主题的项目连接><span class=link-name>hugo-cms-theme</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></a></div></div></aside></div></main><footer class=site-footer><div class=footer-content><p class=copyright>&copy; 2026 熟童.
+All rights reserved.</p><div class=footer-info><span class=footer-info-item><a href=https://github.com/heheboy/hugo-cms target=_blank rel=noopener>本网站由Hugo驱动,使用Hugo-cms制作
+</a></span><span class=footer-info-item><a href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener>主题采用 hugo-cms-theme
+</a><a class=github-star-link href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener title="GitHub Stars"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 0c4.42.0 8 3.58 8 8a8.013 8.013.0 01-5.45 7.59c-.4.08-.55-.17-.55-.38.0-.27.01-1.13.01-2.2.0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95.0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12.0.0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27s-1.36.09-2 .27c-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15.0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94.0.67.01 1.3.01 1.49.0.21-.15.45-.55.38A7.995 7.995.0 010 8c0-4.42 3.58-8 8-8z"/></svg>
+<span>Star</span></a></span></div><div class=footer-links><a href=/index.xml class=footer-link target=_blank rel=noopener aria-label=RSS订阅><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6.503 20.752C6.503 22.546 5.047 24 3.252 24c-1.796.0-3.252-1.454-3.252-3.248s1.456-3.248 3.252-3.248c1.795.001 3.251 1.454 3.251 3.248zM0 8.18v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817C15.777 15.29 8.721 8.242.0 8.18zm0-3.368C10.58 4.858 19.152 13.406 19.183 24H24c-.03-13.231-10.736-23.954-24-24v4.812z"/></svg>
+<span>RSS 订阅</span>
+</a><span class=footer-link-separator>|</span>
+<a href=/sitemap.xml class=footer-link target=_blank rel=noopener aria-label=网站地图><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 3l-6 1.5L8.501 3l-6 1.5v15l6-1.5 5.999 1.5 6-1.5V3zM15 16.656l-5.999-1.5V3.844L15 5.344v11.312zm1-11.312 4 .999v11.312l-4-.999V5.344zm-7 .499-4-.999v11.312l4 .999V5.843z"/></svg>
+<span>网站地图</span></a></div></div></footer><script>(function(){const t=document.querySelector(".theme-toggle");if(!t)return;const e=document.documentElement,n=localStorage.getItem("theme");n&&e.setAttribute("data-theme",n),t.addEventListener("click",()=>{const n=e.getAttribute("data-theme"),t=n==="dark"?"light":"dark";e.setAttribute("data-theme",t),localStorage.setItem("theme",t)})})()</script><script>(function(){const e=document.querySelector(".nav-toggle"),t=document.querySelector(".nav-menu");e&&e.addEventListener("click",()=>{t.classList.toggle("active"),e.classList.toggle("active")})})()</script></body></html>

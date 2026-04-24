@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>同步策略 on 熟童·实验室</title><link>https://heheboy.github.io/tags/%E5%90%8C%E6%AD%A5%E7%AD%96%E7%95%A5/</link><description>Recent content in 同步策略 on 熟童·实验室</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sat, 25 Apr 2026 01:53:34 +0800</lastBuildDate><atom:link href="https://heheboy.github.io/tags/%E5%90%8C%E6%AD%A5%E7%AD%96%E7%95%A5/index.xml" rel="self" type="application/rss+xml"/><item><title>第12章 状态同步策略</title><link>https://heheboy.github.io/posts/%E7%AC%AC12%E7%AB%A0-%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5%E7%AD%96%E7%95%A5/</link><pubDate>Sat, 25 Apr 2026 01:53:34 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC12%E7%AB%A0-%E7%8A%B6%E6%80%81%E5%90%8C%E6%AD%A5%E7%AD%96%E7%95%A5/</guid><description>&lt;h2 id="121-状态快照同步snapshot-interpolation"&gt;12.1 状态快照同步（Snapshot Interpolation）&lt;/h2&gt;
+&lt;p&gt;状态快照同步是现代多人游戏中最常用的同步技术，它通过定期发送完整游戏状态快照来保持客户端一致性。&lt;/p&gt;
+&lt;h3 id="1211-快照系统架构"&gt;12.1.1 快照系统架构&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;设计思路与原理&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;状态快照同步是多人游戏最常用的同步方式，服务器定期广播游戏世界的完整状态，客户端根据快照更新显示。&lt;/p&gt;
+&lt;p&gt;核心概念：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;快照&lt;/strong&gt;：某一时刻游戏世界的完整状态&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;序列号&lt;/strong&gt;：用于识别和排序快照&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;时间戳&lt;/strong&gt;：服务器生成快照的时间&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;插值延迟&lt;/strong&gt;：客户端延迟渲染以获得平滑效果&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;同步流程：&lt;/p&gt;</description></item></channel></rss>

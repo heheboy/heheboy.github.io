@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>烘焙缺陷 on 熟童·实验室</title><link>https://heheboy.github.io/tags/%E7%83%98%E7%84%99%E7%BC%BA%E9%99%B7/</link><description>Recent content in 烘焙缺陷 on 熟童·实验室</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Thu, 09 Apr 2026 22:59:53 +0800</lastBuildDate><atom:link href="https://heheboy.github.io/tags/%E7%83%98%E7%84%99%E7%BC%BA%E9%99%B7/index.xml" rel="self" type="application/rss+xml"/><item><title>第7章 烘焙缺陷的形成机理</title><link>https://heheboy.github.io/posts/%E7%AC%AC7%E7%AB%A0-%E7%83%98%E7%84%99%E7%BC%BA%E9%99%B7%E7%9A%84%E5%BD%A2%E6%88%90%E6%9C%BA%E7%90%86/</link><pubDate>Thu, 09 Apr 2026 22:59:53 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC7%E7%AB%A0-%E7%83%98%E7%84%99%E7%BC%BA%E9%99%B7%E7%9A%84%E5%BD%A2%E6%88%90%E6%9C%BA%E7%90%86/</guid><description>&lt;h2 id="71-缺陷分类体系"&gt;7.1 缺陷分类体系&lt;/h2&gt;
+&lt;h3 id="711-按形成阶段分类"&gt;7.1.1 按形成阶段分类&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;烘焙缺陷分类树：
+
+烘焙缺陷
+├── 烘焙前缺陷（生豆带入）
+│ ├── 瑕疵豆烘焙
+│ ├── 水分异常
+│ └── 密度不均
+│
+├── 烘焙中缺陷（操作不当）
+│ ├── 温度控制缺陷
+│ │ ├── 焦糊（Scorched）
+│ │ ├── 烤熟（Baked）
+│ │ └── 夹生（Underdeveloped）
+│ ├── 时间控制缺陷
+│ │ ├── 发展不足
+│ │ └── 发展过度
+│ ├── 热分布缺陷
+│ │ ├── 烘焙不均
+│ │ ├── 芯表温差过大
+│ │ └── 批次间差异
+│ └── 操作失误
+│ ├── 下豆时机错误
+│ ├── 冷却不当
+│ └── 设备故障
+│
+└── 烘焙后缺陷（处理不当）
+ ├── 氧化
+ ├── 吸湿
+ ├── 污染
+ └── 储存不当
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="712-按缺陷性质分类"&gt;7.1.2 按缺陷性质分类&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;缺陷类型&lt;/th&gt;
+ &lt;th&gt;主要表现&lt;/th&gt;
+ &lt;th&gt;形成原因&lt;/th&gt;
+ &lt;th&gt;可逆性&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;热力学缺陷&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;温度相关异常&lt;/td&gt;
+ &lt;td&gt;热量输入不当&lt;/td&gt;
+ &lt;td&gt;不可逆&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;动力学缺陷&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;时间/速率异常&lt;/td&gt;
+ &lt;td&gt;节奏控制失误&lt;/td&gt;
+ &lt;td&gt;不可逆&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;物理缺陷&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;外观/结构异常&lt;/td&gt;
+ &lt;td&gt;机械/热冲击&lt;/td&gt;
+ &lt;td&gt;不可逆&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;化学缺陷&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;风味化学反应异常&lt;/td&gt;
+ &lt;td&gt;反应条件失控&lt;/td&gt;
+ &lt;td&gt;不可逆&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;操作缺陷&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;流程执行错误&lt;/td&gt;
+ &lt;td&gt;人为失误&lt;/td&gt;
+ &lt;td&gt;部分可纠正&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="72-焦糊缺陷scorched--tipped"&gt;7.2 焦糊缺陷（Scorched / Tipped）&lt;/h2&gt;
+&lt;h3 id="721-形成机理"&gt;7.2.1 形成机理&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;焦糊（Scorched）&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>
