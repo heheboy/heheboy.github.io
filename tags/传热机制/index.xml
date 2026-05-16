@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>传热机制 on 熟童·实验室</title><link>https://heheboy.github.io/tags/%E4%BC%A0%E7%83%AD%E6%9C%BA%E5%88%B6/</link><description>Recent content in 传热机制 on 熟童·实验室</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Tue, 07 Apr 2026 17:45:28 +0800</lastBuildDate><atom:link href="https://heheboy.github.io/tags/%E4%BC%A0%E7%83%AD%E6%9C%BA%E5%88%B6/index.xml" rel="self" type="application/rss+xml"/><item><title>第4章 热力学基础与传热机制</title><link>https://heheboy.github.io/posts/%E7%AC%AC4%E7%AB%A0-%E7%83%AD%E5%8A%9B%E5%AD%A6%E5%9F%BA%E7%A1%80%E4%B8%8E%E4%BC%A0%E7%83%AD%E6%9C%BA%E5%88%B6/</link><pubDate>Tue, 07 Apr 2026 17:45:28 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC4%E7%AB%A0-%E7%83%AD%E5%8A%9B%E5%AD%A6%E5%9F%BA%E7%A1%80%E4%B8%8E%E4%BC%A0%E7%83%AD%E6%9C%BA%E5%88%B6/</guid><description>&lt;h2 id="41-热力学基础概念"&gt;4.1 热力学基础概念&lt;/h2&gt;
+&lt;h3 id="411-温度与热量"&gt;4.1.1 温度与热量&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;温度（Temperature）&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;定义：物质微观粒子热运动剧烈程度的量度&lt;/li&gt;
+&lt;li&gt;单位：摄氏度（°C）、华氏度（°F）、开尔文（K）&lt;/li&gt;
+&lt;li&gt;转换公式：
+&lt;ul&gt;
+&lt;li&gt;°F = °C × 9/5 + 32&lt;/li&gt;
+&lt;li&gt;K = °C + 273.15&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;热量（Heat）&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;定义：能量的一种形式，由温度差驱动的能量传递&lt;/li&gt;
+&lt;li&gt;单位：焦耳（J）、卡路里（cal）&lt;/li&gt;
+&lt;li&gt;转换：1 cal = 4.184 J&lt;/li&gt;
+&lt;li&gt;热量计算公式：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Q = m × c × ΔT
+
+其中：
+Q = 热量（J）
+m = 质量（kg）
+c = 比热容（J/kg·K）
+ΔT = 温度变化（K或°C）
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="412-比热容specific-heat-capacity"&gt;4.1.2 比热容（Specific Heat Capacity）&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;定义&lt;/strong&gt;：单位质量的物质温度升高1°C所需的热量&lt;/p&gt;</description></item></channel></rss>

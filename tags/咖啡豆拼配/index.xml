@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>咖啡豆拼配 on 熟童·实验室</title><link>https://heheboy.github.io/tags/%E5%92%96%E5%95%A1%E8%B1%86%E6%8B%BC%E9%85%8D/</link><description>Recent content in 咖啡豆拼配 on 熟童·实验室</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sun, 17 May 2026 00:53:31 +0800</lastBuildDate><atom:link href="https://heheboy.github.io/tags/%E5%92%96%E5%95%A1%E8%B1%86%E6%8B%BC%E9%85%8D/index.xml" rel="self" type="application/rss+xml"/><item><title>第15章 单品与拼配的产品设计</title><link>https://heheboy.github.io/posts/%E7%AC%AC15%E7%AB%A0-%E5%8D%95%E5%93%81%E4%B8%8E%E6%8B%BC%E9%85%8D%E7%9A%84%E4%BA%A7%E5%93%81%E8%AE%BE%E8%AE%A1/</link><pubDate>Sun, 17 May 2026 00:53:31 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC15%E7%AB%A0-%E5%8D%95%E5%93%81%E4%B8%8E%E6%8B%BC%E9%85%8D%E7%9A%84%E4%BA%A7%E5%93%81%E8%AE%BE%E8%AE%A1/</guid><description>&lt;h2 id="151-产品线规划"&gt;15.1 产品线规划&lt;/h2&gt;
+&lt;h3 id="1511-产品分类体系"&gt;15.1.1 产品分类体系&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;咖啡产品线：
+
+按烘焙度分类：
+├── 浅烘系列（Light Roasts）
+│ ├── Agtron 75-85
+│ ├── 单一产地（SO）
+│ ├── 花果香、明亮酸质
+│ └── 适合：手冲、冷萃
+│
+├── 中烘系列（Medium Roasts）
+│ ├── Agtron 65-75
+│ ├── 单品、拼配
+│ ├── 平衡、焦糖
+│ └── 适合：手冲、滴滤、意式
+│
+├── 中深烘系列（Medium-Dark）
+│ ├── Agtron 55-65
+│ ├── 拼配为主
+│ ├── 巧克力、醇厚
+│ └── 适合：意式、法压
+│
+└── 深烘系列（Dark Roasts）
+ ├── Agtron 45-55
+ ├── 拼配、特殊单品
+ ├── 烟熏、苦甜
+ └── 适合：意式、传统咖啡
+
+按产地分类：
+├── 非洲系列（埃塞、肯尼亚、卢旺达等）
+├── 中南美系列（哥伦比亚、巴西、危地马拉等）
+├── 亚洲系列（印尼、印度、也门等）
+├── 太平洋系列（巴布亚新几内亚等）
+└── 特殊产地（巴拿马、夏威夷等）
+
+按处理法分类：
+├── 水洗系列（干净、酸质）
+├── 日晒系列（甜感、果香）
+├── 蜜处理系列（平衡）
+└── 特殊处理（厌氧、酒桶等）
+
+按用途分类：
+├── 意式系列（拼配、SOE）
+├── 手冲系列（单品）
+├── 冷萃系列
+├── 法压系列
+└── 全能系列
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="1512-产品定位策略"&gt;15.1.2 产品定位策略&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;金字塔模型&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>第14章 意式拼配的烘焙与调和逻辑</title><link>https://heheboy.github.io/posts/%E7%AC%AC14%E7%AB%A0-%E6%84%8F%E5%BC%8F%E6%8B%BC%E9%85%8D%E7%9A%84%E7%83%98%E7%84%99%E4%B8%8E%E8%B0%83%E5%92%8C%E9%80%BB%E8%BE%91/</link><pubDate>Sun, 17 May 2026 00:52:29 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC14%E7%AB%A0-%E6%84%8F%E5%BC%8F%E6%8B%BC%E9%85%8D%E7%9A%84%E7%83%98%E7%84%99%E4%B8%8E%E8%B0%83%E5%92%8C%E9%80%BB%E8%BE%91/</guid><description>&lt;h2 id="141-意式拼配基础理论"&gt;14.1 意式拼配基础理论&lt;/h2&gt;
+&lt;h3 id="1411-拼配的目的"&gt;14.1.1 拼配的目的&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;一致性（Consistency）&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;挑战：
+├── 单品豆受季节影响
+├── 不同批次风味差异
+├── 生豆供应不稳定
+└── 客户需求稳定
+
+拼配解决方案：
+├── 多产地混合，平滑差异
+├── 主要基底豆全年供应
+├── 风味豆比例微调
+└── 保持整体风味稳定
+
+实现方式：
+├── 70-80%稳定基底豆
+├── 20-30%调节风味豆
+├── 建立风味标准化体系
+└── 定期杯测调整
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;复杂度（Complexity）&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>

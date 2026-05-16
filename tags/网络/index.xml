@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>网络 on 熟童·实验室</title><link>https://heheboy.github.io/tags/%E7%BD%91%E7%BB%9C/</link><description>Recent content in 网络 on 熟童·实验室</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sat, 25 Apr 2026 01:52:33 +0800</lastBuildDate><atom:link href="https://heheboy.github.io/tags/%E7%BD%91%E7%BB%9C/index.xml" rel="self" type="application/rss+xml"/><item><title>第11章 网络基础架构</title><link>https://heheboy.github.io/posts/%E7%AC%AC11%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84/</link><pubDate>Sat, 25 Apr 2026 01:52:33 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC11%E7%AB%A0-%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84/</guid><description>&lt;h2 id="111-多人游戏架构模式"&gt;11.1 多人游戏架构模式&lt;/h2&gt;
+&lt;p&gt;在多人游戏开发中，选择合适的网络架构是至关重要的决策，它直接影响游戏的性能、安全性、开发复杂度以及玩家体验。&lt;/p&gt;
+&lt;h3 id="1111-客户端-服务器架构clientserver"&gt;11.1.1 客户端-服务器架构（Client/Server）&lt;/h3&gt;
+&lt;p&gt;C/S架构是当前多人游戏中最常用的模式，特点是所有游戏逻辑和状态都由服务器权威控制。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;架构原理：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+│ 客户端A │◄────►│ │◄────►│ 客户端B │
+└─────────────┘ │ 服务器 │ └─────────────┘
+┌─────────────┐ │ (权威) │ ┌─────────────┐
+│ 客户端C │◄────►│ │◄────►│ 客户端D │
+└─────────────┘ └─────────────┘ └─────────────┘
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;优势：&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>

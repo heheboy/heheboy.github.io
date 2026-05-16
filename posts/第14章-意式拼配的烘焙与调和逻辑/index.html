@@ -1,0 +1,821 @@
+<!doctype html><html lang=zh-CN data-theme=light><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="14.1 意式拼配基础理论
+14.1.1 拼配的目的
+一致性（Consistency）
+挑战：
+├── 单品豆受季节影响
+├── 不同批次风味差异
+├── 生豆供应不稳定
+└── 客户需求稳定
+
+拼配解决方案：
+├── 多产地混合，平滑差异
+├── 主要基底豆全年供应
+├── 风味豆比例微调
+└── 保持整体风味稳定
+
+实现方式：
+├── 70-80%稳定基底豆
+├── 20-30%调节风味豆
+├── 建立风味标准化体系
+└── 定期杯测调整
+复杂度（Complexity）"><meta name=author content="熟童"><meta name=generator content="Hugo 0.159.0"><title>第14章 意式拼配的烘焙与调和逻辑 | 熟童·实验室</title><link rel=canonical href=https://heheboy.github.io/posts/%E7%AC%AC14%E7%AB%A0-%E6%84%8F%E5%BC%8F%E6%8B%BC%E9%85%8D%E7%9A%84%E7%83%98%E7%84%99%E4%B8%8E%E8%B0%83%E5%92%8C%E9%80%BB%E8%BE%91/><link rel=stylesheet href=/css/main.min.52a33c1c75f1018fce5fd552f8174ace585d07d2689bbdd7854b698275ee0477.css integrity="sha256-UqM8HHXxAY/OX9VS+BdKzlhdB9Jom73XhUtpgnXuBHc="><link rel=icon type=image/x-icon href=/favicon.ico><meta property="og:title" content="第14章 意式拼配的烘焙与调和逻辑"><meta property="og:description" content="14.1 意式拼配基础理论
+14.1.1 拼配的目的
+一致性（Consistency）
+挑战：
+├── 单品豆受季节影响
+├── 不同批次风味差异
+├── 生豆供应不稳定
+└── 客户需求稳定
+
+拼配解决方案：
+├── 多产地混合，平滑差异
+├── 主要基底豆全年供应
+├── 风味豆比例微调
+└── 保持整体风味稳定
+
+实现方式：
+├── 70-80%稳定基底豆
+├── 20-30%调节风味豆
+├── 建立风味标准化体系
+└── 定期杯测调整
+复杂度（Complexity）"><meta property="og:url" content="https://heheboy.github.io/posts/%E7%AC%AC14%E7%AB%A0-%E6%84%8F%E5%BC%8F%E6%8B%BC%E9%85%8D%E7%9A%84%E7%83%98%E7%84%99%E4%B8%8E%E8%B0%83%E5%92%8C%E9%80%BB%E8%BE%91/"><meta property="og:site_name" content="熟童·实验室"><meta property="og:type" content="article"><meta name=twitter:card content="summary_large_image"><meta name=twitter:title content="第14章 意式拼配的烘焙与调和逻辑"><meta name=twitter:description content="14.1 意式拼配基础理论
+14.1.1 拼配的目的
+一致性（Consistency）
+挑战：
+├── 单品豆受季节影响
+├── 不同批次风味差异
+├── 生豆供应不稳定
+└── 客户需求稳定
+
+拼配解决方案：
+├── 多产地混合，平滑差异
+├── 主要基底豆全年供应
+├── 风味豆比例微调
+└── 保持整体风味稳定
+
+实现方式：
+├── 70-80%稳定基底豆
+├── 20-30%调节风味豆
+├── 建立风味标准化体系
+└── 定期杯测调整
+复杂度（Complexity）"><meta property="article:published_time" content="2026-05-17T00:00:00+00:00"><meta property="article:modified_time" content="2026-05-17T00:00:00+00:00"><meta property="article:tag" content="咖啡"><meta property="article:tag" content="咖啡豆"><meta property="article:tag" content="咖啡烘焙"><meta property="article:tag" content="咖啡豆拼配"></head><body><nav class=main-nav><div class=nav-container><a class=nav-brand href=/>熟童·实验室</a>
+<button class=nav-toggle aria-label="Toggle navigation">
+<span></span>
+<span></span>
+<span></span></button><div class=nav-menu><a class=nav-link href=/>首页</a>
+<a class=nav-link href=/posts/>内容文章</a>
+<a class=nav-link href=/categories/>文章分类</a>
+<a class=nav-link href=/archive/>归档册</a>
+<a class=nav-link href=/tags/>标签</a>
+<a class=nav-link href=/about/>关于本站</a>
+<a class="nav-link nav-search-link" href=/search/ aria-label=搜索><svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61.0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></a></div></div></nav><header class=site-header style=background-image:url(/img/post-bg.jpg)><div class=header-content><h1 class=site-title>第14章 意式拼配的烘焙与调和逻辑</h1><p class=site-slogan>让技术长出温度，在精确的逻辑与冷静的结构之中，依然保留人与世界的感知。不只是实现功能，也是在构建表达；不只是解决问题，也是在回应内心。</p></div></header><main class=main-container><div class=content-wrapper><div class=main-content><article class=page-content><header class=page-article-header><h1 class=page-article-title>第14章 意式拼配的烘焙与调和逻辑</h1><div class=page-article-meta><time datetime=2026-05-17>2026年5月17日
+</time><span class=meta-separator>·</span>
+<a href=/categories/%E5%92%96%E5%95%A1%E7%9B%B8%E5%85%B3>咖啡相关</a></div></header><h2 id=141-意式拼配基础理论>14.1 意式拼配基础理论</h2><h3 id=1411-拼配的目的>14.1.1 拼配的目的</h3><p><strong>一致性（Consistency）</strong></p><pre tabindex=0><code>挑战：
+├── 单品豆受季节影响
+├── 不同批次风味差异
+├── 生豆供应不稳定
+└── 客户需求稳定
+
+拼配解决方案：
+├── 多产地混合，平滑差异
+├── 主要基底豆全年供应
+├── 风味豆比例微调
+└── 保持整体风味稳定
+
+实现方式：
+├── 70-80%稳定基底豆
+├── 20-30%调节风味豆
+├── 建立风味标准化体系
+└── 定期杯测调整
+</code></pre><p><strong>复杂度（Complexity）</strong></p><pre tabindex=0><code>单一豆种的局限：
+├── 风味轮廓单一
+├── 层次不够丰富
+├── 某些维度缺失
+└── 难以满足多样需求
+
+拼配的优势：
+├── 酸甜苦平衡
+├── 香气层次叠加
+├── body与酸质互补
+├── 前后段风味完整
+
+经典互补：
+├── 巴西（坚果、醇厚）+ 埃塞俄比亚（花香、酸质）
+├── 哥伦比亚（平衡）+ 苏门答腊（草本、厚重）
+├── 危地马拉（烟熏、香料）+ 哥斯达黎加（甜感、干净）
+└── 基底（稳定）+ 风味（特色）
+</code></pre><p><strong>成本优化（Cost Efficiency）</strong></p><pre tabindex=0><code>成本结构：
+├── 精品豆：高成本、高风味
+├── 商业豆：低成本、基础风味
+├── 拼配：平衡成本与风味
+
+策略：
+├── 60-70%成本效益豆（巴西、哥伦比亚商业级）
+├── 30-40%精品风味豆
+├── 整体成本降低30-50%
+├── 风味仍保持高水平
+
+注意：
+├── 不以牺牲品质为代价
+├── 成本优化是附加价值
+├── 风味优先原则
+└── 客户接受度验证
+</code></pre><p><strong>稳定性（Stability）</strong></p><pre tabindex=0><code>咖啡品质波动因素：
+├── 天气变化
+├── 收成差异
+├── 处理法变化
+├── 储存条件
+└── 运输影响
+
+拼配的稳定作用：
+├── 多产地分散风险
+├── 不同季节豆互补
+├── 新旧作物混合
+├── 建立缓冲库存
+
+实施：
+├── 基底豆6-12个月库存
+├── 风味豆3-6个月库存
+├── 定期评估调整
+└── 建立备选方案
+</code></pre><h3 id=1412-意式咖啡的特点>14.1.2 意式咖啡的特点</h3><p><strong>意式浓缩的技术要求</strong></p><pre tabindex=0><code>高压萃取（9 bar）：
+├── 要求豆子结构适合
+├── 需要足够CO₂（新鲜度）
+├── 需要适量油脂
+└── 需要正确烘焙度
+
+快速萃取（25-30秒）：
+├── 需要可溶性物质充分
+├── 要求研磨度匹配
+├── 需要风味快速释放
+└── 烘焙度影响萃取率
+
+少量高浓度（30ml）：
+├── 风味必须集中
+├── 缺陷会被放大
+├── 要求高品质生豆
+└── 要求精确烘焙
+
+Crema要求：
+├── 需要CO₂
+├── 需要油脂乳化
+├── 需要蛋白质和多糖
+└── 烘焙度影响crema质量
+</code></pre><p><strong>意式拼配 vs 单品烘焙</strong></p><table><thead><tr><th>维度</th><th>意式拼配</th><th>单品烘焙</th></tr></thead><tbody><tr><td><strong>烘焙度</strong></td><td>中深至深烘（Agtron 55-70）</td><td>浅至中烘（Agtron 65-85）</td></tr><tr><td><strong>酸质</strong></td><td>低酸、柔和</td><td>明亮、复杂</td></tr><tr><td><strong>甜度</strong></td><td>焦糖、苦甜</td><td>果甜、蜂蜜</td></tr><tr><td><strong>苦度</strong></td><td>适中至明显</td><td>低</td></tr><tr><td><strong>Body</strong></td><td>厚重、饱满</td><td>轻盈至中等</td></tr><tr><td><strong>风味</strong></td><td>坚果、巧克力、焦糖</td><td>花果、产地特征</td></tr><tr><td><strong>一致性</strong></td><td>全年稳定</td><td>季节变化</td></tr><tr><td><strong>用途</strong></td><td>浓缩、奶咖</td><td>手冲、单品</td></tr></tbody></table><hr><h2 id=142-拼配角色分类>14.2 拼配角色分类</h2><h3 id=1421-基底豆base>14.2.1 基底豆（Base）</h3><p><strong>功能定位</strong></p><pre tabindex=0><code>作用：
+├── 提供基础风味轮廓
+├── 保证一致性
+├── 提供body和醇厚感
+├── 控制成本
+└── 占比：60-80%
+
+理想特性：
+├── 风味中性至温和
+├── 全年供应稳定
+├── 价格合理
+├── 烘焙一致性高
+├── 适合中深烘
+└── 与牛奶兼容
+
+风味贡献：
+├── 坚果（杏仁、榛果）
+├── 巧克力（可可、黑巧）
+├── 焦糖（红糖、太妃糖）
+├── 醇厚body
+└── 温和苦甜
+</code></pre><p><strong>经典基底豆</strong></p><pre tabindex=0><code>巴西（Brazil）：
+├── 占比：40-60%（常见）
+├── 产区：喜拉多、摩吉安娜
+├── 品种：波旁、卡杜艾、蒙多诺沃
+├── 处理法：日晒、半日晒
+├── 烘焙度：中深烘（Agtron 60-70）
+├── 风味：坚果、巧克力、低酸、醇厚
+├── 作用：基础甜感、body、crema
+└── 注意：避免过深（土味）
+
+哥伦比亚（Colombia）：
+├── 占比：30-50%
+├── 产区：慧兰、娜玲珑
+├── 品种：卡杜拉、卡斯蒂略
+├── 处理法：水洗
+├── 烘焙度：中烘（Agtron 65-72）
+├── 风味：焦糖、平衡、中等酸质
+├── 作用：平衡剂、增加复杂度
+└── 注意：全年供应、稳定性高
+
+其他基底选择：
+├── 危地马拉安提瓜（烟熏、香料）
+├── 墨西哥（温和、坚果）
+├── 秘鲁（柔和、甜感）
+└── 印度（浓郁、香料）
+</code></pre><h3 id=1422-风味豆flavor>14.2.2 风味豆（Flavor）</h3><p><strong>功能定位</strong></p><pre tabindex=0><code>作用：
+├── 提供特色风味
+├── 增加复杂度
+├── 创造独特性
+├── 提升品质感
+└── 占比：20-40%
+
+理想特性：
+├── 风味强烈、独特
+├── 辨识度高
+├── 与基底互补
+├── 适量即可见效
+└── 品质高
+
+风味类型：
+├── 花香（埃塞俄比亚）
+├── 果香（肯尼亚、巴拿马）
+├── 香料（印尼、也门）
+├── 明亮酸质（非洲豆）
+└── 特殊处理法（厌氧、酒桶）
+</code></pre><p><strong>经典风味豆</strong></p><pre tabindex=0><code>埃塞俄比亚（Ethiopia）：
+├── 占比：10-20%
+├── 产区：耶加雪菲、西达摩
+├── 处理法：水洗、日晒
+├── 烘焙度：中浅烘（Agtron 70-78）
+├── 风味：花香、柑橘、茶感
+├── 作用：增加复杂度、花香
+└── 注意：烘焙度不要过深
+
+肯尼亚（Kenya）：
+├── 占比：10-15%
+├── 等级：AA、AB
+├── 品种：SL28、SL34
+├── 烘焙度：中烘（Agtron 68-75）
+├── 风味：黑醋栗、明亮酸质、浆果
+├── 作用：增加酸质活力
+└── 注意：控制比例（酸质强烈）
+
+苏门答腊（Sumatra）：
+├── 占比：15-25%
+├── 产区：曼特宁、林东
+├── 处理法：湿刨法
+├── 烘焙度：中烘（Agtron 62-70）
+├── 风味：草本、香料、醇厚、低酸
+├── 作用：增加body、厚度
+└── 注意：避免过深（土味加重）
+
+巴拿马瑰夏（Panama Geisha）：
+├── 占比：5-10%（精品拼配）
+├── 处理法：水洗
+├── 烘焙度：中浅烘（Agtron 75-82）
+├── 风味：茉莉、佛手柑、精致
+├── 作用：提升品质感、花香
+└── 注意：成本高、烘焙度关键
+
+特殊处理法豆：
+├── 厌氧发酵（果香、酒香）
+├── 酒桶陈酿（酒韵、香草）
+├── 蜜处理（甜感、复杂）
+└── 用于：创造独特拼配
+</code></pre><h3 id=1423-功能性豆functional>14.2.3 功能性豆（Functional）</h3><p><strong>功能定位</strong></p><pre tabindex=0><code>作用：
+├── 提供特定功能属性
+├── 改善萃取表现
+├── 增强crema
+├── 调整酸苦平衡
+└── 占比：0-20%
+
+常见功能：
+├── 增加油脂（Robusta）
+├── 增加酸质（非洲豆）
+├── 增加醇厚（印尼豆）
+├── 增加甜感（巴西、蜜处理）
+└── 调整body（不同密度豆）
+</code></pre><p><strong>罗布斯塔（Robusta）</strong></p><pre tabindex=0><code>在意式拼配中的作用：
+├── 增加crema（油脂多）
+├── 增加苦味（平衡甜感）
+├── 增加咖啡因
+├── 降低成本
+└── 增加body
+
+使用比例：
+├── 传统南意：20-40%
+├── 现代精品：0-10%
+├── 100%阿拉比卡：0%
+└── 趋势：减少使用
+
+烘焙建议：
+├── 罗布斯塔需更深烘焙
+├── 单独烘焙后混合
+├── 或调整整体烘焙度
+└── 注意：过度深烘苦味尖锐
+
+产地选择：
+├── 印度Kaapi Royale（品质较高）
+├── 越南（成本低）
+├── 乌干达（中等）
+└── 印尼（香料感）
+
+注意事项：
+├── 高品质Robusta可用
+├── 低品质会产生橡胶味
+├── 精品趋势减少使用
+└── 测试客户接受度
+</code></pre><hr><h2 id=143-烘焙度协调>14.3 烘焙度协调</h2><h3 id=1431-同度烘焙single-roast>14.3.1 同度烘焙（Single Roast）</h3><p><strong>概念与适用</strong></p><pre tabindex=0><code>定义：
+├── 所有拼配豆同批次烘焙
+├── 相同烘焙度
+├── 混合后使用
+└── 最简单的方法
+
+适用场景：
+├── 风味特性相近的豆
+├── 密度差异小的豆
+├── 处理法相同的豆
+├── 快速生产需求
+└── 初学者
+
+优点：
+├── 操作简单
+├── 时间短
+├── 一致性高（同批次）
+├── 不需要多设备
+└── 成本低
+
+缺点：
+├── 无法优化每种豆
+├── 可能牺牲部分风味
+├── 不适合差异大的豆
+└── 灵活性低
+</code></pre><p><strong>同度烘焙策略</strong></p><pre tabindex=0><code>烘焙度选择：
+├── 取折中烘焙度
+├── 偏向基底豆需求（通常中深）
+├── Agtron 60-70（典型）
+
+生豆准备：
+├── 生豆混合均匀
+├── 确保密度相近
+├── 筛选分级
+└── 瑕疵挑出
+
+烘焙参数：
+├── 入豆温：标准中深烘（180-190°C）
+├── ROR：标准曲线
+├── 下豆：Agtron 60-70
+└── DTR：25-35%
+
+验证：
+├── 杯测拼配效果
+├── 萃取测试
+├── 如有问题调整烘焙度
+└── 或改为分度烘焙
+</code></pre><h3 id=1432-分度烘焙split-roast>14.3.2 分度烘焙（Split Roast）</h3><p><strong>概念与优势</strong></p><pre tabindex=0><code>定义：
+├── 不同豆种分别烘焙
+├── 各自优化烘焙度
+├── 熟豆按比例混合
+└── 专业烘焙方法
+
+优势：
+├── 每种豆风味最大化
+├── 灵活调整比例
+├── 可精确控制每个组分
+├── 适合差异大的豆
+└── 专业品质
+
+适用场景：
+├── 基底豆+风味豆差异大
+├── 需要保留产地特征
+├── 精品拼配
+├── 复杂配方
+└── 专业烘焙师
+</code></pre><p><strong>分度烘焙策略</strong></p><pre tabindex=0><code>基底豆烘焙：
+├── 目标：中深烘（Agtron 60-70）
+├── 发展body和甜感
+├── 巴西：Agtron 62-68
+├── 哥伦比亚：Agtron 65-72
+└── 苏门答腊：Agtron 60-68
+
+风味豆烘焙：
+├── 目标：依豆种优化
+├── 埃塞俄比亚：Agtron 72-82（浅中）
+├── 肯尼亚：Agtron 68-76（中）
+├── 巴拿马：Agtron 75-85（浅）
+└── 保留花香果香
+
+混合前熟化：
+├── 各自养豆3-7天
+├── 排气稳定
+├── 风味发展
+└── 然后按比例混合
+
+混合比例：
+├── 先小批量测试
+├── 杯测不同比例
+├── 选择最佳配方
+└── 记录确定配方
+</code></pre><p><strong>分度烘焙案例</strong></p><pre tabindex=0><code>配方：经典意式拼配
+├── 巴西喜拉多：60%
+├── 哥伦比亚慧兰：25%
+└── 埃塞俄比亚耶加雪菲：15%
+
+烘焙方案：
+巴西：
+├── 入豆温：180°C
+├── 下豆温：220°C
+├── Agtron：65
+└── DTR：30%
+
+哥伦比亚：
+├── 入豆温：185°C
+├── 下豆温：218°C
+├── Agtron：68
+└── DTR：28%
+
+埃塞俄比亚：
+├── 入豆温：195°C
+├── 下豆温：210°C
+├── Agtron：78
+└── DTR：20%
+
+混合：
+├── 各自养豆5天
+├── 按比例混合
+├── 养豆2-3天后使用
+└── 萃取测试
+
+结果：
+├── 巴西提供body和坚果巧克力
+├── 哥伦比亚提供平衡和焦糖
+├── 埃塞俄比亚提供花香和复杂度
+└── 整体：丰富、平衡、适合意式
+</code></pre><h3 id=1433-预混-vs-后混>14.3.3 预混 vs 后混</h3><p><strong>预混（Pre-blend）</strong></p><pre tabindex=0><code>定义：
+├── 生豆按比例混合
+├── 一起烘焙
+└── 同度烘焙
+
+优点：
+├── 操作简单
+├── 生豆混合均匀
+├── 同批次一致性高
+├── 适合大规模生产
+
+缺点：
+├── 无法分别优化
+├── 生豆混合可能不均
+├── 密度差异导致烘焙不均
+├── 灵活性低
+
+适用：
+├── 风味特性相近的豆
+├── 大规模连续生产
+├── 标准化产品
+└── 成本敏感产品
+</code></pre><p><strong>后混（Post-blend）</strong></p><pre tabindex=0><code>定义：
+├── 分别烘焙
+├── 熟豆混合
+└── 分度烘焙
+
+优点：
+├── 每种豆优化
+├── 灵活性高
+├── 可调整比例
+├── 品质高
+
+缺点：
+├── 操作复杂
+├── 时间成本高
+├── 需要多次烘焙
+├── 批次一致性挑战
+
+适用：
+├── 精品拼配
+├── 小批量生产
+├── 风味豆差异大
+└── 专业烘焙
+</code></pre><p><strong>选择建议</strong></p><pre tabindex=0><code>选择预混当：
+├── 生豆特性相近
+├── 大规模生产
+├── 成本优先
+├── 操作简化需求
+└── 客户对一致性要求高
+
+选择后混当：
+├── 生豆特性差异大
+├── 精品定位
+├── 品质优先
+├── 小批量
+└── 追求最佳风味
+
+混合策略：
+├── 基底豆预混（量大、特性相近）
+├── 风味豆单独烘焙
+├── 熟豆混合
+└── 兼顾效率和品质
+</code></pre><hr><h2 id=144-经典意式拼配配方>14.4 经典意式拼配配方</h2><h3 id=1441-北意风格northern-italian-style>14.4.1 北意风格（Northern Italian Style）</h3><p><strong>特点</strong></p><pre tabindex=0><code>风格特征：
+├── 100%阿拉比卡
+├── 中深烘（Agtron 60-68）
+├── 酸甜平衡
+├── 复杂度
+├── 适合直接饮用
+└── 也适合奶咖
+
+风味目标：
+├── 坚果、巧克力
+├── 焦糖、红糖
+├── 柔和酸质
+├── 丝滑口感
+├── 持久余韵
+└── 无粗糙感
+</code></pre><p><strong>配方示例</strong></p><pre tabindex=0><code>配方一：经典北意
+├── 巴西喜拉多：50%
+├── 哥伦比亚慧兰：30%
+└── 危地马拉安提瓜：20%
+
+烘焙：
+├── 同度烘焙（Agtron 65）
+├── 或分度（巴西64，哥伦比亚67，安提瓜63）
+
+风味：
+├── 巴西：坚果、巧克力、body
+├── 哥伦比亚：焦糖、平衡
+├── 安提瓜：烟熏、香料
+└── 整体：丰富、平衡、优雅
+
+配方二：花香北意
+├── 巴西：45%
+├── 哥伦比亚：30%
+└── 埃塞俄比亚耶加雪菲（水洗）：25%
+
+烘焙：
+├── 分度烘焙（埃塞俄比亚中浅）
+
+风味：
+├── 基底：坚果、巧克力、焦糖
+├── 埃塞俄比亚：花香、柑橘
+└── 整体：花香、复杂、层次丰富
+</code></pre><h3 id=1442-南意风格southern-italian-style>14.4.2 南意风格（Southern Italian Style）</h3><p><strong>特点</strong></p><pre tabindex=0><code>风格特征：
+├── 含罗布斯塔（20-40%）
+├── 深烘（Agtron 50-60）
+├── 苦甜强烈
+├── 浓郁厚重
+├── 适合大杯量
+└── 传统意式
+
+风味目标：
+├── 强烈苦味
+├── 浓郁巧克力
+├── 焦糖化
+├── 强劲body
+├── 高crema
+└── 持久苦甜余韵
+</code></pre><p><strong>配方示例</strong></p><pre tabindex=0><code>配方：传统南意
+├── 巴西：40%
+├── 罗布斯塔（印度）：30%
+└── 哥伦比亚：30%
+
+烘焙：
+├── 深烘（Agtron 55）
+├── 可能进入二爆
+├── DTR 35-40%
+
+风味：
+├── 强烈、浓郁
+├── 苦甜平衡
+├── 高crema
+├── 适合大杯拿铁
+└── 传统风格
+
+现代改良：
+├── 减少罗布斯塔至10-20%
+├── 使用高品质Robusta
+├── 烘焙度略浅（Agtron 58-62）
+└── 减少苦味刺激
+</code></pre><h3 id=1443-第三波风格third-wave-style>14.4.3 第三波风格（Third Wave Style）</h3><p><strong>特点</strong></p><pre tabindex=0><code>风格特征：
+├── 100%阿拉比卡
+├── 中烘（Agtron 65-75）
+├── 保留产地特征
+├── 酸甜明亮
+├── 复杂度优先
+├── 类似&#34;单品化拼配&#34;
+└── 精品定位
+
+风味目标：
+├── 产地特征明显
+├── 酸甜平衡
+├── 花果香气
+├── 复杂层次
+├── 口感干净
+└── 余韵悠长
+</code></pre><p><strong>配方示例</strong></p><pre tabindex=0><code>配方：精品第三波
+├── 哥伦比亚娜玲珑：40%
+├── 埃塞俄比亚古吉（日晒）：35%
+└── 肯尼亚AA：25%
+
+烘焙：
+├── 分度烘焙
+├── 哥伦比亚：Agtron 70（中烘）
+├── 埃塞俄比亚：Agtron 78（中浅）
+└── 肯尼亚：Agtron 72（中烘）
+
+风味：
+├── 哥伦比亚：焦糖、平衡
+├── 埃塞俄比亚：蓝莓、热带水果
+├── 肯尼亚：黑醋栗、明亮酸质
+└── 整体：果香爆炸、酸质明亮、复杂层次
+
+适用：
+├── 精品咖啡馆
+├── 单品意式（SOE）爱好者
+├── 追求风味的客户
+└── 小批量精品
+</code></pre><hr><h2 id=145-拼配设计与测试流程>14.5 拼配设计与测试流程</h2><h3 id=1451-设计流程>14.5.1 设计流程</h3><p><strong>步骤一：确定目标</strong></p><pre tabindex=0><code>目标定义：
+├── 风格定位（传统/精品/特色）
+├── 风味方向（坚果/花果/烟熏）
+├── 酸苦平衡
+├── body要求
+├── 成本范围
+└── 萃取方式（浓缩/奶咖）
+
+市场调研：
+├── 客户偏好
+├── 竞品分析
+├── 定价策略
+└── 差异化定位
+</code></pre><p><strong>步骤二：选择生豆</strong></p><pre tabindex=0><code>基底豆选择（1-2种）：
+├── 供应稳定性
+├── 价格合理性
+├── 风味中性
+├── 烘焙一致性
+└── 占比60-80%
+
+风味豆选择（1-3种）：
+├── 特色鲜明
+├── 与基底互补
+├── 辨识度高
+├── 品质优异
+└── 占比20-40%
+
+采购：
+├── 样品测试
+├── 烘焙试验
+├── 杯测评估
+├── 确定品质
+└── 批量采购
+</code></pre><p><strong>步骤三：确定比例</strong></p><pre tabindex=0><code>初始比例设定：
+├── 基底：70%
+├── 风味A：20%
+├── 风味B：10%
+
+比例调整范围：
+├── 基底：60-80%
+├── 风味：5-30%
+└── 测试不同组合
+
+评估标准：
+├── 杯测评分
+├── 萃取表现
+├── 客户测试
+├── 成本核算
+└── 稳定性评估
+</code></pre><h3 id=1452-测试流程>14.5.2 测试流程</h3><p><strong>小批量测试</strong></p><pre tabindex=0><code>测试量：
+├── 100-500g/批次
+├── 多个比例组合
+└── 多次重复
+
+烘焙：
+├── 同度或分度
+├── 记录参数
+├── 标记清楚
+└── 养豆3-7天
+
+杯测：
+├── 标准杯测流程
+├── 对比评估
+├── 记录评分
+├── 盲测（如可能）
+└── 多人评估
+
+萃取测试：
+├── 意式浓缩
+├── 调整研磨度
+├── 测试不同比例
+├── 评估crema
+├── 奶咖测试
+└── 综合评估
+</code></pre><p><strong>配方确定</strong></p><pre tabindex=0><code>评估维度：
+├── 风味满意度
+├── 一致性
+├── 成本
+├── 供应稳定性
+├── 客户接受度
+└── 差异化
+
+确定配方：
+├── 选择最佳比例
+├── 确定烘焙方案
+├── 制定SOP
+├── 建立质量标准
+├── 培训操作人员
+└── 准备量产
+
+文档化：
+├── 配方卡
+├── 烘焙参数表
+├── 杯测标准
+├── 质量指标
+└── 追溯信息
+</code></pre><hr><h2 id=146-拼配品质管理>14.6 拼配品质管理</h2><h3 id=1461-混合一致性控制>14.6.1 混合一致性控制</h3><p><strong>混合流程</strong></p><pre tabindex=0><code>生豆混合（预混）：
+1. 按比例称重（精确到100g）
+2. 生豆混合均匀
+   ├── 使用混合机（大规模）
+   ├── 手工分层混合（小批量）
+   └── 确保均匀
+3. 烘焙前再次确认
+4. 标记批次
+5. 烘焙
+
+熟豆混合（后混）：
+1. 分别烘焙
+2. 养豆完成后
+3. 按比例称重（精确）
+4. 混合均匀
+   ├── 使用搅拌机
+   ├── 手工分批混合
+   └── 充分均匀
+5. 静置24小时稳定
+6. 包装
+</code></pre><p><strong>均匀性检测</strong></p><pre tabindex=0><code>视觉检查：
+├── 颜色均匀度
+├── 颗粒大小
+├── 表面油脂
+└── 挑出异常豆
+
+杯测一致性：
+├── 多杯冲泡
+├── 评估杯间差异
+├── 标准偏差
+└── 目标：变异系数&lt;5%
+
+萃取一致性：
+├── 多份萃取
+├── 时间、压力、重量
+├── 评估稳定性
+└── 目标：变异&lt;10%
+</code></pre><h3 id=1462-批次一致性>14.6.2 批次一致性</h3><p><strong>批次管理</strong></p><pre tabindex=0><code>批次追溯：
+├── 每批次独立编号
+├── 生豆批次记录
+├── 烘焙参数记录
+├── 杯测评分记录
+└── 储存位置记录
+
+批次间一致性控制：
+├── 标准化烘焙参数
+├── 定期校准设备
+├── 操作人员培训
+├── 质量抽检
+└── 统计分析
+
+调整策略：
+├── 新批次生豆杯测
+├── 与标准对比
+├── 微调烘焙度
+├── 记录调整
+└── 验证效果
+</code></pre><hr><p><strong>本章关键要点：</strong></p><ol><li>拼配目的：一致性、复杂度、成本优化、稳定性</li><li>角色分类：基底豆（60-80%，稳定、body）、风味豆（20-40%，特色）、功能豆（0-20%，特定功能）</li><li>烘焙度协调：同度烘焙（简单）、分度烘焙（品质）、预混（效率）、后混（灵活）</li><li>经典风格：北意（100%阿拉比卡、中深烘、平衡）、南意（含罗布斯塔、深烘、强烈）、第三波（精品、中烘、产地特征）</li><li>设计流程：确定目标→选择生豆→确定比例→小批量测试→确定配方→文档化</li><li>品质管理：混合均匀性控制、批次一致性管理</li></ol><div class=post-tags><a href=/tags/%E5%92%96%E5%95%A1 class=post-tag>#咖啡</a>
+<a href=/tags/%E5%92%96%E5%95%A1%E8%B1%86 class=post-tag>#咖啡豆</a>
+<a href=/tags/%E5%92%96%E5%95%A1%E7%83%98%E7%84%99 class=post-tag>#咖啡烘焙</a>
+<a href=/tags/%E5%92%96%E5%95%A1%E8%B1%86%E6%8B%BC%E9%85%8D class=post-tag>#咖啡豆拼配</a></div><nav class=post-nav><a href=/posts/%E7%AC%AC13%E7%AB%A0-%E7%83%98%E7%84%99%E8%AE%BE%E5%A4%87%E7%BB%B4%E6%8A%A4%E4%B8%8E%E6%A0%A1%E5%87%86/ class=prev-post><span class=nav-label>← 上一篇</span>
+<span class=nav-title>第13章 烘焙设备维护与校准</span>
+</a><a href=/posts/%E7%AC%AC15%E7%AB%A0-%E5%8D%95%E5%93%81%E4%B8%8E%E6%8B%BC%E9%85%8D%E7%9A%84%E4%BA%A7%E5%93%81%E8%AE%BE%E8%AE%A1/ class=next-post><span class=nav-label>下一篇 →</span>
+<span class=nav-title>第15章 单品与拼配的产品设计</span></a></nav><script src=https://giscus.app/client.js data-repo=heheboy/heheboy.github.io data-repo-id=R_kgDORzG4BQ data-category=Announcements data-category-id=DIC_kwDORzG4Bc4C54kN data-mapping=pathname data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=light data-lang=zh-CN crossorigin=anonymous async></script></article></div><aside class=sidebar><div class="sidebar-widget author-widget"><img class=author-avatar src=/img/avatar.jpg alt=熟童><h3 class=author-name>熟童</h3><p class=author-bio>熟童，一个在代码、咖啡与虚拟世界之间反复横跳的人。写程序、做游戏、研究AI，也会认真对待一杯咖啡的参数曲线。这里记录的不只是技术，还有那些被实现出来的想法。相信技术不只是工具，它也可以有温度。</p><div class=author-social><a href=https://github.com/heheboy target=_blank rel=noopener aria-label=GitHub><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 0C5.37.0.0 5.37.0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57.0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925.0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18.0.0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225.0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22.0 1.605-.015 2.895-.015 3.3.0.315.225.69.825.57A12.02 12.02.0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+</a><a href=https://space.bilibili.com/8756982 target=_blank rel=noopener aria-label=Bilibili><svg viewBox="0 0 24 24"><path fill="currentColor" d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858.0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234.0 11.704-1.778L8.46 4.45V4.267a1.227 1.227.0 112.453.0V5.32l2.823-2.695a1.234 1.234.0 011.704 1.778l-1.687 1.12zm-3.28 9.653c-.56.0-1.013.453-1.013 1.013s.453 1.013 1.013 1.013 1.013-.453 1.013-1.013-.453-1.013-1.013-1.013zm-6 0c-.56.0-1.013.453-1.013 1.013s.453 1.013 1.013 1.013 1.013-.453 1.013-1.013-.453-1.013-1.013-1.013z"/></svg>
+</a><a href=https://www.facebook.com/dio.zeng.2025 target=_blank rel=noopener aria-label=Facebook><svg viewBox="0 0 24 24"><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312.0 2.686.235 2.686.235v2.953H15.83c-1.491.0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a><div class=social-wechat-wrapper><a href=# class=social-wechat-trigger aria-label=WeChat><svg viewBox="0 0 24 24"><path fill="currentColor" d="M8.691 2.188C3.891 2.188.0 5.476.0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59.0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213.0.163.13.295.29.295a.326.326.0 00.167-.054l1.903-1.114a.864.864.0 01.717-.098 10.16 10.16.0 002.837.403c.276.0.543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642.0 1.162.529 1.162 1.18A1.17 1.17.0 015.785 8.349 1.17 1.17.0 014.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813.0c.642.0 1.162.529 1.162 1.18a1.17 1.17.0 01-1.162 1.178 1.17 1.17.0 01-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826.0 1.622-.12 2.361-.336a.722.722.0 01.598.082l1.584.926a.272.272.0 00.14.047c.134.0.24-.111.24-.247.0-.06-.023-.12-.038-.177l-.327-1.233a.582.582.0 01-.023-.156.49.49.0 01.201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088V8.89c-.135-.01-.27-.027-.407-.03zm-2.53 3.274c.535.0.969.44.969.982a.976.976.0 01-.969.983.976.976.0 01-.969-.983c0-.542.434-.982.97-.982zm4.844.0c.535.0.969.44.969.982a.976.976.0 01-.969.983.976.976.0 01-.969-.983c0-.542.434-.982.969-.982z"/></svg></a><div class=wechat-qr-popup><img src=/img/wechat-qr.png alt="WeChat QR Code">
+<span>扫码加我</span></div></div><a href=https://www.instagram.com/bengbeng9548/ target=_blank rel=noopener aria-label=Instagram><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.163c3.204.0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849.0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204.0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849.0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741.0 8.333.014 7.053.072c-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.668.072 4.948c.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403.0-6.162 2.759-6.162 6.162S8.597 18.163 12 18.163s6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zM12 16c-2.209.0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796.0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795.0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a><div class=social-email-wrapper><a href=mailto:bengbeng9548@qq.com class=social-email aria-label=Email><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 4H4c-1.1.0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1.0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+<span>bengbeng9548@qq.com</span></a></div></div></div><div class="sidebar-widget categories-widget"><h4>分类</h4><div class=category-cloud><a href=/categories/%E5%92%96%E5%95%A1%E7%9B%B8%E5%85%B3/ class=category-link>咖啡相关
+<span class=category-count>(15)</span>
+</a><a href=/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/ class=category-link>游戏开发
+<span class=category-count>(15)</span>
+</a><a href=/categories/ai%E7%9B%B8%E5%85%B3/ class=category-link>AI相关
+<span class=category-count>(2)</span>
+</a><a href=/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/ class=category-link>生活随记
+<span class=category-count>(1)</span></a></div></div><div class="sidebar-widget tags-widget"><h4>标签</h4><div class=tag-cloud><a href=/tags/c%23/ class=tag-link style=font-size:1.5em>C#
+</a><a href=/tags/csharp/ class=tag-link style=font-size:1.5em>CSharp
+</a><a href=/tags/godot/ class=tag-link style=font-size:1.5em>Godot
+</a><a href=/tags/%E5%92%96%E5%95%A1/ class=tag-link style=font-size:1.5em>咖啡
+</a><a href=/tags/%E5%92%96%E5%95%A1%E8%B1%86/ class=tag-link style=font-size:1.5em>咖啡豆
+</a><a href=/tags/%E5%BC%80%E5%8F%91/ class=tag-link style=font-size:1.5em>开发
+</a><a href=/tags/%E5%92%96%E5%95%A1%E7%83%98%E7%84%99/ class=tag-link style=font-size:1.5em>咖啡烘焙
+</a><a href=/tags/%E6%9E%B6%E6%9E%84/ class=tag-link style=font-size:1.5em>架构
+</a><a href=/tags/agent/ class=tag-link style=font-size:1em>Agent
+</a><a href=/tags/ai/ class=tag-link style=font-size:1em>AI
+</a><a href=/tags/claudecode/ class=tag-link style=font-size:1em>ClaudeCode
+</a><a href=/tags/%E5%92%96%E5%95%A1%E7%94%9F%E8%B1%86/ class=tag-link style=font-size:1em>咖啡生豆
+</a><a href=/tags/%E5%92%96%E5%95%A1%E8%B1%86%E6%8B%BC%E9%85%8D/ class=tag-link style=font-size:1em>咖啡豆拼配
+</a><a href=/tags/%E6%99%BA%E8%83%BD%E4%BD%93/ class=tag-link style=font-size:1em>智能体
+</a><a href=/tags/%E7%83%98%E7%84%99%E6%9B%B2%E7%BA%BF/ class=tag-link style=font-size:1em>烘焙曲线
+</a><a href=/tags/anthropic/ class=tag-link style=font-size:.9em>Anthropic
+</a><a href=/tags/cc/ class=tag-link style=font-size:.9em>Cc
+</a><a href=/tags/mcp/ class=tag-link style=font-size:.9em>Mcp
+</a><a href=/tags/openclaw/ class=tag-link style=font-size:.9em>OpenClaw
+</a><a href=/tags/skill/ class=tag-link style=font-size:.9em>Skill</a></div></div><div class="sidebar-widget links-widget"><h4>友情链接</h4><div class=links-list><a href=https://gohugo.io target=_blank rel=noopener class=link-item title="Hugo 静态网站生成器官方文档"><span class=link-name>Hugo 官方</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+</a><a href=https://github.com/heheboy/hugo-cms target=_blank rel=noopener class=link-item title=hugo-cms的项目连接><span class=link-name>Hugo-cms</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+</a><a href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener class=link-item title=主题的项目连接><span class=link-name>hugo-cms-theme</span>
+<svg class="link-arrow" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></a></div></div></aside></div></main><footer class=site-footer><div class=footer-content><p class=copyright>&copy; 2026 熟童.
+All rights reserved.</p><div class=footer-info><span class=footer-info-item><a href=https://github.com/heheboy/hugo-cms target=_blank rel=noopener>本网站由Hugo驱动,使用Hugo-cms制作
+</a></span><span class=footer-info-item><a href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener>主题采用 hugo-cms-theme
+</a><a class=github-star-link href=https://github.com/heheboy/hugo-cms-theme target=_blank rel=noopener title="GitHub Stars"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 0c4.42.0 8 3.58 8 8a8.013 8.013.0 01-5.45 7.59c-.4.08-.55-.17-.55-.38.0-.27.01-1.13.01-2.2.0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95.0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12.0.0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27s-1.36.09-2 .27c-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15.0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94.0.67.01 1.3.01 1.49.0.21-.15.45-.55.38A7.995 7.995.0 010 8c0-4.42 3.58-8 8-8z"/></svg>
+<span>Star</span></a></span></div><div class=footer-links><a href=/index.xml class=footer-link target=_blank rel=noopener aria-label=RSS订阅><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6.503 20.752C6.503 22.546 5.047 24 3.252 24c-1.796.0-3.252-1.454-3.252-3.248s1.456-3.248 3.252-3.248c1.795.001 3.251 1.454 3.251 3.248zM0 8.18v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817C15.777 15.29 8.721 8.242.0 8.18zm0-3.368C10.58 4.858 19.152 13.406 19.183 24H24c-.03-13.231-10.736-23.954-24-24v4.812z"/></svg>
+<span>RSS 订阅</span>
+</a><span class=footer-link-separator>|</span>
+<a href=/sitemap.xml class=footer-link target=_blank rel=noopener aria-label=网站地图><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 3l-6 1.5L8.501 3l-6 1.5v15l6-1.5 5.999 1.5 6-1.5V3zM15 16.656l-5.999-1.5V3.844L15 5.344v11.312zm1-11.312 4 .999v11.312l-4-.999V5.344zm-7 .499-4-.999v11.312l4 .999V5.843z"/></svg>
+<span>网站地图</span></a></div></div></footer><script>(function(){const t=document.querySelector(".theme-toggle");if(!t)return;const e=document.documentElement,n=localStorage.getItem("theme");n&&e.setAttribute("data-theme",n),t.addEventListener("click",()=>{const n=e.getAttribute("data-theme"),t=n==="dark"?"light":"dark";e.setAttribute("data-theme",t),localStorage.setItem("theme",t)})})()</script><script>(function(){const e=document.querySelector(".nav-toggle"),t=document.querySelector(".nav-menu");e&&e.addEventListener("click",()=>{t.classList.toggle("active"),e.classList.toggle("active")})})()</script></body></html>

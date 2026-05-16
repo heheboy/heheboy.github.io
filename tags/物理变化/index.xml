@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>物理变化 on 熟童·实验室</title><link>https://heheboy.github.io/tags/%E7%89%A9%E7%90%86%E5%8F%98%E5%8C%96/</link><description>Recent content in 物理变化 on 熟童·实验室</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Tue, 07 Apr 2026 17:55:31 +0800</lastBuildDate><atom:link href="https://heheboy.github.io/tags/%E7%89%A9%E7%90%86%E5%8F%98%E5%8C%96/index.xml" rel="self" type="application/rss+xml"/><item><title>第5章 烘焙阶段的物理化学变化</title><link>https://heheboy.github.io/posts/%E7%AC%AC5%E7%AB%A0-%E7%83%98%E7%84%99%E9%98%B6%E6%AE%B5%E7%9A%84%E7%89%A9%E7%90%86%E5%8C%96%E5%AD%A6%E5%8F%98%E5%8C%96/</link><pubDate>Tue, 07 Apr 2026 17:55:31 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC5%E7%AB%A0-%E7%83%98%E7%84%99%E9%98%B6%E6%AE%B5%E7%9A%84%E7%89%A9%E7%90%86%E5%8C%96%E5%AD%A6%E5%8F%98%E5%8C%96/</guid><description>&lt;h2 id="51-烘焙阶段总览"&gt;5.1 烘焙阶段总览&lt;/h2&gt;
+&lt;h3 id="511-时间-温度-化学反应映射"&gt;5.1.1 时间-温度-化学反应映射&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;温度(°C)
+ │
+250 ┤ ┌─────────── 深烘终点
+ │ ┌──────┘
+230 ┤ ┌─────┘ 二爆
+ │ ┌─────┘
+220 ┤ ┌─────┘
+ │ ┌─────┘ 一爆
+205 ┤──────┘
+ │
+200 ┤────────┬────────┬────────┬────────┬────────┬──→ 时间(min)
+ │ │ │ │ │ │
+ │ 干燥期 梅纳期 焦糖化 发展期 冷却期
+ │ 0-5 5-8 8-10 10-12 12-14
+ │ (分钟) (分钟) (分钟) (分钟) (分钟)
+
+化学反应强度：
+干燥期：水分蒸发 ████████░░░░░░░░░░░░ 40%
+梅纳期：化学反应 ██████████████░░░░░░ 70%
+焦糖化：糖类分解 ████████████████░░░░ 80%
+发展期：风味形成 ████████████████████ 100%
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="512-各阶段关键参数"&gt;5.1.2 各阶段关键参数&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;阶段&lt;/th&gt;
+ &lt;th&gt;温度范围&lt;/th&gt;
+ &lt;th&gt;时间占比&lt;/th&gt;
+ &lt;th&gt;质量损失占比&lt;/th&gt;
+ &lt;th&gt;核心反应&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;干燥期&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;20-150°C&lt;/td&gt;
+ &lt;td&gt;35-45%&lt;/td&gt;
+ &lt;td&gt;8-10%&lt;/td&gt;
+ &lt;td&gt;水分蒸发、组织软化&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;梅纳反应期&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;150-180°C&lt;/td&gt;
+ &lt;td&gt;20-25%&lt;/td&gt;
+ &lt;td&gt;2-3%&lt;/td&gt;
+ &lt;td&gt;氨基酸-还原糖反应&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;焦糖化期&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;170-200°C&lt;/td&gt;
+ &lt;td&gt;15-20%&lt;/td&gt;
+ &lt;td&gt;3-5%&lt;/td&gt;
+ &lt;td&gt;糖类热解、褐变&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;发展期&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;200-230°C&lt;/td&gt;
+ &lt;td&gt;10-20%&lt;/td&gt;
+ &lt;td&gt;1-2%&lt;/td&gt;
+ &lt;td&gt;风味物质合成&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;冷却期&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;230-30°C&lt;/td&gt;
+ &lt;td&gt;2-3分钟&lt;/td&gt;
+ &lt;td&gt;可忽略&lt;/td&gt;
+ &lt;td&gt;反应终止&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="52-干燥期drying-phase"&gt;5.2 干燥期（Drying Phase）&lt;/h2&gt;
+&lt;h3 id="521-水分迁移机制"&gt;5.2.1 水分迁移机制&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;生豆中的水分分布&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>

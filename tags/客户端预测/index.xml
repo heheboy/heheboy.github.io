@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>客户端预测 on 熟童·实验室</title><link>https://heheboy.github.io/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%A2%84%E6%B5%8B/</link><description>Recent content in 客户端预测 on 熟童·实验室</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sun, 17 May 2026 00:45:42 +0800</lastBuildDate><atom:link href="https://heheboy.github.io/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%A2%84%E6%B5%8B/index.xml" rel="self" type="application/rss+xml"/><item><title>第13章 客户端预测与服务器调和</title><link>https://heheboy.github.io/posts/%E7%AC%AC13%E7%AB%A0-%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%A2%84%E6%B5%8B%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%B0%83%E5%92%8C/</link><pubDate>Sun, 17 May 2026 00:45:42 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC13%E7%AB%A0-%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%A2%84%E6%B5%8B%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%B0%83%E5%92%8C/</guid><description>&lt;h2 id="131-客户端预测client-side-prediction原理"&gt;13.1 客户端预测（Client-Side Prediction）原理&lt;/h2&gt;
+&lt;h3 id="1311-预测的基本概念"&gt;13.1.1 预测的基本概念&lt;/h3&gt;
+&lt;p&gt;客户端预测是解决网络延迟问题的核心技术。其基本思想是：客户端不等待服务器确认，立即执行玩家输入，模拟服务器的行为。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;无预测 vs 有预测对比：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;无预测（延迟明显）：
+输入(t=0) ──► 发送到服务器 ──► 处理 ──► 返回结果 ──► 显示(t=200ms)
+
+有预测（即时反馈）：
+输入(t=0) ──► 立即执行并显示(t=0) ──► 等待服务器确认 ──► 调和(t=200ms)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;预测的优势：&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>

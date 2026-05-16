@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>化学反应 on 熟童·实验室</title><link>https://heheboy.github.io/tags/%E5%8C%96%E5%AD%A6%E5%8F%8D%E5%BA%94/</link><description>Recent content in 化学反应 on 熟童·实验室</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Tue, 07 Apr 2026 17:59:24 +0800</lastBuildDate><atom:link href="https://heheboy.github.io/tags/%E5%8C%96%E5%AD%A6%E5%8F%8D%E5%BA%94/index.xml" rel="self" type="application/rss+xml"/><item><title>第6章 关键化学反应深度解析</title><link>https://heheboy.github.io/posts/%E7%AC%AC6%E7%AB%A0-%E5%85%B3%E9%94%AE%E5%8C%96%E5%AD%A6%E5%8F%8D%E5%BA%94%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</link><pubDate>Tue, 07 Apr 2026 17:59:24 +0800</pubDate><guid>https://heheboy.github.io/posts/%E7%AC%AC6%E7%AB%A0-%E5%85%B3%E9%94%AE%E5%8C%96%E5%AD%A6%E5%8F%8D%E5%BA%94%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</guid><description>&lt;h2 id="61-梅纳反应maillard-reaction的完整机制"&gt;6.1 梅纳反应（Maillard Reaction）的完整机制&lt;/h2&gt;
+&lt;h3 id="611-反应动力学"&gt;6.1.1 反应动力学&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;温度依赖性&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;梅纳反应速率与温度的关系：
+
+阿伦尼乌斯方程：
+k = A × exp(-Ea/RT)
+
+其中：
+k = 反应速率常数
+A = 频率因子
+Ea = 活化能（梅纳反应约80-120 kJ/mol）
+R = 气体常数 8.314 J/mol·K
+T = 绝对温度（K）
+
+温度效应：
+├── 20°C：反应极慢，可忽略
+├── 80°C：反应开始可检测
+├── 120°C：反应加速
+├── 150°C：反应显著
+├── 180°C：反应快速
+└── 200°C：反应剧烈但趋向完成
+
+温度每升高10°C，反应速率约增加2-3倍（经验法则）
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;pH值的影响&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>
